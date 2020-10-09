@@ -1,8 +1,7 @@
-## Welcome to GitHub Pages
+## Hi there!
 
-You can use the [editor on GitHub](https://github.com/jaketg97/test/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+My name's Jake, and I'm an aspiring applied microeconomist hoping to specialize in public or labor economics. Right now I'm working as a research analyst at Northwestern University in the Global Poverty Research Lab; I plan on applying to Econ PhD programs next fall (Autumn 2021). I use this site to share some of my personal research. **To be clear, all work shared here is preliminary and personal unless stated otherwise** (don't blame my employer for any of my shoddy work). Critiques are welcome at jaketg97@gmail.com. Before we get to the half-baked work though, here are some shameless plugs...
+[Here's my CV](main_files/Gosselin, Jacob - CV.pdf)     [And my twitter](https://twitter.com/jaketg97)    [And my LinkedIn](https://www.linkedin.com/in/jacobgosselin/) 
 
 ### Markdown
 
