@@ -1,0 +1,119 @@
+---
+title: "Cook County Criminal Judge Sentencing Analysis"
+author: "Jacob Gosselin"
+date: "10/9/2020"
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(mosaic)
+library(readr)
+library(formatR)
+library(dplyr)
+library(plyr)
+library(plotrix)
+library(boot)
+library(lubridate)
+library(lmtest)
+library(sandwich)
+```
+What follows is the methodology for my sentencing analysis on Cook County Criminal Division judges. All work was done in R. The R code is here, at my GitHub; since the data is read in from the Cook County Online Data portal, my work can easily be re-created or expanded upon.
+
+# Reading in Data/Converting Sentence Term
+
+We'll start by reading in our sentencing [data](https://datacatalog.cookcountyil.gov/Courts/Sentencing/tg8v-tm6u). We'll then create a conversion table to standardize our units (i.e. years=1, months=1/12, weeks=1/52, days=1/365, all other units are left undefined but the rows are kept). We'll then convert our sentence (i.e. 6 months=.5), and store it under a new variable, "converted_sentence".
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+original <- read_csv("https://datacatalog.cookcountyil.gov/api/views/tg8v-tm6u/rows.csv?accessType=DOWNLOAD")
+conversion_table <- revalue(original$COMMITMENT_UNIT, c("Year(s)"=1, "Months"=1/12, "Weeks"=1/52, "Days"=1/365, "Pounds"=NA, "Dollars"=NA, "Term"=NA))
+conversion_table <- as.double(conversion_table)
+original["converted_sentence"]<-ifelse(original$COMMITMENT_UNIT=="Natural Life", 100,conversion_table*as.double(original$COMMITMENT_TERM))
+original["sentence_date"]<-as.Date(original$SENTENCE_DATE, "%m/%d/%Y")
+original["sentence_year"]<-year(original$sentence_date)
+```
+
+# Finding median sentences by felony class
+
+We'll now create a series of subsets, to find median sentences. We're going to create a subset for class 1, 2, 3, 4, and X felonies. This will exclude 2792 cases, which are filed under class A, B, C, M, O, P, U, or Z felonies. A lot of these are mistaken filings, but we don't want to assign them. Since the sample size is large, we're better of ignoring them (they only make up <2% of cases). 
+
+We're also going to create further subsets (PJ) for sentences to Prison or Jail. We'll use these to find median sentences; while it eliminates a good chunk of our cases (~41%), you have to do this to get an accurate read on median sentence time. Otherwise, a two year probation will skew our median, since that will be considered harsher than a one year prison sentence. 
+
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+CLASS_1 <- subset(original, DISPOSITION_CHARGED_CLASS=="1")
+CLASS_2 <- subset(original, DISPOSITION_CHARGED_CLASS=="2")
+CLASS_3 <- subset(original, DISPOSITION_CHARGED_CLASS=="3")
+CLASS_4 <- subset(original, DISPOSITION_CHARGED_CLASS=="4")
+CLASS_X <- subset(original, DISPOSITION_CHARGED_CLASS=="X") 
+CLASS_1_PJ <- subset(original, DISPOSITION_CHARGED_CLASS=="1" & (SENTENCE_TYPE=="Prison" | SENTENCE_TYPE=="Jail"))
+CLASS_2_PJ <- subset(original, DISPOSITION_CHARGED_CLASS=="2" & (SENTENCE_TYPE=="Prison" | SENTENCE_TYPE=="Jail"))
+CLASS_3_PJ <- subset(original, DISPOSITION_CHARGED_CLASS=="3" & (SENTENCE_TYPE=="Prison" | SENTENCE_TYPE=="Jail"))
+CLASS_4_PJ <- subset(original, DISPOSITION_CHARGED_CLASS=="4" & (SENTENCE_TYPE=="Prison" | SENTENCE_TYPE=="Jail"))
+CLASS_X_PJ <- subset(original, DISPOSITION_CHARGED_CLASS=="X" & (SENTENCE_TYPE=="Prison" | SENTENCE_TYPE=="Jail"))
+original_PJ <- subset(original, SENTENCE_TYPE=="Prison" | SENTENCE_TYPE=="Jail")
+median_1 <- median(CLASS_1_PJ$converted_sentence, na.rm=TRUE)
+median_2 <- median(CLASS_2_PJ$converted_sentence, na.rm=TRUE)
+median_3 <- median(CLASS_3_PJ$converted_sentence, na.rm=TRUE)
+median_4 <- median(CLASS_4_PJ$converted_sentence, na.rm=TRUE)
+median_X <- median(CLASS_X_PJ$converted_sentence, na.rm=TRUE)
+median_1 
+median_2 
+median_3 
+median_4 
+median_X
+```
+The outputs are our median prison sentences by felony class.
+
+# Creating Severity Ranking 
+
+Now we construct our ranking of Criminal Division judges by sentence severity. First we're going to create a subset of our original which solely includes felonies of class 1, 2, 3, 4, and X (which is the vast majority of entries). Then we're going to create a boolean for whether the charge resulted in prison time, and if so, whether that prison sentence was above the median.
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+original_subset <- subset(original, DISPOSITION_CHARGED_CLASS=="1" | DISPOSITION_CHARGED_CLASS=="2" | DISPOSITION_CHARGED_CLASS=="3" | DISPOSITION_CHARGED_CLASS=="4" | DISPOSITION_CHARGED_CLASS=="X")
+conversion_table2 <- revalue(original_subset$SENTENCE_TYPE, c("Prison"=TRUE, "Jail"=TRUE))
+original_subset["PJ"]=conversion_table2
+above_median <- (original_subset$PJ==TRUE & ((original_subset$DISPOSITION_CHARGED_CLASS=="1" & original_subset$converted_sentence>median_1) | (original_subset$DISPOSITION_CHARGED_CLASS=="2" & original_subset$converted_sentence>median_2) | (original_subset$DISPOSITION_CHARGED_CLASS=="3" & original_subset$converted_sentence>median_3) | (original_subset$DISPOSITION_CHARGED_CLASS=="4" & original_subset$converted_sentence>median_4) | (original_subset$DISPOSITION_CHARGED_CLASS=="X" & original_subset$converted_sentence>median_X)))
+original_subset["above_median"] <- above_median
+```
+Now we are ready to make our ranking. We'll create a counter (a simple boolean, 1 if true, 0 if false) for: 
+1. Each sentence (i.e. 1 always) 
+2. Whether the sentence resulted in prison or jail time 
+3. If the sentence resulted in prison or jail time, whether the sentence was above the median for that felony class 
+4-7. Whether the sentence was on a Class 1/2/3/4 felony respectively 
+8. Whether the sentence was on a class 4 felony and resulted in prison time. 
+
+Then we'll aggregate our counters by judge (i.e. sum each counter, grouped by the sentencing judge), and calculate the percent of prison sentences above the median/the percent of class 4 felony sentences resulting in prison time. We'll average it to create our severity metric. I drop all judges who have served on less than 500 case (I like to deal in large sample sizes; the outcomes for judges who haven't served on many cases could be misleading). From there I just abbreviated the list and ordered it to make it tidy.  
+
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+original_subset<-subset(original_subset, original_subset$SENTENCE_TYPE=="Prison"|original_subset$SENTENCE_TYPE=="Jail"|original_subset$SENTENCE_TYPE=="Probation")
+original_subset$counter<-1
+original_subset$counter_PJ<-ifelse(original_subset$SENTENCE_TYPE=="Prison" | original_subset$SENTENCE_TYPE=="Jail", 1, 0)
+original_subset$counter_abovemedian<-ifelse(original_subset$above_median==TRUE & original_subset$counter_PJ==1, 1, 0)
+original_subset$counter_F1 <-ifelse(original_subset$DISPOSITION_CHARGED_CLASS==1, 1, 0)
+original_subset$counter_F2 <-ifelse(original_subset$DISPOSITION_CHARGED_CLASS==2, 1, 0)
+original_subset$counter_F3 <-ifelse(original_subset$DISPOSITION_CHARGED_CLASS==3, 1, 0)
+original_subset$counter_F4 <-ifelse(original_subset$DISPOSITION_CHARGED_CLASS==4, 1, 0)
+original_subset$counter_F4_pj <-ifelse(original_subset$DISPOSITION_CHARGED_CLASS==4 & original_subset$SENTENCE_TYPE!="Probation", 1, 0)
+judge_rankings<-aggregate(original_subset[47:54], by=list(judges=original_subset$SENTENCE_JUDGE), FUN=sum, na.rm=TRUE)
+judge_rankings<-subset(judge_rankings, judge_rankings$counter>=500)
+judge_rankings$percentabove <- judge_rankings$counter_abovemedian/judge_rankings$counter_PJ
+judge_rankings$class4prisonpercent <- judge_rankings$counter_F4_pj/judge_rankings$counter_F4
+judge_rankings$severity_metric<-(judge_rankings$percentabove+judge_rankings$class4prisonpercent)/2
+judge_rankings_abb <-data.frame(judge_rankings$judges, judge_rankings$percentabove, judge_rankings$class4prisonpercent, judge_rankings$severity_metric)
+colnames(judge_rankings_abb)<-c("Judges", "Percent of Prison Sentences Above The Median", "Percent of Class 4 Felony Prison Sentences","Severity Metric")
+judge_rankings_abb<-arrange(judge_rankings_abb, desc(judge_rankings_abb$`Severity Metric`))
+retention_judges <- subset(judge_rankings_abb, Judges == "Shelley  Sutker-Dermer" | Judges == "Kenneth J Wadas" | Judges == "Kerry M Kennedy" | Judges == "Araujo, Mauricio" | Judges == "Byrne, Thomas" | Judges == "Anna Helen Demacopoulos" | Judges == "URSULA  WALOWSKI" | Judges == "Steven G Watkins" | Judges == "William  Raines")
+knitr::kable(retention_judges, format = "html")
+```
+
+# Significance Tests for Slattery Boyle 
+
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+boyle_PJ <- subset(original_subset, original_subset$counter_PJ==1 & original_subset$SENTENCE_JUDGE=="Maura  Slattery Boyle")
+original_subset_PJ <- subset(original_subset, counter_PJ == 1)
+original_subset_PJ$boyle_dummy <- original_subset_PJ$SENTENCE_JUDGE == "Maura  Slattery Boyle"
+original_subset_PJ$sentence_year.f <- factor(original_subset_PJ$sentence_year)
+boyle_mod <- lm(counter_abovemedian ~ boyle_dummy + sentence_date + sentence_year.f, data = original_subset_PJ)
+coeftest(boyle_mod, vcov = vcovHC(boyle_mod, type="HC0"))
+```
