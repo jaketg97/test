@@ -1,40 +1,13 @@
 ## Hi there!
 
-My name's Jake, and I'm an aspiring applied microeconomist hoping to specialize in public or labor economics. Right now I'm working as a research analyst at Northwestern University in the Global Poverty Research Lab; I plan on applying to Econ PhD programs next fall (Autumn 2021). I use this site to share some of my personal research. **To be clear, all work shared here is preliminary and personal unless stated otherwise** (don't blame my employer for any of my shoddy work). Critiques are welcome at jaketg97@gmail.com. Before we get to the half-baked work though, here are some shameless plugs...
+My name's Jake, and I'm an aspiring applied microeconomist hoping to specialize in public or labor economics. Right now I'm working as a research analyst at Northwestern University in the Global Poverty Research Lab; I plan on applying to Econ PhD programs next fall (Autumn 2021). I use this site to share/work through my personal research (i.e. a sounding board for my half baked ideas). **To be clear, all work shared here is preliminary and personal unless stated otherwise** (don't blame my employer for any of my shoddy work). Critiques are welcome at jaketg97@gmail.com. Before we get to the undeveloped ideas though, here are some shameless plugs...
 
 [Here's my CV](main_files/Gosselin, Jacob - CV.pdf) &nbsp; &nbsp; [And my twitter](https://twitter.com/jaketg97) &nbsp; &nbsp; [And my LinkedIn](https://www.linkedin.com/in/jacobgosselin/) 
 
-### Markdown
+### And here are a few ideas that turned into things I'm proud of 
+- **[Chicago’s harshest judge seeks retention](https://www.injusticewatch.org/news/2018/chicago-harshest-judge-seeks-retention/):** Piece I co-wrote (with help from a great team) on Judge Maura Slattery Boyle, as part of their coverage for the judicial retention races. [Injustice Watch](https://www.injusticewatch.org) continues to do some of the best reporting in Chicago; if you haven't yet, check out their [Judicial Election Guide](https://www.injusticewatch.org/interactives/judicial-election-guide/2020-general/en/)
+- **[Fighting Royalty: The Daniel Biss Campaign for Governor](http://uchicagogate.com/articles/2018/7/4/fighting-royalty-daniel-biss-campaign-governor/):** probably the piece I'm proudest of from my day's at UChicago's undergraduate political review. Incredibly interesting campaign with a lot of great characters. Also includes a map I spent hours building in Tableau because I didn't know how to use R yet, so that's a nice memory.
+- **[Insurer Competition in the Age of Provider Consolidation](main_files/Insurer Competition in the Age of Provider Consolidation.pdf):** Wow that's a mouthful. Undergraduate thesis completed with the help of my wonderful advisor Professor Colleen Grogan. Using public data from CMS, and private data from the American Hospital Association (AHA), I tried to measure the impact of reduced healthcare provider competition on competition and prices in ACA exchanges. Imperfect work, but I think the general findings are correct. This was basically confirming qualitative research I saw at Brookings during my summer internship there; because the ACA made it illegal for insurers to compete over enrollees (i.e. no more denials of coverage for preexisting conditions or medical underwriting), they competeted over healthcare providers, narrowing their networks. This kind of competition only works if theres a robust healthcare provider market; so even in cities, if a provider network has a monopoly (or close to it), it's hard for any real competition to exist among ACA insurers (and therefore, premiums are likely to be higher). 
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Now, for the good stuff (the good stuff being my probably bad ideas)
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](subpage.html) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/jaketg97/test/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
-
-[Absolute Link](https://jaketg97.github.io/test/subpage)
-[Relative Link](subpage)
