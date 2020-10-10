@@ -111,9 +111,14 @@ knitr::kable(retention_judges, format = "html")
 
 ```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 boyle_PJ <- subset(original_subset, original_subset$counter_PJ==1 & original_subset$SENTENCE_JUDGE=="Maura  Slattery Boyle")
+over_500 <- subset(original_subset, original_subset$SENTENCE_JUDGE %in% judge_rankings$judges)
+over_500_pj <- subset(over_500, counter_PJ == 1)
 original_subset_PJ <- subset(original_subset, counter_PJ == 1)
 original_subset_PJ$boyle_dummy <- original_subset_PJ$SENTENCE_JUDGE == "Maura  Slattery Boyle"
 original_subset_PJ$sentence_year.f <- factor(original_subset_PJ$sentence_year)
+over_500_pj$sentence_year.f <- factor(over_500_pj$sentence_year)
+over_500_pj$judge.f <- factor(over_500_pj$SENTENCE_JUDGE)
 boyle_mod <- lm(counter_abovemedian ~ boyle_dummy + sentence_date + sentence_year.f, data = original_subset_PJ)
+all_fixed_mod <- lm(counter_abovemedian ~ judge.f + sentence_date + sentence_year.f, data = over_500_pj)
 coeftest(boyle_mod, vcov = vcovHC(boyle_mod, type="HC0"))
 ```
