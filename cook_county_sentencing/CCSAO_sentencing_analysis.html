@@ -685,58 +685,236 @@ Steven G Watkins
 <div id="significance-tests-for-slattery-boyle" class="section level1">
 <h1>Significance Tests for Slattery Boyle</h1>
 <pre class="r"><code>boyle_PJ &lt;- subset(original_subset, original_subset$counter_PJ == 
-    1 &amp; original_subset$SENTENCE_JUDGE == &quot;Maura  Slattery Boyle&quot;)
-original_subset_PJ &lt;- subset(original_subset, counter_PJ == 1)
-original_subset_PJ$boyle_dummy &lt;- original_subset_PJ$SENTENCE_JUDGE == 
+    1 &amp; original_subset$SENTENCE_JUDGE == &quot;Maura Slattery Boyle&quot;)
+over_500 &lt;- subset(original_subset, original_subset$SENTENCE_JUDGE %in% 
+    judge_rankings$judges)
+over_500_pj &lt;- subset(over_500, counter_PJ == 1)
+original_subset_pj &lt;- subset(original_subset, counter_PJ == 1)
+over_500_pj$sentence_year.f &lt;- factor(over_500_pj$sentence_year)
+over_500_pj$judge.f &lt;- factor(over_500_pj$SENTENCE_JUDGE)
+over_500_pj$boyle_dummy &lt;- over_500_pj$SENTENCE_JUDGE == &quot;Maura  Slattery Boyle&quot;
+original_subset_pj$sentence_year.f &lt;- factor(original_subset_pj$sentence_year)
+original_subset_pj$boyle_dummy &lt;- original_subset_pj$SENTENCE_JUDGE == 
     &quot;Maura  Slattery Boyle&quot;
-original_subset_PJ$sentence_year.f &lt;- factor(original_subset_PJ$sentence_year)
-boyle_mod &lt;- lm(counter_abovemedian ~ boyle_dummy + sentence_date + 
-    sentence_year.f, data = original_subset_PJ)
-coeftest(boyle_mod, vcov = vcovHC(boyle_mod, type = &quot;HC0&quot;))</code></pre>
-<pre><code>## 
-## t test of coefficients:
-## 
-##                        Estimate  Std. Error t value  Pr(&gt;|t|)    
-## (Intercept)          1.2464e+00  1.9336e-01  6.4459 1.153e-10 ***
-## boyle_dummyTRUE      7.8017e-02  1.0753e-02  7.2556 4.022e-13 ***
-## sentence_date        1.7073e-05  1.3400e-05  1.2741 0.2026184    
-## sentence_year.f1991 -3.8080e-01  2.9887e-01 -1.2741 0.2026184    
-## sentence_year.f1992 -3.8498e-01  3.0215e-01 -1.2741 0.2026184    
-## sentence_year.f2001 -4.4053e-01  3.4575e-01 -1.2741 0.2026184    
-## sentence_year.f2002 -1.4497e+00  3.5293e-01 -4.1076 4.001e-05 ***
-## sentence_year.f2006 -4.7325e-01  3.7143e-01 -1.2741 0.2026184    
-## sentence_year.f2007 -9.7997e-01  5.1797e-01 -1.8919 0.0585003 .  
-## sentence_year.f2008 -4.8525e-01  3.8084e-01 -1.2741 0.2026184    
-## sentence_year.f2009 -8.7686e-01  4.2135e-01 -2.0811 0.0374306 *  
-## sentence_year.f2010 -6.8222e-01  3.9425e-01 -1.7304 0.0835553 .  
-## sentence_year.f2011 -9.9228e-01  3.9651e-01 -2.5025 0.0123319 *  
-## sentence_year.f2012 -1.0439e+00  4.0136e-01 -2.6009 0.0092998 ** 
-## sentence_year.f2013 -1.0320e+00  4.0628e-01 -2.5401 0.0110818 *  
-## sentence_year.f2014 -1.0411e+00  4.1110e-01 -2.5326 0.0113248 *  
-## sentence_year.f2015 -1.0597e+00  4.1597e-01 -2.5475 0.0108510 *  
-## sentence_year.f2016 -1.0778e+00  4.2092e-01 -2.5605 0.0104529 *  
-## sentence_year.f2017 -1.0770e+00  4.2583e-01 -2.5292 0.0114343 *  
-## sentence_year.f2018 -1.0750e+00  4.3064e-01 -2.4963 0.0125515 *  
-## sentence_year.f2019 -1.1033e+00  4.3549e-01 -2.5334 0.0112969 *  
-## sentence_year.f2020 -1.1130e+00  4.3934e-01 -2.5333 0.0112993 *  
-## sentence_year.f2021 -1.5668e+00  4.4484e-01 -3.5221 0.0004283 ***
-## sentence_year.f2022 -1.5726e+00  4.4940e-01 -3.4993 0.0004666 ***
-## sentence_year.f2026 -1.2657e+00  5.4261e-01 -2.3326 0.0196709 *  
-## sentence_year.f2029 -6.1476e-01  4.8249e-01 -1.2741 0.2026184    
-## sentence_year.f2041 -1.6910e+00  5.4234e-01 -3.1180 0.0018212 ** 
-## sentence_year.f2051 -1.0037e+00  6.2990e-01 -1.5934 0.1110747    
-## sentence_year.f2108 -2.1882e+00  8.7153e-01 -2.5108 0.0120468 *  
-## sentence_year.f2109 -1.4483e+00  9.1667e-01 -1.5800 0.1141136    
-## sentence_year.f2119 -1.1767e+00  9.2353e-01 -1.2741 0.2026184    
-## sentence_year.f2201 -2.6913e+00  1.3275e+00 -2.0275 0.0426177 *  
-## sentence_year.f2212 -2.4251e+00  1.4067e+00 -1.7240 0.0847125 .  
-## sentence_year.f2216 -2.7820e+00  1.3986e+00 -1.9892 0.0466864 *  
-## sentence_year.f2218 -1.7984e+00  1.4115e+00 -1.2741 0.2026184    
-## sentence_year.f2914 -6.9147e+00  4.8185e+00 -1.4350 0.1512811    
-## sentence_year.f2915 -6.1407e+00  4.8195e+00 -1.2741 0.2026184    
-## sentence_year.f2917 -6.1536e+00  4.8296e+00 -1.2741 0.2026184    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+boyle_reg_over500 &lt;- lm(counter_abovemedian ~ boyle_dummy + sentence_date + 
+    sentence_year.f, data = over_500_pj)
+cov &lt;- vcovHC(boyle_reg_over500, type = &quot;HC&quot;)
+over_500_robust.se &lt;- sqrt(diag(cov))
+boyle_reg_all &lt;- lm(counter_abovemedian ~ boyle_dummy + sentence_date + 
+    sentence_year.f, data = original_subset_pj)
+cov &lt;- vcovHC(boyle_reg_all, type = &quot;HC&quot;)
+all_robust.se &lt;- sqrt(diag(cov))
+stargazer(boyle_reg_all, boyle_reg_over500, column.labels = c(&quot;Overall&quot;, 
+    &quot;Only judges &gt;500 sentences&quot;), align = TRUE, type = &quot;html&quot;, 
+    omit = &quot;sentence_year.f&quot;)</code></pre>
+<table style="text-align:center">
+<tr>
+<td colspan="3" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="2">
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="2">
+counter_abovemedian
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+Overall
+</td>
+<td>
+Only judges &gt;500 sentences
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(1)
+</td>
+<td>
+(2)
+</td>
+</tr>
+<tr>
+<td colspan="3" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+boyle_dummy
+</td>
+<td>
+0.078<sup>***</sup>
+</td>
+<td>
+0.078<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.011)
+</td>
+<td>
+(0.011)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+sentence_date
+</td>
+<td>
+0.00002
+</td>
+<td>
+0.00002
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.00001)
+</td>
+<td>
+(0.00001)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+1.246<sup>**</sup>
+</td>
+<td>
+1.259<sup>**</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.535)
+</td>
+<td>
+(0.536)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="3" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+129,586
+</td>
+<td>
+124,964
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.002
+</td>
+<td>
+0.002
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.002
+</td>
+<td>
+0.002
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+0.499 (df = 129548)
+</td>
+<td>
+0.499 (df = 124930)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+F Statistic
+</td>
+<td>
+8.700<sup>***</sup> (df = 37; 129548)
+</td>
+<td>
+8.976<sup>***</sup> (df = 33; 124930)
+</td>
+</tr>
+<tr>
+<td colspan="3" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td colspan="2" style="text-align:right">
+<sup><em></sup>p&lt;0.1; <sup><strong></sup>p&lt;0.05; <sup></strong></em></sup>p&lt;0.01
+</td>
+</tr>
+</table>
 </div>
 
 

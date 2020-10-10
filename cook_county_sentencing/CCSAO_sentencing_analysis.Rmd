@@ -20,6 +20,7 @@ library(boot)
 library(lubridate)
 library(lmtest)
 library(sandwich)
+library(stargazer)
 ```
 What follows is the methodology for my sentencing analysis on Cook County Criminal Division judges. All work was done in R. The R code is here, at my GitHub; since the data is read in from the Cook County Online Data portal, my work can easily be re-created or expanded upon.
 
@@ -109,16 +110,21 @@ knitr::kable(retention_judges, format = "html")
 
 # Significance Tests for Slattery Boyle 
 
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
-boyle_PJ <- subset(original_subset, original_subset$counter_PJ==1 & original_subset$SENTENCE_JUDGE=="Maura  Slattery Boyle")
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60), results="asis"}
+boyle_PJ <- subset(original_subset, original_subset$counter_PJ==1 & original_subset$SENTENCE_JUDGE=="Maura Slattery Boyle")
 over_500 <- subset(original_subset, original_subset$SENTENCE_JUDGE %in% judge_rankings$judges)
 over_500_pj <- subset(over_500, counter_PJ == 1)
-original_subset_PJ <- subset(original_subset, counter_PJ == 1)
-original_subset_PJ$boyle_dummy <- original_subset_PJ$SENTENCE_JUDGE == "Maura  Slattery Boyle"
-original_subset_PJ$sentence_year.f <- factor(original_subset_PJ$sentence_year)
+original_subset_pj <- subset(original_subset, counter_PJ == 1)
 over_500_pj$sentence_year.f <- factor(over_500_pj$sentence_year)
 over_500_pj$judge.f <- factor(over_500_pj$SENTENCE_JUDGE)
-boyle_mod <- lm(counter_abovemedian ~ boyle_dummy + sentence_date + sentence_year.f, data = original_subset_PJ)
-all_fixed_mod <- lm(counter_abovemedian ~ judge.f + sentence_date + sentence_year.f, data = over_500_pj)
-coeftest(boyle_mod, vcov = vcovHC(boyle_mod, type="HC0"))
+over_500_pj$boyle_dummy <- over_500_pj$SENTENCE_JUDGE == "Maura  Slattery Boyle"
+original_subset_pj$sentence_year.f <- factor(original_subset_pj$sentence_year)
+original_subset_pj$boyle_dummy <- original_subset_pj$SENTENCE_JUDGE == "Maura  Slattery Boyle"
+boyle_reg_over500 <- lm(counter_abovemedian ~ boyle_dummy + sentence_date + sentence_year.f, data = over_500_pj)
+cov <- vcovHC(boyle_reg_over500, type = "HC") 
+over_500_robust.se <- sqrt(diag(cov))
+boyle_reg_all <- lm(counter_abovemedian ~ boyle_dummy + sentence_date + sentence_year.f, data = original_subset_pj)
+cov <- vcovHC(boyle_reg_all, type = "HC") 
+all_robust.se <- sqrt(diag(cov))
+stargazer(boyle_reg_all, boyle_reg_over500, column.labels=c("Overall","Only judges >500 sentences"), align=TRUE, type = "html", omit = "sentence_year.f")
 ```
