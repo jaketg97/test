@@ -705,8 +705,8 @@ boyle_reg_all &lt;- lm(counter_abovemedian ~ boyle_dummy + sentence_date +
 cov &lt;- vcovHC(boyle_reg_all, type = &quot;HC&quot;)
 all_robust.se &lt;- sqrt(diag(cov))
 stargazer(boyle_reg_all, boyle_reg_over500, column.labels = c(&quot;Overall&quot;, 
-    &quot;Only judges &gt;500 sentences&quot;), align = TRUE, type = &quot;html&quot;, 
-    omit = &quot;sentence_year.f&quot;)</code></pre>
+    &quot;Only judges &gt;500 sentences&quot;), se = list(all_robust.se, over_500_robust.se), 
+    align = TRUE, type = &quot;html&quot;, omit = &quot;sentence_year.f&quot;, notes = &quot;Also controlling for sentence year fixed effects&quot;)</code></pre>
 <table style="text-align:center">
 <tr>
 <td colspan="3" style="border-bottom: 1px solid black">
@@ -819,20 +819,20 @@ sentence_date
 Constant
 </td>
 <td>
-1.246<sup>**</sup>
+1.246<sup>***</sup>
 </td>
 <td>
-1.259<sup>**</sup>
+1.259<sup>***</sup>
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
 </td>
 <td>
-(0.535)
+(0.193)
 </td>
 <td>
-(0.536)
+(0.197)
 </td>
 </tr>
 <tr>
@@ -912,6 +912,13 @@ F Statistic
 </td>
 <td colspan="2" style="text-align:right">
 <sup><em></sup>p&lt;0.1; <sup><strong></sup>p&lt;0.05; <sup></strong></em></sup>p&lt;0.01
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="2" style="text-align:right">
+Also controlling for sentence year fixed effects
 </td>
 </tr>
 </table>

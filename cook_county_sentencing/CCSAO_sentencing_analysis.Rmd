@@ -126,5 +126,5 @@ over_500_robust.se <- sqrt(diag(cov))
 boyle_reg_all <- lm(counter_abovemedian ~ boyle_dummy + sentence_date + sentence_year.f, data = original_subset_pj)
 cov <- vcovHC(boyle_reg_all, type = "HC") 
 all_robust.se <- sqrt(diag(cov))
-stargazer(boyle_reg_all, boyle_reg_over500, column.labels=c("Overall","Only judges >500 sentences"), align=TRUE, type = "html", omit = "sentence_year.f")
+stargazer(boyle_reg_all, boyle_reg_over500, column.labels=c("Overall","Only judges >500 sentences"), se = list(all_robust.se, over_500_robust.se), align=TRUE, type = "html", omit = "sentence_year.f", notes = "Also controlling for sentence year fixed effects")
 ```
