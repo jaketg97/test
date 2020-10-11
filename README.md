@@ -1,6 +1,6 @@
 ## Hi there!
 
-My name's Jake, and I'm an aspiring applied microeconomist hoping to specialize in public or labor economics. Right now I'm working as a research analyst at Northwestern University in the Global Poverty Research Lab; I plan on applying to Econ PhD programs next fall (Autumn 2021). I use this site to share/work through my personal research (i.e. a sounding board for my half baked ideas). **To be clear, all work shared here is preliminary and personal unless stated otherwise** (don't blame my employer for any of my shoddy work). Critiques are welcome at jaketg97@gmail.com. Before we get to the undeveloped ideas though, here are some shameless plugs...
+My name's Jake, and I'm an aspiring applied microeconomist hoping to specialize in public or labor economics. Right now I'm working as a research analyst at Northwestern University in the Global Poverty Research Lab; I plan on applying to Econ PhD programs next fall (Autumn 2021). I use this site as a sounding board for my half baked ideas. **To be clear, all work shared here is preliminary and personal unless stated otherwise** (don't blame my employer for any of my shoddy work). Critiques are welcome at jaketg97@gmail.com. Before we get to the undeveloped ideas though, here are some shameless plugs...
 
 [Here's my CV](main_files/Gosselin, Jacob - CV.pdf) &nbsp; &nbsp; [And my twitter](https://twitter.com/jaketg97) &nbsp; &nbsp; [And my LinkedIn](https://www.linkedin.com/in/jacobgosselin/) 
 
@@ -10,4 +10,4 @@ My name's Jake, and I'm an aspiring applied microeconomist hoping to specialize 
 - **[Insurer Competition in the Age of Provider Consolidation](main_files/Insurer Competition in the Age of Provider Consolidation.pdf):** Wow that's a mouthful. Undergraduate thesis completed with the help of my wonderful advisor Professor Colleen Grogan. Using public data from CMS, and private data from the American Hospital Association (AHA), I tried to measure the impact of reduced healthcare provider competition on competition and prices in ACA exchanges. Imperfect work, but I think the general findings are correct.
 
 ## Now, for the good stuff (the good stuff being my probably bad ideas)
-
+- **[test](cook_county_sentencing/test.md)**
