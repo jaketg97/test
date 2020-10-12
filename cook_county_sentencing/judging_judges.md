@@ -22,7 +22,7 @@ The first half of my code is dedicated to creating a "severity metric". This is 
 
 I average those two measures to create my severity metric. I drop all judges who have served on less than 500 case (I like to deal in large sample sizes; the outcomes for judges who haven't served on many cases could be misleading). From there I just abbreviated the list and ordered it to make it tidy. I export the full list of 90 judges, ranked, to a CSV you can find [here](judge_rankings.csv). Below you can see the judges included in the list who are on the ballot for retention November 3rd, with their relative rank within the list of 90 judges by my "severity metric".
 
-<table><table style="text-align:center"><tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td>Judges</td><td>% prison/jail sentences above median</td><td>% Class 4 felonies sentenced to prison/jail</td><td>Severity metric</td></tr>
+  <table style="text-align:center"><tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td>Judges</td><td>% prison/jail sentences above median</td><td>% Class 4 felonies sentenced to prison/jail</td><td>Severity metric</td></tr>
 <tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">3</td><td>URSULA WALOWSKI</td><td>0.505</td><td>0.670</td><td>0.588</td></tr>
 <tr><td style="text-align:left">24</td><td>Araujo, Mauricio</td><td>0.522</td><td>0.559</td><td>0.540</td></tr>
 <tr><td style="text-align:left">25</td><td>Byrne, Thomas</td><td>0.537</td><td>0.538</td><td>0.538</td></tr>
@@ -32,8 +32,8 @@ I average those two measures to create my severity metric. I drop all judges who
 <tr><td style="text-align:left">64</td><td>Shelley Sutker-Dermer</td><td>0.411</td><td>0.502</td><td>0.456</td></tr>
 <tr><td style="text-align:left">70</td><td>Kerry M Kennedy</td><td>0.352</td><td>0.534</td><td>0.443</td></tr>
 <tr><td style="text-align:left">75</td><td>Steven G Watkins</td><td>0.367</td><td>0.496</td><td>0.431</td></tr>
-<tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr></table>
-<br>
+<tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr>
+</table>
 
 ## Checking significance
 
@@ -57,7 +57,6 @@ So, below I have five regression tables for five judges: Maura Slattery Boyle (s
 
 **Judge Slattery Boyle**
 
-<table>
 <table style="text-align:center"><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:</em></td></tr>
 <tr><td></td><td colspan="3" style="border-bottom: 1px solid black"></td></tr>
 <tr><td style="text-align:left"></td><td>Above median sentence</td><td>Class 4 prison sentence</td><td>Severe sentence</td></tr>
@@ -78,8 +77,7 @@ So, below I have five regression tables for five judges: Maura Slattery Boyle (s
 </table>
 
 **Judge Walowski**
-
-<table>
+  
   <table style="text-align:center"><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:</em></td></tr>
 <tr><td></td><td colspan="3" style="border-bottom: 1px solid black"></td></tr>
 <tr><td style="text-align:left"></td><td>Above median sentence</td><td>Class 4 prison sentence</td><td>Severe sentence</td></tr>
@@ -98,10 +96,11 @@ So, below I have five regression tables for five judges: Maura Slattery Boyle (s
 <tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="3" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
 <tr><td style="text-align:left"></td><td colspan="3" style="text-align:right">Also controlling for sentence year fixed effects</td></tr>
 </table>
-<br>
+
 **Judge Araujo**
 
 <table>
+  
   <table style="text-align:center"><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:</em></td></tr>
 <tr><td></td><td colspan="3" style="border-bottom: 1px solid black"></td></tr>
 <tr><td style="text-align:left"></td><td>Above median sentence</td><td>Class 4 prison sentence</td><td>Severe sentence</td></tr>
@@ -119,11 +118,11 @@ So, below I have five regression tables for five judges: Maura Slattery Boyle (s
 <tr><td style="text-align:left">Adjusted R<sup>2</sup></td><td>0.002</td><td>0.003</td><td>0.001</td></tr>
 <tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="3" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
 <tr><td style="text-align:left"></td><td colspan="3" style="text-align:right">Also controlling for sentence year fixed effects</td></tr>
+
 </table>
 
 **Judge Byrne**
 
-<table>
   <table style="text-align:center"><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:</em></td></tr>
 <tr><td></td><td colspan="3" style="border-bottom: 1px solid black"></td></tr>
 <tr><td style="text-align:left"></td><td>Above median sentence</td><td>Class 4 prison sentence</td><td>Severe sentence</td></tr>
@@ -142,10 +141,9 @@ So, below I have five regression tables for five judges: Maura Slattery Boyle (s
 <tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="3" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
 <tr><td style="text-align:left"></td><td colspan="3" style="text-align:right">Also controlling for sentence year fixed effects</td></tr>
 </table>
-<br>
+
 **Judge Raines**
 
-<table>
   <table style="text-align:center"><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:</em></td></tr>
 <tr><td></td><td colspan="3" style="border-bottom: 1px solid black"></td></tr>
 <tr><td style="text-align:left"></td><td>Above median sentence</td><td>Class 4 prison sentence</td><td>Severe sentence</td></tr>
