@@ -44,7 +44,7 @@ Two years ago, when I was only looking at Judge Maura Slattery Boyle, I did this
 
 In retrospect, this approach wasn’t particularly elegant or effective. I didn’t want to do a simple linear regression because I was dealing with two dummy variables, and the distribution of the regression residuals wouldn’t be even close to normal. My understanding then (and now, although I’d love if someone could walk me through this like I was 5) was that while non-normal residuals don’t violate the Gauss-Markov theorem, they did make it impossible to interpret the t statistics/p-values produced, and the p-value was all I really wanted.
 
-![This is still super ugly, someone explain if that means the coefficients are useless, I clearly don't remember my college `metrics course well](boyle_3_qq.png)
+![This is still super ugly, someone explain if that means the coefficients are useless, I clearly don't remember my college metrics course well](boyle_3_qq.png)
 
 Looking back now, I’ve had a change of heart for two reasons. 
 1. As long as the Gauss-Markov assumptions are satisfied (we can adjust for heteroskedasticity using robust standard errors), the coefficient produced by my linear regression is still BLUE and consistent, meaning that given the massive sample size offered by this data (well over 100k cases), I feel more comfortable interpreting the coefficient than I did then. 
