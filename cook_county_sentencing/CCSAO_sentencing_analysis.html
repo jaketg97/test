@@ -373,7 +373,6 @@ summary {
 <div id="reading-in-dataconverting-sentence-term" class="section level1">
 <h1>Reading in Data/Converting Sentence Term</h1>
 <p>We’ll start by reading in our sentencing <a href="https://datacatalog.cookcountyil.gov/Courts/Sentencing/tg8v-tm6u">data</a>. We’ll then create a conversion table to standardize our units (i.e. years=1, months=1/12, weeks=1/52, days=1/365, all other units are left undefined but the rows are kept). We’ll then convert our sentence (i.e. 6 months=.5), and store it under a new variable, “converted_sentence”.</p>
-<pre class="r"><code>original &lt;- read_csv(&quot;https://datacatalog.cookcountyil.gov/api/views/tg8v-tm6u/rows.csv?accessType=DOWNLOAD&quot;)</code></pre>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   .default = col_character(),
@@ -399,113 +398,37 @@ summary {
 ## 2217 INCIDENT_CITY 1/0/T/F/TRUE/FALSE Chicago      'https://datacatalog.cookcountyil.gov/api/views/tg8v-tm6u/rows.csv?accessType=DOWNLOAD'
 ## .... ............. .................. ............ .......................................................................................
 ## See problems(...) for more details.</code></pre>
-<pre class="r"><code>conversion_table &lt;- revalue(original$COMMITMENT_UNIT, c(`Year(s)` = 1, 
-    Months = 1/12, Weeks = 1/52, Days = 1/365, Pounds = NA, Dollars = NA, 
-    Term = NA))
-conversion_table &lt;- as.double(conversion_table)</code></pre>
 <pre><code>## Warning: NAs introduced by coercion</code></pre>
-<pre class="r"><code>original[&quot;converted_sentence&quot;] &lt;- ifelse(original$COMMITMENT_UNIT == 
-    &quot;Natural Life&quot;, 100, conversion_table * as.double(original$COMMITMENT_TERM))</code></pre>
 <pre><code>## Warning in ifelse(original$COMMITMENT_UNIT == &quot;Natural Life&quot;, 100,
 ## conversion_table * : NAs introduced by coercion</code></pre>
-<pre class="r"><code>original[&quot;sentence_date&quot;] &lt;- as.Date(original$SENTENCE_DATE, 
-    &quot;%m/%d/%Y&quot;)
-original[&quot;sentence_year&quot;] &lt;- year(original$sentence_date)</code></pre>
 </div>
 <div id="finding-median-sentences-by-felony-class" class="section level1">
 <h1>Finding median sentences by felony class</h1>
 <p>We’ll now create a series of subsets, to find median sentences. We’re going to create a subset for class 1, 2, 3, 4, and X felonies. This will exclude 2792 cases, which are filed under class A, B, C, M, O, P, U, or Z felonies. A lot of these are mistaken filings, but we don’t want to assign them. Since the sample size is large, we’re better of ignoring them (they only make up &lt;2% of cases).</p>
 <p>We’re also going to create further subsets (PJ) for sentences to Prison or Jail. We’ll use these to find median sentences; while it eliminates a good chunk of our cases (~41%), you have to do this to get an accurate read on median sentence time. Otherwise, a two year probation will skew our median, since that will be considered harsher than a one year prison sentence.</p>
-<pre class="r"><code>CLASS_1 &lt;- subset(original, DISPOSITION_CHARGED_CLASS == &quot;1&quot;)
-CLASS_2 &lt;- subset(original, DISPOSITION_CHARGED_CLASS == &quot;2&quot;)
-CLASS_3 &lt;- subset(original, DISPOSITION_CHARGED_CLASS == &quot;3&quot;)
-CLASS_4 &lt;- subset(original, DISPOSITION_CHARGED_CLASS == &quot;4&quot;)
-CLASS_X &lt;- subset(original, DISPOSITION_CHARGED_CLASS == &quot;X&quot;)
-CLASS_1_PJ &lt;- subset(original, DISPOSITION_CHARGED_CLASS == &quot;1&quot; &amp; 
-    (SENTENCE_TYPE == &quot;Prison&quot; | SENTENCE_TYPE == &quot;Jail&quot;))
-CLASS_2_PJ &lt;- subset(original, DISPOSITION_CHARGED_CLASS == &quot;2&quot; &amp; 
-    (SENTENCE_TYPE == &quot;Prison&quot; | SENTENCE_TYPE == &quot;Jail&quot;))
-CLASS_3_PJ &lt;- subset(original, DISPOSITION_CHARGED_CLASS == &quot;3&quot; &amp; 
-    (SENTENCE_TYPE == &quot;Prison&quot; | SENTENCE_TYPE == &quot;Jail&quot;))
-CLASS_4_PJ &lt;- subset(original, DISPOSITION_CHARGED_CLASS == &quot;4&quot; &amp; 
-    (SENTENCE_TYPE == &quot;Prison&quot; | SENTENCE_TYPE == &quot;Jail&quot;))
-CLASS_X_PJ &lt;- subset(original, DISPOSITION_CHARGED_CLASS == &quot;X&quot; &amp; 
-    (SENTENCE_TYPE == &quot;Prison&quot; | SENTENCE_TYPE == &quot;Jail&quot;))
-original_PJ &lt;- subset(original, SENTENCE_TYPE == &quot;Prison&quot; | SENTENCE_TYPE == 
-    &quot;Jail&quot;)
-median_1 &lt;- median(CLASS_1_PJ$converted_sentence, na.rm = TRUE)
-median_2 &lt;- median(CLASS_2_PJ$converted_sentence, na.rm = TRUE)
-median_3 &lt;- median(CLASS_3_PJ$converted_sentence, na.rm = TRUE)
-median_4 &lt;- median(CLASS_4_PJ$converted_sentence, na.rm = TRUE)
-median_X &lt;- median(CLASS_X_PJ$converted_sentence, na.rm = TRUE)
-median_1</code></pre>
 <pre><code>## [1] 5.5</code></pre>
-<pre class="r"><code>median_2</code></pre>
 <pre><code>## [1] 4</code></pre>
-<pre class="r"><code>median_3</code></pre>
 <pre><code>## [1] 2.25</code></pre>
-<pre class="r"><code>median_4</code></pre>
 <pre><code>## [1] 1</code></pre>
-<pre class="r"><code>median_X</code></pre>
 <pre><code>## [1] 10</code></pre>
 <p>The outputs are our median prison sentences by felony class.</p>
 </div>
 <div id="creating-severity-ranking" class="section level1">
 <h1>Creating Severity Ranking</h1>
 <p>Now we construct our ranking of Criminal Division judges by sentence severity. First we’re going to create a subset of our original which solely includes felonies of class 1, 2, 3, 4, and X (which is the vast majority of entries). Then we’re going to create a boolean for whether the charge resulted in prison time, and if so, whether that prison sentence was above the median.</p>
-<pre class="r"><code>original_subset &lt;- subset(original, DISPOSITION_CHARGED_CLASS == 
-    &quot;1&quot; | DISPOSITION_CHARGED_CLASS == &quot;2&quot; | DISPOSITION_CHARGED_CLASS == 
-    &quot;3&quot; | DISPOSITION_CHARGED_CLASS == &quot;4&quot; | DISPOSITION_CHARGED_CLASS == 
-    &quot;X&quot;)
-conversion_table2 &lt;- revalue(original_subset$SENTENCE_TYPE, c(Prison = TRUE, 
-    Jail = TRUE))
-original_subset[&quot;PJ&quot;] = conversion_table2
-above_median &lt;- (original_subset$PJ == TRUE &amp; ((original_subset$DISPOSITION_CHARGED_CLASS == 
-    &quot;1&quot; &amp; original_subset$converted_sentence &gt; median_1) | (original_subset$DISPOSITION_CHARGED_CLASS == 
-    &quot;2&quot; &amp; original_subset$converted_sentence &gt; median_2) | (original_subset$DISPOSITION_CHARGED_CLASS == 
-    &quot;3&quot; &amp; original_subset$converted_sentence &gt; median_3) | (original_subset$DISPOSITION_CHARGED_CLASS == 
-    &quot;4&quot; &amp; original_subset$converted_sentence &gt; median_4) | (original_subset$DISPOSITION_CHARGED_CLASS == 
-    &quot;X&quot; &amp; original_subset$converted_sentence &gt; median_X)))
-original_subset[&quot;above_median&quot;] &lt;- above_median</code></pre>
-<p>Now we are ready to make our ranking. We’ll create a counter (a simple boolean, 1 if true, 0 if false) for: 1. Each sentence (i.e. 1 always) 2. Whether the sentence resulted in prison or jail time 3. If the sentence resulted in prison or jail time, whether the sentence was above the median for that felony class 4-7. Whether the sentence was on a Class 1/2/3/4 felony respectively 8. Whether the sentence was on a class 4 felony and resulted in prison time.</p>
-<p>Then we’ll aggregate our counters by judge (i.e. sum each counter, grouped by the sentencing judge), and calculate the percent of prison sentences above the median/the percent of class 4 felony sentences resulting in prison time. We’ll average it to create our severity metric. I drop all judges who have served on less than 500 case (I like to deal in large sample sizes; the outcomes for judges who haven’t served on many cases could be misleading). From there I just abbreviated the list and ordered it to make it tidy.</p>
-<pre class="r"><code>original_subset &lt;- subset(original_subset, original_subset$SENTENCE_TYPE == 
-    &quot;Prison&quot; | original_subset$SENTENCE_TYPE == &quot;Jail&quot; | original_subset$SENTENCE_TYPE == 
-    &quot;Probation&quot;)
-original_subset$counter &lt;- 1
-original_subset$counter_PJ &lt;- ifelse(original_subset$SENTENCE_TYPE == 
-    &quot;Prison&quot; | original_subset$SENTENCE_TYPE == &quot;Jail&quot;, 1, 0)
-original_subset$counter_abovemedian &lt;- ifelse(original_subset$above_median == 
-    TRUE &amp; original_subset$counter_PJ == 1, 1, 0)
-original_subset$counter_F1 &lt;- ifelse(original_subset$DISPOSITION_CHARGED_CLASS == 
-    1, 1, 0)
-original_subset$counter_F2 &lt;- ifelse(original_subset$DISPOSITION_CHARGED_CLASS == 
-    2, 1, 0)
-original_subset$counter_F3 &lt;- ifelse(original_subset$DISPOSITION_CHARGED_CLASS == 
-    3, 1, 0)
-original_subset$counter_F4 &lt;- ifelse(original_subset$DISPOSITION_CHARGED_CLASS == 
-    4, 1, 0)
-original_subset$counter_F4_pj &lt;- ifelse(original_subset$DISPOSITION_CHARGED_CLASS == 
-    4 &amp; original_subset$SENTENCE_TYPE != &quot;Probation&quot;, 1, 0)
-judge_rankings &lt;- aggregate(original_subset[47:54], by = list(judges = original_subset$SENTENCE_JUDGE), 
-    FUN = sum, na.rm = TRUE)
-judge_rankings &lt;- subset(judge_rankings, judge_rankings$counter &gt;= 
-    500)
-judge_rankings$percentabove &lt;- judge_rankings$counter_abovemedian/judge_rankings$counter_PJ
-judge_rankings$class4prisonpercent &lt;- judge_rankings$counter_F4_pj/judge_rankings$counter_F4
-judge_rankings$severity_metric &lt;- (judge_rankings$percentabove + 
-    judge_rankings$class4prisonpercent)/2
-judge_rankings_abb &lt;- data.frame(judge_rankings$judges, judge_rankings$percentabove, 
-    judge_rankings$class4prisonpercent, judge_rankings$severity_metric)
-colnames(judge_rankings_abb) &lt;- c(&quot;Judges&quot;, &quot;Percent of Prison Sentences Above The Median&quot;, 
-    &quot;Percent of Class 4 Felony Prison Sentences&quot;, &quot;Severity Metric&quot;)
-judge_rankings_abb &lt;- arrange(judge_rankings_abb, desc(judge_rankings_abb$`Severity Metric`))
-retention_judges &lt;- subset(judge_rankings_abb, Judges == &quot;Shelley  Sutker-Dermer&quot; | 
-    Judges == &quot;Kenneth J Wadas&quot; | Judges == &quot;Kerry M Kennedy&quot; | 
-    Judges == &quot;Araujo, Mauricio&quot; | Judges == &quot;Byrne, Thomas&quot; | 
-    Judges == &quot;Anna Helen Demacopoulos&quot; | Judges == &quot;URSULA  WALOWSKI&quot; | 
-    Judges == &quot;Steven G Watkins&quot; | Judges == &quot;William  Raines&quot;)
-knitr::kable(retention_judges, format = &quot;html&quot;)</code></pre>
+<p>Now we are ready to make our ranking. We’ll create a counter (a simple boolean, 1 if true, 0 if false) for:</p>
+<ol style="list-style-type: decimal">
+<li>Each sentence (i.e. 1 always)</li>
+<li>Whether the sentence resulted in prison or jail time</li>
+<li>If the sentence resulted in prison or jail time, whether the sentence was above the median for that felony class</li>
+<li>Whether the sentence was on a Class 1 felony</li>
+<li>Whether the sentence was a Class 2 felony</li>
+<li>Whether the sentence was a Class 3 felony</li>
+<li>Whether the sentence was a Class 4 felony<br />
+</li>
+<li>Whether the sentence was on a class 4 felony and resulted in prison time.</li>
+</ol>
+<p>Then we’ll aggregate our counters by judge (i.e. sum each counter, grouped by the sentencing judge), and calculate the percent of prison sentences above the median/the percent of class 4 felony sentences resulting in prison time. We’ll average it to create our severity metric. I drop all judges who have served on less than 500 case (I like to deal in large sample sizes; the outcomes for judges who haven’t served on many cases could be misleading). From there I just abbreviated the list and ordered it to make it tidy. I export the full list of 90 judges, ranked, to judge_rankings.csv. I also display the judges included in the list who are on the ballot for retention November 3rd, with their relative rank within the list of 90 judges by my “severity metric”.</p>
 <table>
 <thead>
 <tr>
@@ -682,64 +605,47 @@ Steven G Watkins
 </tbody>
 </table>
 </div>
-<div id="significance-tests-for-slattery-boyle" class="section level1">
-<h1>Significance Tests for Slattery Boyle</h1>
-<pre class="r"><code>boyle_PJ &lt;- subset(original_subset, original_subset$counter_PJ == 
-    1 &amp; original_subset$SENTENCE_JUDGE == &quot;Maura Slattery Boyle&quot;)
-over_500 &lt;- subset(original_subset, original_subset$SENTENCE_JUDGE %in% 
-    judge_rankings$judges)
-over_500_pj &lt;- subset(over_500, counter_PJ == 1)
-original_subset_pj &lt;- subset(original_subset, counter_PJ == 1)
-over_500_pj$sentence_year.f &lt;- factor(over_500_pj$sentence_year)
-over_500_pj$judge.f &lt;- factor(over_500_pj$SENTENCE_JUDGE)
-over_500_pj$boyle_dummy &lt;- over_500_pj$SENTENCE_JUDGE == &quot;Maura  Slattery Boyle&quot;
-original_subset_pj$sentence_year.f &lt;- factor(original_subset_pj$sentence_year)
-original_subset_pj$boyle_dummy &lt;- original_subset_pj$SENTENCE_JUDGE == 
-    &quot;Maura  Slattery Boyle&quot;
-boyle_reg_over500 &lt;- lm(counter_abovemedian ~ boyle_dummy + sentence_date + 
-    sentence_year.f, data = over_500_pj)
-cov &lt;- vcovHC(boyle_reg_over500, type = &quot;HC&quot;)
-over_500_robust.se &lt;- sqrt(diag(cov))
-boyle_reg_all &lt;- lm(counter_abovemedian ~ boyle_dummy + sentence_date + 
-    sentence_year.f, data = original_subset_pj)
-cov &lt;- vcovHC(boyle_reg_all, type = &quot;HC&quot;)
-all_robust.se &lt;- sqrt(diag(cov))
-stargazer(boyle_reg_all, boyle_reg_over500, column.labels = c(&quot;Overall&quot;, 
-    &quot;Only judges &gt;500 sentences&quot;), se = list(all_robust.se, over_500_robust.se), 
-    align = TRUE, type = &quot;html&quot;, omit = &quot;sentence_year.f&quot;, notes = &quot;Also controlling for sentence year fixed effects&quot;)</code></pre>
+<div id="checking-significance" class="section level1">
+<h1>Checking significance</h1>
+<p>A ranking is one thing, but for context we want to see if the judges at the top of our ranking do seem to hand down “severe” sentences at a statistically significant rate. Otherwise, the differences we see in the variables that make up our severity metric (percent of prison sentences “above the median” and percent of class 4 felony sentences resulting in prison time) could just be statistical noise.</p>
+<p>Two years ago, when I was only looking at Judge Maura Slattery Boyle, I did this by “bootstrap”, i.e. resampling data with replacement. My logic was that doing it this way I wouldn’t have to assume the distribution of the statistic (in this case, the two aforementioned variables). I could draw a 95% confidence interval around the variables for Judge Slattery Boyle, and then compare that confidence interval to the actual values of the variables in the entire population. If the bottom end of the confidence interval was above the actual value of the variable in the entire dataset, I could say at a p-val of .05 that Judge Slattery-Boyle’s sentences weren’t randomly picked from the population at large. In other words, she was sentencing at a higher rate than the “average” judge.</p>
+<p>In retrospect, this approach wasn’t particularly elegant or effective. I didn’t want to do a simple linear regression because I was dealing with two dummy variables, and thus the distribution of the regression residuals wouldn’t be even close to normal. My understanding then (and now, although I’d love if someone could walk me through this like I was 5) was that while non-normal residuals don’t violate the Gauss-Markov theorem, they did make it impossible to interpret the t statistics/p-values produced, and the p-value was all I really wanted.</p>
+<p>However, looking back now I’ve had a change of heart for two reasons. Number one, as long as the Gauss-Markov assumptions are satisfied (we can adjust for heteroskedasticity using robust standard errors), the coefficient produced by my linear regression is still BLUE and consistent, meaning that given the massive sample size offered by this data (well over 100k cases), I feel more comfortable interpreting the coefficient than I did then. Number two, the biggest concern I always had was omitted variable bias, and by using a linear regression to assess the significance I’m able to control for two additional variables that I didn’t account for in my bootstrap method: sentence date (as a continuos variable, assuming sentences have gotten more lenient over time) and sentence years (as fixed effects, assuming sentencing norms/rules might change year to year).</p>
+<p>So, below I have five regression tables for five judges: Maura Slattery Boyle (still leading by my severity metric, and I want to see if controlling for the additional covariates changes the results for her), Ursula Walowski, Mauricio Araujo, Thomas Byrne, and William Raines (all up for retention and in the top third of judges by sentencing severity). Each table has three columns for three dependent variables</p>
+<ol style="list-style-type: decimal">
+<li>Dummy variable for sentence being above the median (0 if not, 1 if so, only using sentences that resulted in prison or jail time)</li>
+<li>Dummy variable for sentence being a class 4 felony and resulting in prison time (0 if class 4 felony sentenced to probation, 1 if class 4 felony sentenced to prison or jail, only using sentences on class 4 felonies where the outcome was prison or jail)</li>
+<li>Dummy variable for a sentence being “severe” (1 if sentence is for prison or jail and “above the median” for that particular felony class OR if a sentence is for prison or jail and the charge is a class 4 felony, 0 otherwise, using all sentences resulting in prison, jail, or probation time)</li>
+</ol>
 <table style="text-align:center">
 <tr>
-<td colspan="3" style="border-bottom: 1px solid black">
+<td colspan="4" style="border-bottom: 1px solid black">
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
 </td>
-<td colspan="2">
+<td colspan="3">
 <em>Dependent variable:</em>
 </td>
 </tr>
 <tr>
 <td>
 </td>
-<td colspan="2" style="border-bottom: 1px solid black">
-</td>
-</tr>
-<tr>
-<td style="text-align:left">
-</td>
-<td colspan="2">
-counter_abovemedian
+<td colspan="3" style="border-bottom: 1px solid black">
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
 </td>
 <td>
-Overall
+Above median sentence
 </td>
 <td>
-Only judges &gt;500 sentences
+Class 4 prison sentence
+</td>
+<td>
+Severe sentence
 </td>
 </tr>
 <tr>
@@ -751,9 +657,12 @@ Only judges &gt;500 sentences
 <td>
 (2)
 </td>
+<td>
+(3)
+</td>
 </tr>
 <tr>
-<td colspan="3" style="border-bottom: 1px solid black">
+<td colspan="4" style="border-bottom: 1px solid black">
 </td>
 </tr>
 <tr>
@@ -764,7 +673,10 @@ boyle_dummy
 0.078<sup>***</sup>
 </td>
 <td>
-0.078<sup>***</sup>
+0.132<sup>***</sup>
+</td>
+<td>
+0.104<sup>***</sup>
 </td>
 </tr>
 <tr>
@@ -774,11 +686,16 @@ boyle_dummy
 (0.011)
 </td>
 <td>
-(0.011)
+(0.013)
+</td>
+<td>
+(0.013)
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
+</td>
+<td>
 </td>
 <td>
 </td>
@@ -793,7 +710,10 @@ sentence_date
 0.00002
 </td>
 <td>
-0.00002
+-0.00001
+</td>
+<td>
+0.00000
 </td>
 </tr>
 <tr>
@@ -803,11 +723,16 @@ sentence_date
 (0.00001)
 </td>
 <td>
-(0.00001)
+(0.00002)
+</td>
+<td>
+(0.00002)
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
+</td>
+<td>
 </td>
 <td>
 </td>
@@ -822,7 +747,10 @@ Constant
 1.246<sup>***</sup>
 </td>
 <td>
-1.259<sup>***</sup>
+0.013
+</td>
+<td>
+1.048<sup>***</sup>
 </td>
 </tr>
 <tr>
@@ -832,7 +760,10 @@ Constant
 (0.193)
 </td>
 <td>
-(0.197)
+(0.018)
+</td>
+<td>
+(0.018)
 </td>
 </tr>
 <tr>
@@ -842,9 +773,11 @@ Constant
 </td>
 <td>
 </td>
+<td>
+</td>
 </tr>
 <tr>
-<td colspan="3" style="border-bottom: 1px solid black">
+<td colspan="4" style="border-bottom: 1px solid black">
 </td>
 </tr>
 <tr>
@@ -855,7 +788,10 @@ Observations
 129,586
 </td>
 <td>
-124,964
+96,051
+</td>
+<td>
+214,571
 </td>
 </tr>
 <tr>
@@ -864,6 +800,9 @@ R<sup>2</sup>
 </td>
 <td>
 0.002
+</td>
+<td>
+0.004
 </td>
 <td>
 0.002
@@ -877,7 +816,10 @@ Adjusted R<sup>2</sup>
 0.002
 </td>
 <td>
-0.002
+0.004
+</td>
+<td>
+0.001
 </td>
 </tr>
 <tr>
@@ -888,7 +830,10 @@ Residual Std. Error
 0.499 (df = 129548)
 </td>
 <td>
-0.499 (df = 124930)
+0.498 (df = 96023)
+</td>
+<td>
+0.491 (df = 214525)
 </td>
 </tr>
 <tr>
@@ -899,25 +844,28 @@ F Statistic
 8.700<sup>***</sup> (df = 37; 129548)
 </td>
 <td>
-8.976<sup>***</sup> (df = 33; 124930)
+15.931<sup>***</sup> (df = 27; 96023)
+</td>
+<td>
+7.614<sup>***</sup> (df = 45; 214525)
 </td>
 </tr>
 <tr>
-<td colspan="3" style="border-bottom: 1px solid black">
+<td colspan="4" style="border-bottom: 1px solid black">
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
 <em>Note:</em>
 </td>
-<td colspan="2" style="text-align:right">
+<td colspan="3" style="text-align:right">
 <sup><em></sup>p&lt;0.1; <sup><strong></sup>p&lt;0.05; <sup></strong></em></sup>p&lt;0.01
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
 </td>
-<td colspan="2" style="text-align:right">
+<td colspan="3" style="text-align:right">
 Also controlling for sentence year fixed effects
 </td>
 </tr>
