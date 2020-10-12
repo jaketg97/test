@@ -33,8 +33,7 @@ I average those two measures to create my severity metric. I drop all judges who
 <tr><td style="text-align:left">70</td><td>Kerry M Kennedy</td><td>0.352</td><td>0.534</td><td>0.443</td></tr>
 <tr><td style="text-align:left">75</td><td>Steven G Watkins</td><td>0.367</td><td>0.496</td><td>0.431</td></tr>
 <tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr></table>
-
-Again, for full ranking, see the csv above.
+<br>
 
 ## Checking significance
 
@@ -99,7 +98,7 @@ So, below I have five regression tables for five judges: Maura Slattery Boyle (s
 <tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="3" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
 <tr><td style="text-align:left"></td><td colspan="3" style="text-align:right">Also controlling for sentence year fixed effects</td></tr>
 </table>
-
+<br>
 **Judge Araujo**
 
 <table>
@@ -143,7 +142,7 @@ So, below I have five regression tables for five judges: Maura Slattery Boyle (s
 <tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="3" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
 <tr><td style="text-align:left"></td><td colspan="3" style="text-align:right">Also controlling for sentence year fixed effects</td></tr>
 </table>
-
+<br>
 **Judge Raines**
 
 <table>
