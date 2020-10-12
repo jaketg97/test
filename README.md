@@ -10,4 +10,4 @@ My name's Jake, and I'm an aspiring applied microeconomist hoping to specialize 
 - **[Insurer Competition in the Age of Provider Consolidation](main_files/Insurer Competition in the Age of Provider Consolidation.pdf):** Wow that's a mouthful. Undergraduate thesis completed with the help of my wonderful advisor Professor Colleen Grogan. Using public data from CMS, and private data from the American Hospital Association (AHA), I tried to measure the impact of reduced healthcare provider competition on competition and prices in ACA exchanges. Imperfect work, but I think the general findings are correct.
 
 ## Now, for the good stuff 
-- **[Judging judges (round 2)](cook_county_sentencing/Judging judges (round 2).md)**
+- **[Judging judges (round 2)](cook_county_sentencing/judging_judges.md)**
