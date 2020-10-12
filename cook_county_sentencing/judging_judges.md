@@ -36,6 +36,7 @@ I average those two measures to create my severity metric. I drop all judges who
 <tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr>
 </table>
 
+
 ## Checking significance
 
 A ranking is one thing, but for context we want to see if the judges at the top of our ranking do seem to hand down “severe” sentences at a significant rate. Otherwise, the differences we see in the variables that make up our severity metric (percent of prison sentences “above the median” and percent of class 4 felony sentences resulting in prison time) could just be statistical noise.
