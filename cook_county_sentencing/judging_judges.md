@@ -34,6 +34,7 @@ I average those two measures to create my severity metric. I drop all judges who
 <tr><td style="text-align:left">75</td><td>Steven G Watkins</td><td>0.367</td><td>0.496</td><td>0.431</td></tr>
 <tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr></table>
 
+Again, for full ranking, see the csv above.
 
 ## Checking significance
 
