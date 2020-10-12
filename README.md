@@ -9,5 +9,5 @@ My name's Jake, and I'm an aspiring applied microeconomist hoping to specialize 
 - **[Fighting Royalty: The Daniel Biss Campaign for Governor](http://uchicagogate.com/articles/2018/7/4/fighting-royalty-daniel-biss-campaign-governor/):** probably the piece I'm proudest of from my day's at UChicago's undergraduate political review. Incredibly interesting campaign with a lot of great characters. Also includes a map I spent hours building in Tableau because I didn't know how to use R yet, so that's a nice memory.
 - **[Insurer Competition in the Age of Provider Consolidation](main_files/Insurer Competition in the Age of Provider Consolidation.pdf):** Wow that's a mouthful. Undergraduate thesis completed with the help of my wonderful advisor Professor Colleen Grogan. Using public data from CMS, and private data from the American Hospital Association (AHA), I tried to measure the impact of reduced healthcare provider competition on competition and prices in ACA exchanges. Imperfect work, but I think the general findings are correct.
 
-## Now, for the good stuff (the good stuff being my probably bad ideas)
+## Now, for the good stuff 
 - **[Judging judges (round 2)](cook_county_sentencing/Judging judges (round 2).md)**
