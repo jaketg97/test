@@ -21,6 +21,7 @@ library(lubridate)
 library(lmtest)
 library(sandwich)
 library(stargazer)
+library(kableExtra)
 ```
 What follows is the methodology for my sentencing analysis on Cook County Criminal Division judges. All work was done in R. The R code is here, at my GitHub; since the data is read in from the Cook County Online Data portal, my work can easily be re-created or expanded upon.
 
@@ -90,7 +91,7 @@ Now we are ready to make our ranking. We'll create a counter (a simple boolean, 
 
 Then we'll aggregate our counters by judge (i.e. sum each counter, grouped by the sentencing judge), and calculate the percent of prison sentences above the median/the percent of class 4 felony sentences resulting in prison time. We'll average it to create our severity metric. I drop all judges who have served on less than 500 case (I like to deal in large sample sizes; the outcomes for judges who haven't served on many cases could be misleading). From there I just abbreviated the list and ordered it to make it tidy. I export the full list of 90 judges, ranked, to judge_rankings.csv. I also display the judges included in the list who are on the ballot for retention November 3rd, with their relative rank within the list of 90 judges by my "severity metric".  
 
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60), results = "asis"}
 original_subset<-subset(original_subset, original_subset$SENTENCE_TYPE=="Prison"|original_subset$SENTENCE_TYPE=="Jail"|original_subset$SENTENCE_TYPE=="Probation")
 original_subset$counter<-1
 original_subset$counter_PJ<-ifelse(original_subset$SENTENCE_TYPE=="Prison" | original_subset$SENTENCE_TYPE=="Jail", 1, 0)
@@ -106,22 +107,22 @@ judge_rankings$percentabove <- judge_rankings$counter_abovemedian/judge_rankings
 judge_rankings$class4prisonpercent <- judge_rankings$counter_F4_pj/judge_rankings$counter_F4
 judge_rankings$severity_metric<-(judge_rankings$percentabove+judge_rankings$class4prisonpercent)/2
 judge_rankings_abb <-data.frame(judge_rankings$judges, judge_rankings$percentabove, judge_rankings$class4prisonpercent, judge_rankings$severity_metric)
-colnames(judge_rankings_abb)<-c("Judges", "Percent of Prison Sentences Above The Median", "Percent of Class 4 Felony Prison Sentences","Severity Metric")
-judge_rankings_abb<-arrange(judge_rankings_abb, desc(judge_rankings_abb$`Severity Metric`))
+colnames(judge_rankings_abb)<-c("Judges", "% prison/jail sentences above median", "% Class 4 felonies sentenced to prison/jail","Severity metric")
+judge_rankings_abb<-arrange(judge_rankings_abb, desc(judge_rankings_abb$`Severity metric`))
 write.csv(judge_rankings_abb, "judge_rankings.csv")
 retention_judges <- subset(judge_rankings_abb, Judges == "Shelley  Sutker-Dermer" | Judges == "Kenneth J Wadas" | Judges == "Kerry M Kennedy" | Judges == "Araujo, Mauricio" | Judges == "Byrne, Thomas" | Judges == "Anna Helen Demacopoulos" | Judges == "URSULA  WALOWSKI" | Judges == "Steven G Watkins" | Judges == "William  Raines")
-knitr::kable(retention_judges, format = "html")
+stargazer(retention_judges, summary = FALSE, type = "html", out = "retention_judge_rankings.html")
 ```
 
 # Checking significance
 
-A ranking is one thing, but for context we want to see if the judges at the top of our ranking do seem to hand down "severe" sentences at a statistically significant rate. Otherwise, the differences we see in the variables that make up our severity metric (percent of prison sentences "above the median" and percent of class 4 felony sentences resulting in prison time) could just be statistical noise. 
+A ranking is one thing, but for context we want to see if the judges at the top of our ranking do seem to hand down "severe" sentences at a significant rate. Otherwise, the differences we see in the variables that make up our severity metric (percent of prison sentences "above the median" and percent of class 4 felony sentences resulting in prison time) could just be statistical noise. 
 
-Two years ago, when I was only looking at Judge Maura Slattery Boyle, I did this by "bootstrap", i.e.  resampling data with replacement. My logic was that doing it this way I wouldn't have to assume the distribution of the statistic (in this case, the two aforementioned variables). I could draw a 95% confidence interval around the variables for Judge Slattery Boyle, and then compare that confidence interval to the actual values of the variables in the entire population. If the bottom end of the confidence interval was above the actual value of the variable in the entire dataset, I could say at a p-val of .05 that Judge Slattery-Boyle's sentences weren't randomly picked from the population at large. In other words, she was sentencing at a higher rate than the "average" judge.
+Two years ago, when I was only looking at Judge Maura Slattery Boyle, I did this by "bootstrap", i.e.  resampling data with replacement. My logic was that doing it this way I wouldn't have to assume the distribution of the statistic (in this case, the two aforementioned variables). I could draw a 95% confidence interval around the variables for Judge Slattery Boyle, and then compare that confidence interval to the actual values of the variables in the entire population. If the bottom end of the confidence interval was above the actual value of the variable in the entire dataset (which was the case), I could say at a p-val of .05 that Judge Slattery-Boyle's sentences weren't randomly picked from the population at large. In other words, she was sentencing at a higher rate than the "average" judge.
 
-In retrospect, this approach wasn't particularly elegant or effective. I didn't want to do a simple linear regression because I was dealing with two dummy variables, and thus the distribution of the regression residuals wouldn't be even close to normal. My understanding then (and now, although I'd love if someone could walk me through this like I was 5) was that while non-normal residuals don't violate the Gauss-Markov theorem, they did make it impossible to interpret the t statistics/p-values produced, and the p-value was all I really wanted.
+In retrospect, this approach wasn't particularly elegant or effective. I didn't want to do a simple linear regression because I was dealing with two dummy variables, and the distribution of the regression residuals wouldn't be even close to normal. My understanding then (and now, although I'd love if someone could walk me through this like I was 5) was that while non-normal residuals don't violate the Gauss-Markov theorem, they did make it impossible to interpret the t statistics/p-values produced, and the p-value was all I really wanted.
 
-However, looking back now I've had a change of heart for two reasons. Number one, as long as the Gauss-Markov assumptions are satisfied (we can adjust for heteroskedasticity using robust standard errors), the coefficient produced by my linear regression is still BLUE and consistent, meaning that given the massive sample size offered by this data (well over 100k cases), I feel more comfortable interpreting the coefficient than I did then. Number two, the biggest concern I always had was omitted variable bias, and by using a linear regression to assess the significance I'm able to control for two additional variables that I didn't account for in my bootstrap method: sentence date (as a continuos variable, assuming sentences have gotten more lenient over time) and sentence years (as fixed effects, assuming sentencing norms/rules might change year to year). 
+However, looking back now I've had a change of heart for two reasons. Number one, as long as the Gauss-Markov assumptions are satisfied (we can adjust for heteroskedasticity using robust standard errors), the coefficient produced by my linear regression is still BLUE and consistent, meaning that given the massive sample size offered by this data (well over 100k cases), I feel more comfortable interpreting the coefficient than I did then. Number two, the biggest concern I always had was omitted variable bias, and by using a linear regression to assess significance I'm able to control for two additional variables that I didn't account for in my bootstrap method: sentence date (as a continuos variable, assuming sentences have gotten more lenient over time) and sentence years (as fixed effects, assuming sentencing norms/rules might change year to year). 
 
 So, below I have five regression tables for five judges: Maura Slattery Boyle (still leading by my severity metric, and I want to see if controlling for the additional covariates changes the results for her), Ursula Walowski, Mauricio Araujo, Thomas Byrne, and William Raines (all up for retention and in the top third of judges by sentencing severity). Each table has three columns for three dependent variables 
 
@@ -133,10 +134,10 @@ So, below I have five regression tables for five judges: Maura Slattery Boyle (s
 
 original_subset$sentence_year.f <- factor(original_subset$sentence_year)
 original_subset$boyle_dummy <- original_subset$SENTENCE_JUDGE == "Maura  Slattery Boyle"
-original_subset$walowksi_dummy <- original_subset$SENTENCE_JUDGE == "URSULA WALOWSKI"
+original_subset$walowski_dummy <- original_subset$SENTENCE_JUDGE == "URSULA  WALOWSKI"
 original_subset$araujo_dummy <- original_subset$SENTENCE_JUDGE == "Araujo, Mauricio"
 original_subset$byrne_dummy <- original_subset$SENTENCE_JUDGE == "Byrne, Thomas"
-original_subset$raines_dummy <- original_subset$SENTENCE_JUDGE == "William Raines"
+original_subset$raines_dummy <- original_subset$SENTENCE_JUDGE == "William  Raines"
 original_subset$severe_sentence <- original_subset$counter_abovemedian == 1 | original_subset$counter_F4_pj == 1
 
 model_1_data <- subset(original_subset, counter_PJ == 1)
@@ -153,6 +154,53 @@ boyle_reg_3 <- lm(severe_sentence ~ boyle_dummy + sentence_date + sentence_year.
 cov <- vcovHC(boyle_reg_3, type = "HC") 
 boyle_reg_3_robust.se <- sqrt(diag(cov))
 
+stargazer(boyle_reg_1, boyle_reg_2, boyle_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), se = list(boyle_reg_1_robust.se, boyle_reg_2_robust.se, boyle_reg_2_robust.se), align=TRUE, type = "html", omit = "sentence_year.f", notes = "Also controlling for sentence year fixed effects", omit.stat = c("rsq", "f", "ser"), out = "boyle_reg.html")
 
-stargazer(boyle_reg_1, boyle_reg_2, boyle_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), se = list(boyle_reg_1_robust.se, boyle_reg_2_robust.se, boyle_reg_2_robust.se), align=TRUE, type = "html", omit = "sentence_year.f", notes = "Also controlling for sentence year fixed effects", out = "boyle_reg.html")
+walowski_reg_1 <- lm(above_median ~ walowski_dummy + sentence_date + sentence_year.f, data = model_1_data)
+cov <- vcovHC(walowski_reg_1, type = "HC") 
+walowski_reg_1_robust.se <- sqrt(diag(cov))
+walowski_reg_2 <- lm(counter_F4_pj ~ walowski_dummy + sentence_date + sentence_year.f, data = model_2_data)
+cov <- vcovHC(walowski_reg_2, type = "HC") 
+walowski_reg_2_robust.se <- sqrt(diag(cov))
+walowski_reg_3 <- lm(severe_sentence ~ walowski_dummy + sentence_date + sentence_year.f, data = model_3_data)
+cov <- vcovHC(walowski_reg_3, type = "HC") 
+walowski_reg_3_robust.se <- sqrt(diag(cov))
+
+stargazer(walowski_reg_1, walowski_reg_2, walowski_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), se = list(walowski_reg_1_robust.se, walowski_reg_2_robust.se, walowski_reg_2_robust.se), align=TRUE, type = "html", omit = "sentence_year.f", notes = "Also controlling for sentence year fixed effects", omit.stat = c("rsq", "f", "ser"), out = "walowski_reg.html")
+
+araujo_reg_1 <- lm(above_median ~ araujo_dummy + sentence_date + sentence_year.f, data = model_1_data)
+cov <- vcovHC(araujo_reg_1, type = "HC") 
+araujo_reg_1_robust.se <- sqrt(diag(cov))
+araujo_reg_2 <- lm(counter_F4_pj ~ araujo_dummy + sentence_date + sentence_year.f, data = model_2_data)
+cov <- vcovHC(araujo_reg_2, type = "HC") 
+araujo_reg_2_robust.se <- sqrt(diag(cov))
+araujo_reg_3 <- lm(severe_sentence ~ araujo_dummy + sentence_date + sentence_year.f, data = model_3_data)
+cov <- vcovHC(araujo_reg_3, type = "HC") 
+araujo_reg_3_robust.se <- sqrt(diag(cov))
+
+stargazer(araujo_reg_1, araujo_reg_2, araujo_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), se = list(araujo_reg_1_robust.se, araujo_reg_2_robust.se, araujo_reg_2_robust.se), align=TRUE, type = "html", omit = "sentence_year.f", notes = "Also controlling for sentence year fixed effects", omit.stat = c("rsq", "f", "ser"), out = "araujo_reg.html")
+
+byrne_reg_1 <- lm(above_median ~ byrne_dummy + sentence_date + sentence_year.f, data = model_1_data)
+cov <- vcovHC(byrne_reg_1, type = "HC") 
+byrne_reg_1_robust.se <- sqrt(diag(cov))
+byrne_reg_2 <- lm(counter_F4_pj ~ byrne_dummy + sentence_date + sentence_year.f, data = model_2_data)
+cov <- vcovHC(byrne_reg_2, type = "HC") 
+byrne_reg_2_robust.se <- sqrt(diag(cov))
+byrne_reg_3 <- lm(severe_sentence ~ byrne_dummy + sentence_date + sentence_year.f, data = model_3_data)
+cov <- vcovHC(byrne_reg_3, type = "HC") 
+byrne_reg_3_robust.se <- sqrt(diag(cov))
+
+stargazer(byrne_reg_1, byrne_reg_2, byrne_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), se = list(byrne_reg_1_robust.se, byrne_reg_2_robust.se, byrne_reg_2_robust.se), align=TRUE, type = "html", omit = "sentence_year.f", notes = "Also controlling for sentence year fixed effects", omit.stat = c("rsq", "f", "ser"), out = "byrne_reg.html")
+
+raines_reg_1 <- lm(above_median ~ raines_dummy + sentence_date + sentence_year.f, data = model_1_data)
+cov <- vcovHC(raines_reg_1, type = "HC") 
+raines_reg_1_robust.se <- sqrt(diag(cov))
+raines_reg_2 <- lm(counter_F4_pj ~ raines_dummy + sentence_date + sentence_year.f, data = model_2_data)
+cov <- vcovHC(raines_reg_2, type = "HC") 
+raines_reg_2_robust.se <- sqrt(diag(cov))
+raines_reg_3 <- lm(severe_sentence ~ raines_dummy + sentence_date + sentence_year.f, data = model_3_data)
+cov <- vcovHC(raines_reg_3, type = "HC") 
+raines_reg_3_robust.se <- sqrt(diag(cov))
+
+stargazer(raines_reg_1, raines_reg_2, raines_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), se = list(raines_reg_1_robust.se, raines_reg_2_robust.se, raines_reg_2_robust.se), align=TRUE, type = "html", omit = "sentence_year.f", notes = "Also controlling for sentence year fixed effects", omit.stat = c("rsq", "f", "ser"), out = "raines_reg.html")
 ```
