@@ -122,13 +122,13 @@ Two years ago, when I was only looking at Judge Maura Slattery Boyle, I did this
 
 In retrospect, this approach wasn't particularly elegant or effective. I didn't want to do a simple linear regression because I was dealing with two dummy variables, and the distribution of the regression residuals wouldn't be even close to normal. My understanding then (and now, although I'd love if someone could walk me through this like I was 5) was that while non-normal residuals don't violate the Gauss-Markov theorem, they did make it impossible to interpret the t statistics/p-values produced, and the p-value was all I really wanted.
 
-However, looking back now I've had a change of heart for two reasons. Number one, as long as the Gauss-Markov assumptions are satisfied (we can adjust for heteroskedasticity using robust standard errors), the coefficient produced by my linear regression is still BLUE and consistent, meaning that given the massive sample size offered by this data (well over 100k cases), I feel more comfortable interpreting the coefficient than I did then. Number two, the biggest concern I always had was omitted variable bias, and by using a linear regression to assess significance I'm able to control for two additional variables that I didn't account for in my bootstrap method: sentence date (as a continuos variable, assuming sentences have gotten more lenient over time) and sentence years (as fixed effects, assuming sentencing norms/rules might change year to year). 
+However, looking back now I've had a change of heart for three reasons. Number one, as long as the Gauss-Markov assumptions are satisfied (we can adjust for heteroskedasticity using robust standard errors), the coefficient produced by my linear regression is still BLUE and consistent, meaning that given the massive sample size offered by this data (well over 100k cases), I feel more comfortable interpreting the coefficient than I did then. Number two, the biggest concern I always had was omitted variable bias, and by using a linear regression to assess significance I'm able to control for two additional variables that I didn't account for in my bootstrap method: sentence date (as a continuous variable, assuming sentences have gotten more lenient over time) and sentence years (as fixed effects, assuming sentencing norms/rules might change year to year). And number three, I can use bootstrapping with my linear regression model, which gives me the best of both worlds: added control variables, and standard errors that should be robust to the non-normality of my residuals. 
 
 So, below I have five regression tables for five judges: Maura Slattery Boyle (still leading by my severity metric, and I want to see if controlling for the additional covariates changes the results for her), Ursula Walowski, Mauricio Araujo, Thomas Byrne, and William Raines (all up for retention and in the top third of judges by sentencing severity). Each table has three columns for three dependent variables 
 
 1. Dummy variable for sentence being above the median (0 if not, 1 if so, only using sentences that resulted in prison or jail time)
 2. Dummy variable for sentence being a class 4 felony and resulting in prison time (0 if class 4 felony sentenced to probation, 1 if class 4 felony sentenced to prison or jail, only using sentences on class 4 felonies where the outcome was prison or jail)
-3. Dummy variable for a sentence being "severe" (1 if sentence is for prison or jail and "above the median" for that particular felony class OR if a sentence is for prison or jail and the charge is a class 4 felony, 0 otherwise, using all sentences resulting in prison, jail, or probation time)
+3. Dummy variable for a sentence being "severe" (1 if sentence is for prison or jail and "above the median" for that particular felony class OR if a sentence is for prison or jail and the charge is a class 4 felony, 0 otherwise, using all sentences resulting in prison, jail, or probation time).
 
 ```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60), results="asis"}
 
@@ -203,4 +203,24 @@ cov <- vcovHC(raines_reg_3, type = "HC")
 raines_reg_3_robust.se <- sqrt(diag(cov))
 
 stargazer(raines_reg_1, raines_reg_2, raines_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), se = list(raines_reg_1_robust.se, raines_reg_2_robust.se, raines_reg_2_robust.se), align=TRUE, type = "html", omit = "sentence_year.f", notes = "Also controlling for sentence year fixed effects", omit.stat = c("rsq", "f", "ser"), out = "raines_reg.html")
+```
+
+Now, I bootstrap one of my models (I'm not doing all of them because that would take ages, and I see this as more of a sanity check to see if the coefficients/standard errors are wildly different). I'm choosing the third column of Judge Maura Slattery Boyle's regression table. The outputs are a summary of the coefficient, a plot of its distribution, and a confidence interval around it. 
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60), results="asis"}
+set.seed(123)
+
+bs <- function(formula, data, indices) {
+  d <- data[indices,] # allows boot to select sample 
+  fit <- lm(formula, data=d)
+  return(coef(fit)) 
+} 
+
+boot_data <- model.matrix( ~ severe_sentence + boyle_dummy + sentence_year.f, data = model_3_data)
+boot_data <- as.data.frame(boot_data)
+rm(list=setdiff(ls(), "boot_data")) #clearing workspace
+boyle_reg_3_boot <- boot(data = boot_data, statistic = bs, R = 1000, formula=severe_sentenceTRUE ~ boyle_dummyTRUE + .)
+
+summary(boyle_reg_3_boot, index = 2)
+plot(boyle_reg_3_boot, index = 2)
+boot.ci(boyle_reg_3_boot, index = 2)
 ```
