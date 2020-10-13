@@ -215,7 +215,7 @@ stargazer(raines_reg_1, raines_reg_2, raines_reg_3, dep.var.labels=c("Above medi
 
 ## Bootstrapping regression
 
-Now, I bootstrap one of my models (I'm not doing all of them because that would take ages, and I see this as more of a sanity check to see if the coefficients/standard errors are wildly different). I'm choosing the third column of Judge Maura Slattery Boyle's regression table. The outputs are a summary of the coefficient, a plot of its distribution, and a confidence interval around it. 
+Now, I bootstrap one of my models (I'm not doing all of them because that would take ages, and I see this as more of a sanity check to see if the coefficients/standard errors are wildly different). I'm choosing the third column of Judge Maura Slattery Boyle's regression table, and draw 5000 bootstrapped samples. The outputs are a summary of the coefficient, a plot of its distribution, and a confidence interval around it. 
 
 
 ```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60), results="asis"}
