@@ -95,11 +95,12 @@ All in all, I see this as the fairest attempt I can make at measuring sentence s
 <tr><td style="text-align:left">Adjusted R<sup>2</sup></td><td>0.002</td><td>0.004</td><td>0.001</td></tr>
 <tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="3" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
 <tr><td style="text-align:left"></td><td colspan="3" style="text-align:right">Also controlling for sentence year fixed effects</td></tr>
+<tr><td style="text-align:left"></td><td colspan="3" style="text-align:right">Huber-White robust standard errors</td></tr>
 </table>
 
 **Judge Walowski**
   
-  <table style="text-align:center"><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:</em></td></tr>
+<table style="text-align:center"><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:</em></td></tr>
 <tr><td></td><td colspan="3" style="border-bottom: 1px solid black"></td></tr>
 <tr><td style="text-align:left"></td><td>Above median sentence</td><td>Class 4 prison sentence</td><td>Severe sentence</td></tr>
 <tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td><td>(3)</td></tr>
@@ -116,11 +117,12 @@ All in all, I see this as the fairest attempt I can make at measuring sentence s
 <tr><td style="text-align:left">Adjusted R<sup>2</sup></td><td>0.002</td><td>0.004</td><td>0.001</td></tr>
 <tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="3" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
 <tr><td style="text-align:left"></td><td colspan="3" style="text-align:right">Also controlling for sentence year fixed effects</td></tr>
+<tr><td style="text-align:left"></td><td colspan="3" style="text-align:right">Huber-White robust standard errors</td></tr>
 </table>
 
 **Judge Araujo**
 
-  <table style="text-align:center"><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:</em></td></tr>
+<table style="text-align:center"><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:</em></td></tr>
 <tr><td></td><td colspan="3" style="border-bottom: 1px solid black"></td></tr>
 <tr><td style="text-align:left"></td><td>Above median sentence</td><td>Class 4 prison sentence</td><td>Severe sentence</td></tr>
 <tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td><td>(3)</td></tr>
@@ -137,11 +139,12 @@ All in all, I see this as the fairest attempt I can make at measuring sentence s
 <tr><td style="text-align:left">Adjusted R<sup>2</sup></td><td>0.002</td><td>0.003</td><td>0.001</td></tr>
 <tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="3" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
 <tr><td style="text-align:left"></td><td colspan="3" style="text-align:right">Also controlling for sentence year fixed effects</td></tr>
+<tr><td style="text-align:left"></td><td colspan="3" style="text-align:right">Huber-White robust standard errors</td></tr>
 </table>
 
 **Judge Byrne**
 
-  <table style="text-align:center"><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:</em></td></tr>
+<table style="text-align:center"><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:</em></td></tr>
 <tr><td></td><td colspan="3" style="border-bottom: 1px solid black"></td></tr>
 <tr><td style="text-align:left"></td><td>Above median sentence</td><td>Class 4 prison sentence</td><td>Severe sentence</td></tr>
 <tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td><td>(3)</td></tr>
@@ -158,11 +161,12 @@ All in all, I see this as the fairest attempt I can make at measuring sentence s
 <tr><td style="text-align:left">Adjusted R<sup>2</sup></td><td>0.002</td><td>0.003</td><td>0.001</td></tr>
 <tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="3" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
 <tr><td style="text-align:left"></td><td colspan="3" style="text-align:right">Also controlling for sentence year fixed effects</td></tr>
+<tr><td style="text-align:left"></td><td colspan="3" style="text-align:right">Huber-White robust standard errors</td></tr>
 </table>
 
 **Judge Raines**
 
-  <table style="text-align:center"><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:</em></td></tr>
+<table style="text-align:center"><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:</em></td></tr>
 <tr><td></td><td colspan="3" style="border-bottom: 1px solid black"></td></tr>
 <tr><td style="text-align:left"></td><td>Above median sentence</td><td>Class 4 prison sentence</td><td>Severe sentence</td></tr>
 <tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td><td>(3)</td></tr>
@@ -179,6 +183,7 @@ All in all, I see this as the fairest attempt I can make at measuring sentence s
 <tr><td style="text-align:left">Adjusted R<sup>2</sup></td><td>0.002</td><td>0.004</td><td>0.001</td></tr>
 <tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="3" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
 <tr><td style="text-align:left"></td><td colspan="3" style="text-align:right">Also controlling for sentence year fixed effects</td></tr>
+<tr><td style="text-align:left"></td><td colspan="3" style="text-align:right">Huber-White robust standard errors</td></tr>
 </table>
 
   
