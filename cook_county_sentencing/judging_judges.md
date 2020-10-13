@@ -43,17 +43,26 @@ Two years ago, when I was only looking at Judge Maura Slattery Boyle, I did this
 
 In retrospect, this approach wasn’t particularly elegant or effective. I didn’t want to do a simple linear regression because I was dealing with two dummy variables, and the distribution of the regression residuals wouldn’t be even close to normal. My understanding then (and now, although I’d love if someone could walk me through this like I was 5) was that while non-normal residuals don’t violate the Gauss-Markov theorem, they did make it impossible to interpret the t statistics/p-values produced, and the p-value was all I really wanted.
 
-![This is still super ugly, someone explain if that means the coefficients are useless, I clearly don't remember my college metrics course well](boyle_3_qq.png)
+![Look at how ugly these residuals are](boyle_3_qq.png)
 
 Looking back now, I’ve had a change of heart for two reasons. 
 1. As long as the Gauss-Markov assumptions are satisfied (we can adjust for heteroskedasticity using robust standard errors), the coefficient produced by my linear regression is still BLUE and consistent, meaning that given the massive sample size offered by this data (well over 100k cases), I feel more comfortable interpreting the coefficient than I did then. 
 2. The biggest concern I always had was omitted variable bias, and by using a linear regression to assess significance I’m able to control for two additional variables that I didn’t account for in my bootstrap method: sentence date (as a continuos variable, assuming sentences have gotten more lenient over time) and sentence years (as fixed effects, assuming sentencing norms/rules might change year to year).
+3. I can use bootstrapping to construct a distribution of my coefficient of interest (across bootstrapped samples of my data), and I can use that distribution to create an empirical confidence interval. This can be a good check on my presumption of coefficient accuracy. 
 
-So, below I have five regression tables for five judges: Maura Slattery Boyle (still leading by my severity metric, and I want to see if controlling for the additional covariates changes the results for her), Ursula Walowski, Mauricio Araujo, Thomas Byrne, and William Raines (all up for retention and in the top third of judges by sentencing severity). Each table has three columns for three dependent variables
+At the bottom of this post I have five regression tables for five judges: Maura Slattery Boyle (still leading by my severity metric, and I want to see if controlling for the additional covariates changes the results for her), Ursula Walowski, Mauricio Araujo, Thomas Byrne, and William Raines (all up for retention and in the top third of judges by sentencing severity). Each table has three columns for three dependent variables
 
 1. Dummy variable for sentence being above the median (0 if not, 1 if so, only using sentences that resulted in prison or jail time)
 2. Dummy variable for sentence being a class 4 felony and resulting in prison time (0 if class 4 felony sentenced to probation, 1 if class 4 felony sentenced to prison or jail, only using sentences on class 4 felonies where the outcome was prison or jail)
 3. Dummy variable for a sentence being “severe” (1 if sentence is for prison or jail and “above the median” for that particular felony class OR if a sentence is for prison or jail and the charge is a class 4 felony, 0 otherwise, using all sentences resulting in prison, jail, or probation time)
+
+The coefficients for our judge dummy variables can be interpreted as increases in severe sentence probability (since our dependent variable is binary, our OLS model is a Linear Probability Model). So, for instance, the .103 coefficient in column three of Judge Slattery Boyle's regression table means our model estimates a 10.3% increase in the likelihood of a severe sentence if a case is heard by Judge Slattery Boyle. It's important to note that this increase is **in comparison to the "average" judge**; i.e. if your case was heard by Judge Raines, who also ranks high on severity metric,  instead of Judge Slattery Boyle, your chances of a severe sentence wouldn't decrease by 10.3% (or at all for that matter). 
+
+While t-statistics and p-values are included, they shouldn't be considered since they presume normality of residuals. However, the coefficients themselves should be considered reasonably accurate estimates given the sample size (I'm inclined to trust their sign except for the ones extremely close to 0, i.e. abs(coef)<.05). As a sanity test for this presumption, I've also included a bootstrapped distribution of one of my models: the third column of Judge Slattery Boyle's regression table (I'm not doing all the models because bootstrapping is a time and computing heavy task, and I've put my laptop through enough). Below you can see the summary of my bootstrapped coefficient, and a histogram/QQ Plot of its distribution. My 99% confidence interval (drawn around the percentiles of the distribution) is . If you compare these results with column three of Judge Slattery Boyle's regression table at the bottom of this post, you'll see that happily results line up pretty well. I take as a pretty good sign that the sample size is mitigating the impacts of our wonky residuals, and therefore our coefficients by and large are pretty robust. **I welcome any critiques though (jaketg97@gmail.com)**. 
+
+![Plots of bootstrapped coefficients for Judge Slattery Boyle's dummy coefficient, model 3](bootstrap_graphs.png)
+
+## 
 
 **Judge Slattery Boyle**
 
