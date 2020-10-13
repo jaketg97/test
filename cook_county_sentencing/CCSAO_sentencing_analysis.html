@@ -625,6 +625,8 @@ Steven G Watkins
 <li>Dummy variable for sentence being a class 4 felony and resulting in prison time (0 if class 4 felony sentenced to probation, 1 if class 4 felony sentenced to prison or jail, only using sentences on class 4 felonies where the outcome was prison or jail)</li>
 <li>Dummy variable for a sentence being “severe” (1 if sentence is for prison or jail and “above the median” for that particular felony class OR if a sentence is for prison or jail and the charge is a class 4 felony, 0 otherwise, using all sentences resulting in prison, jail, or probation time).</li>
 </ol>
+<div id="regression-tables" class="section level2">
+<h2>Regression tables</h2>
 <p>quartz_off_screen 2</p>
 <table style="text-align:center">
 <tr>
@@ -1681,67 +1683,12 @@ Also controlling for sentence year fixed effects
 </td>
 </tr>
 </table>
+</div>
+<div id="bootstrapping-regression" class="section level2">
+<h2>Bootstrapping regression</h2>
 <p>Now, I bootstrap one of my models (I’m not doing all of them because that would take ages, and I see this as more of a sanity check to see if the coefficients/standard errors are wildly different). I’m choosing the third column of Judge Maura Slattery Boyle’s regression table. The outputs are a summary of the coefficient, a plot of its distribution, and a confidence interval around it.</p>
-<pre><code> R original   bootBias    bootSE bootMed</code></pre>
-<p>1 5000 0.10413 0.00024988 0.0091369 0.10438 quartz_off_screen 2 BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS Based on 5000 bootstrap replicates</p>
-<p>CALL : boot.ci(boot.out = boyle_reg_3_boot, conf = 0.99, type = “perc”)</p>
-<p>Intervals : Level Percentile<br />
-99% ( 0.0803, 0.1290 )<br />
-Calculations and Intervals on Original Scale</p>
-<table style="text-align:center">
-<tr>
-<td colspan="6" style="border-bottom: 1px solid black">
-</td>
-</tr>
-<tr>
-<td style="text-align:left">
-</td>
-<td>
-R
-</td>
-<td>
-original
-</td>
-<td>
-bootBias
-</td>
-<td>
-bootSE
-</td>
-<td>
-bootMed
-</td>
-</tr>
-<tr>
-<td colspan="6" style="border-bottom: 1px solid black">
-</td>
-</tr>
-<tr>
-<td style="text-align:left">
-1
-</td>
-<td>
-5,000
-</td>
-<td>
-0.104
-</td>
-<td>
-0.0002
-</td>
-<td>
-0.009
-</td>
-<td>
-0.104
-</td>
-</tr>
-<tr>
-<td colspan="6" style="border-bottom: 1px solid black">
-</td>
-</tr>
-</table>
-<p>Happily, our bootstrap estimates fall in line well (almost perfectly in fact) with our coefficient from the regular OLS regression (see column 3 of our regression table for Judge Slattery Boyle for reference). I won’t replicate this experiment with all the judges (I’ve put my laptop through enough) but I take this as a good sign that the sample size is mitigating the impacts of our wonky residuals, and therefore our coefficients for all models are pretty robust.</p>
+<p>  Happily, our bootstrap estimates fall in line well (almost perfectly in fact) with our coefficient from the regular OLS regression (see column 3 of our regression table for Judge Slattery Boyle for reference). I won’t replicate this experiment with all the judges (I’ve put my laptop through enough) but I take this as a good sign that the sample size is mitigating the impacts of our wonky residuals, and therefore our coefficients for all models are pretty robust.</p>
+</div>
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
