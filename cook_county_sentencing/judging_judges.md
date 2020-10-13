@@ -74,7 +74,7 @@ While t-statistics and p-values are included, **they shouldn't be considered sin
 
 ## Conclusion
 
-All in all, I see this as the fairest attempt I can make at measuring sentence severity and assessing its significance rigorously. I'd love to be [proved wrong though](mailto:jaketg97@gmail.com). 
+All in all, I see this as the fairest attempt I can make at measuring sentence severity and assessing its significance rigorously. I'd love to be [proved wrong](mailto:jaketg97@gmail.com). 
 
 ## Regression Tables
 
