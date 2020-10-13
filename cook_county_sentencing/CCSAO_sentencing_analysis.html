@@ -618,13 +618,14 @@ Steven G Watkins
 <p>A ranking is one thing, but for context we want to see if the judges at the top of our ranking do seem to hand down “severe” sentences at a significant rate. Otherwise, the differences we see in the variables that make up our severity metric (percent of prison sentences “above the median” and percent of class 4 felony sentences resulting in prison time) could just be statistical noise.</p>
 <p>Two years ago, when I was only looking at Judge Maura Slattery Boyle, I did this by “bootstrap”, i.e. resampling data with replacement. My logic was that doing it this way I wouldn’t have to assume the distribution of the statistic (in this case, the two aforementioned variables). I could draw a 95% confidence interval around the variables for Judge Slattery Boyle, and then compare that confidence interval to the actual values of the variables in the entire population. If the bottom end of the confidence interval was above the actual value of the variable in the entire dataset (which was the case), I could say at a p-val of .05 that Judge Slattery-Boyle’s sentences weren’t randomly picked from the population at large. In other words, she was sentencing at a higher rate than the “average” judge.</p>
 <p>In retrospect, this approach wasn’t particularly elegant or effective. I didn’t want to do a simple linear regression because I was dealing with two dummy variables, and the distribution of the regression residuals wouldn’t be even close to normal. My understanding then (and now, although I’d love if someone could walk me through this like I was 5) was that while non-normal residuals don’t violate the Gauss-Markov theorem, they did make it impossible to interpret the t statistics/p-values produced, and the p-value was all I really wanted.</p>
-<p>However, looking back now I’ve had a change of heart for two reasons. Number one, as long as the Gauss-Markov assumptions are satisfied (we can adjust for heteroskedasticity using robust standard errors), the coefficient produced by my linear regression is still BLUE and consistent, meaning that given the massive sample size offered by this data (well over 100k cases), I feel more comfortable interpreting the coefficient than I did then. Number two, the biggest concern I always had was omitted variable bias, and by using a linear regression to assess significance I’m able to control for two additional variables that I didn’t account for in my bootstrap method: sentence date (as a continuos variable, assuming sentences have gotten more lenient over time) and sentence years (as fixed effects, assuming sentencing norms/rules might change year to year).</p>
+<p>However, looking back now I’ve had a change of heart for three reasons. Number one, as long as the Gauss-Markov assumptions are satisfied (we can adjust for heteroskedasticity using robust standard errors), the coefficient produced by my linear regression is still BLUE and consistent, meaning that given the massive sample size offered by this data (well over 100k cases), I feel more comfortable interpreting the coefficient than I did then. Number two, the biggest concern I always had was omitted variable bias, and by using a linear regression to assess significance I’m able to control for two additional variables that I didn’t account for in my bootstrap method: sentence date (as a continuous variable, assuming sentences have gotten more lenient over time) and sentence years (as fixed effects, assuming sentencing norms/rules might change year to year). And number three, I can use bootstrapping with my linear regression model, which gives me the best of both worlds: added control variables, and standard errors that should be robust to the non-normality of my residuals.</p>
 <p>So, below I have five regression tables for five judges: Maura Slattery Boyle (still leading by my severity metric, and I want to see if controlling for the additional covariates changes the results for her), Ursula Walowski, Mauricio Araujo, Thomas Byrne, and William Raines (all up for retention and in the top third of judges by sentencing severity). Each table has three columns for three dependent variables</p>
 <ol style="list-style-type: decimal">
 <li>Dummy variable for sentence being above the median (0 if not, 1 if so, only using sentences that resulted in prison or jail time)</li>
 <li>Dummy variable for sentence being a class 4 felony and resulting in prison time (0 if class 4 felony sentenced to probation, 1 if class 4 felony sentenced to prison or jail, only using sentences on class 4 felonies where the outcome was prison or jail)</li>
-<li>Dummy variable for a sentence being “severe” (1 if sentence is for prison or jail and “above the median” for that particular felony class OR if a sentence is for prison or jail and the charge is a class 4 felony, 0 otherwise, using all sentences resulting in prison, jail, or probation time)</li>
+<li>Dummy variable for a sentence being “severe” (1 if sentence is for prison or jail and “above the median” for that particular felony class OR if a sentence is for prison or jail and the charge is a class 4 felony, 0 otherwise, using all sentences resulting in prison, jail, or probation time).</li>
 </ol>
+<p>quartz_off_screen 2</p>
 <table style="text-align:center">
 <tr>
 <td colspan="4" style="border-bottom: 1px solid black">
@@ -1680,6 +1681,72 @@ Also controlling for sentence year fixed effects
 </td>
 </tr>
 </table>
+<p>Now, I bootstrap one of my models (I’m not doing all of them because that would take ages, and I see this as more of a sanity check to see if the coefficients/standard errors are wildly different). I’m choosing the third column of Judge Maura Slattery Boyle’s regression table. The outputs are a summary of the coefficient, a plot of its distribution, and a confidence interval around it.</p>
+<pre><code> R original   bootBias    bootSE bootMed</code></pre>
+<p>1 5000 0.10413 0.00024988 0.0091369 0.10438 quartz_off_screen 2 BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS Based on 5000 bootstrap replicates</p>
+<p>CALL : boot.ci(boot.out = boyle_reg_3_boot, conf = 0.99, type = “perc”)</p>
+<p>Intervals : Level Percentile<br />
+99% ( 0.0803, 0.1290 )<br />
+Calculations and Intervals on Original Scale</p>
+<table style="text-align:center">
+<tr>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+R
+</td>
+<td>
+original
+</td>
+<td>
+bootBias
+</td>
+<td>
+bootSE
+</td>
+<td>
+bootMed
+</td>
+</tr>
+<tr>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+1
+</td>
+<td>
+5,000
+</td>
+<td>
+0.104
+</td>
+<td>
+0.0002
+</td>
+<td>
+0.009
+</td>
+<td>
+0.104
+</td>
+</tr>
+<tr>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+</table>
+<p>Happily, our bootstrap estimates fall in line well (almost perfectly in fact) with our coefficient from the regular OLS regression (see column 3 of our regression table for Judge Slattery Boyle for reference). I won’t replicate this experiment with all the judges (I’ve put my laptop through enough) but I take this as a good sign that the sample size is mitigating the impacts of our wonky residuals, and therefore our coefficients for all models are pretty robust.</p>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>All in all I see this as the fairest attempt I can make at measuring sentencing severity and assessing it’s significance rigorously. I’d loved to be proved wrong though.</p>
+<p>It’s also worth noting that, while cases are assigned randomly to judges (I confirmed this during my stint at Injustice Watch), the greatest source of omitted variable bias comes from our lack of access to defendent records. Even a simple binary indicating whether an individual had been convicted prior to this case would do wonders for mitigating OVB concerns. Really hope to see that soon.</p>
 </div>
 
 
