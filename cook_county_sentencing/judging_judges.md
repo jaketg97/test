@@ -46,7 +46,7 @@ In retrospect, this approach wasn’t particularly elegant or effective. I didn�
 ![boyle_3_qq](boyle_3_qq.png)
 *Look at how ugly these residuals are*
 
-Looking back now, I’ve had a change of heart for two reasons. 
+Looking back now, I’ve had a change of heart for three reasons. 
 1. As long as the Gauss-Markov assumptions are satisfied (we can adjust for heteroskedasticity using robust standard errors), the coefficient produced by my linear regression is still BLUE and consistent, meaning that given the massive sample size offered by this data (well over 100k cases), I feel more comfortable interpreting the coefficient than I did then. 
 2. The biggest concern I always had was omitted variable bias, and by using a linear regression to assess significance I’m able to control for two additional variables that I didn’t account for in my bootstrap method: sentence date (as a continuos variable, assuming sentences have gotten more lenient over time) and sentence years (as fixed effects, assuming sentencing norms/rules might change year to year).
 3. I can use bootstrapping to construct a distribution of my coefficient of interest (across bootstrapped samples of my data), and I can use that distribution to create an empirical confidence interval. This can be a good check on my presumption of coefficient accuracy. 
