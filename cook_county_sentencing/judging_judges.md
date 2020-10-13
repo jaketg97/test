@@ -14,7 +14,7 @@ In spring 2018, though, an opportunity arose to rectify that. Cook County State'
 
 ## Creating the ranking
 
-My full methodology can be found [here](CCSAO_sentencing_analysis.html). I'll be going over the major points (and my questions) for the rest of this post. Before I go further though, I really hope others start taking a look at this data too ([my code](CCSAO_sentencing_analysis.html.Rmd), by the way, can help with the preliminary cleaning). I think it offers a great opportunity to change the way we assess judicial impact.
+My full methodology can be found [here](CCSAO_sentencing_analysis.html). I'll be going over the major points (and my questions) for the rest of this post. Before I go further though, I really hope others start taking a look at this data too ([my code](https://jaketg97.github.io/Jacob-Toner-Gosselin/cook_county_sentencing/CCSAO_sentencing_analysis.Rmd), by the way, can help with the preliminary cleaning). I think it offers a great opportunity to change the way we assess judicial impact.
 
 The first half of my code is dedicated to creating a "severity metric". This is done by aggregating the data by judges, calculating 
 1. The percent of prison sentences above the median for a given felony class (i.e. is a class 1 felony prison sentence above the median prison sentence given to a class 1 felony, etc...).
