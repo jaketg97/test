@@ -177,7 +177,7 @@ reg_tables <- function(judge_dummy, ols_reg_table, logit_reg_table) {
 
 reg_tables("boyle_dummy", "boyle_ols.html", "boyle_logit.html")
 reg_tables("walowski_dummy", "walowski_ols.html", "walowski_logit.html")
-reg_tables("araujo_dummy", "araujo_ols.html", "byrne_logit.html")
+reg_tables("araujo_dummy", "araujo_ols.html", "araujo_logit.html")
 reg_tables("byrne_dummy", "byrne_ols.html", "byrne_logit.html")
 reg_tables("raines_dummy", "raines_ols.html", "raines_logit.html")
 ```
