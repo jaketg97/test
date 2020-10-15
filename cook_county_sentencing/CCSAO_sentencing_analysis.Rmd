@@ -148,69 +148,38 @@ model_1_data <- subset(original_subset, counter_PJ == 1)
 model_2_data <- subset(original_subset, counter_F4 == 1)
 model_3_data <- original_subset
 
-boyle_reg_1 <- lm(above_median ~ boyle_dummy + sentence_date + sentence_year.f, data = model_1_data)
-cov <- vcovHC(boyle_reg_1, type = "HC") 
-boyle_reg_1_robust.se <- sqrt(diag(cov))
-boyle_reg_2 <- lm(counter_F4_pj ~ boyle_dummy + sentence_date + sentence_year.f, data = model_2_data)
-cov <- vcovHC(boyle_reg_2, type = "HC") 
-boyle_reg_2_robust.se <- sqrt(diag(cov))
 boyle_reg_3 <- lm(severe_sentence ~ boyle_dummy + sentence_date + sentence_year.f, data = model_3_data)
-cov <- vcovHC(boyle_reg_3, type = "HC") 
-boyle_reg_3_robust.se <- sqrt(diag(cov))
 
 png(filename = "boyle_3_qq.png", width = 1000, height = 600)
 qqnorm(rstandard(boyle_reg_3), main = "QQPlot of regression residuals, Judge Boyle model 3")
 dev.off()
 
-stargazer(boyle_reg_1, boyle_reg_2, boyle_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), se = list(boyle_reg_1_robust.se, boyle_reg_2_robust.se, boyle_reg_2_robust.se), align=TRUE, type = "html", omit = "sentence_year.f", notes = c("Also controlling for sentence year fixed effects", "Huber-White robust standard errors"), omit.stat = c("rsq", "f", "ser"), out = "boyle_reg.html")
+reg_tables <- function(judge_dummy, ols_reg_table, logit_reg_table) {
+  
+  ols_reg_1 <- lm(paste("above_median ~ ", judge_dummy, " + sentence_date + sentence_year.f"), data = model_1_data)
+  cov <- vcovHC(boyle_reg_1, type = "HC") 
+  ols_reg_1_robust.se <- sqrt(diag(cov))
+  ols_reg_2 <- lm(paste("counter_F4_pj ~ ", judge_dummy, " + sentence_date + sentence_year.f"), data = model_2_data)
+  cov <- vcovHC(boyle_reg_2, type = "HC") 
+  ols_reg_2_robust.se <- sqrt(diag(cov))
+  ols_reg_3 <- lm(paste("severe_sentence ~ ", judge_dummy, " + sentence_date + sentence_year.f"), data = model_3_data)
+  cov <- vcovHC(ols_reg_3, type = "HC") 
+  ols_reg_3_robust.se <- sqrt(diag(cov)) 
+  
+  stargazer(ols_reg_1, ols_reg_2, ols_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), se = list(ols_reg_1_robust.se, ols_reg_2_robust.se, ols_reg_3_robust.se), align=TRUE, type = "html", omit = "sentence_year.f", notes = c("Also controlling for sentence year fixed effects", "Huber-White robust standard errors"), omit.stat = c("rsq", "f", "ser"), out = ols_reg_table)
+  
+  logit_reg_1 <- glm(paste("above_median ~ ", judge_dummy, " + sentence_date + sentence_year.f"), data = model_1_data)
+  logit_reg_2 <- glm(paste("counter_F4_pj ~ ", judge_dummy, " + sentence_date + sentence_year.f"), data = model_2_data)
+  logit_reg_3 <- glm(paste("severe_sentence ~ ", judge_dummy, " + sentence_date + sentence_year.f"), data = model_3_data)
+  
+  stargazer(logit_reg_1, logit_reg_2, logit_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), align=TRUE, type = "html", omit = "sentence_year.f", notes = c("Also controlling for sentence year fixed effects", "Huber-White robust standard errors"), omit.stat = c("rsq", "f", "ser"), out = logit_reg_table)
+} 
 
-walowski_reg_1 <- lm(above_median ~ walowski_dummy + sentence_date + sentence_year.f, data = model_1_data)
-cov <- vcovHC(walowski_reg_1, type = "HC") 
-walowski_reg_1_robust.se <- sqrt(diag(cov))
-walowski_reg_2 <- lm(counter_F4_pj ~ walowski_dummy + sentence_date + sentence_year.f, data = model_2_data)
-cov <- vcovHC(walowski_reg_2, type = "HC") 
-walowski_reg_2_robust.se <- sqrt(diag(cov))
-walowski_reg_3 <- lm(severe_sentence ~ walowski_dummy + sentence_date + sentence_year.f, data = model_3_data)
-cov <- vcovHC(walowski_reg_3, type = "HC") 
-walowski_reg_3_robust.se <- sqrt(diag(cov))
-
-stargazer(walowski_reg_1, walowski_reg_2, walowski_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), se = list(walowski_reg_1_robust.se, walowski_reg_2_robust.se, walowski_reg_2_robust.se), align=TRUE, type = "html", omit = "sentence_year.f", notes = c("Also controlling for sentence year fixed effects", "Huber-White robust standard errors"), omit.stat = c("rsq", "f", "ser"), out = "walowski_reg.html")
-
-araujo_reg_1 <- lm(above_median ~ araujo_dummy + sentence_date + sentence_year.f, data = model_1_data)
-cov <- vcovHC(araujo_reg_1, type = "HC") 
-araujo_reg_1_robust.se <- sqrt(diag(cov))
-araujo_reg_2 <- lm(counter_F4_pj ~ araujo_dummy + sentence_date + sentence_year.f, data = model_2_data)
-cov <- vcovHC(araujo_reg_2, type = "HC") 
-araujo_reg_2_robust.se <- sqrt(diag(cov))
-araujo_reg_3 <- lm(severe_sentence ~ araujo_dummy + sentence_date + sentence_year.f, data = model_3_data)
-cov <- vcovHC(araujo_reg_3, type = "HC") 
-araujo_reg_3_robust.se <- sqrt(diag(cov))
-
-stargazer(araujo_reg_1, araujo_reg_2, araujo_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), se = list(araujo_reg_1_robust.se, araujo_reg_2_robust.se, araujo_reg_2_robust.se), align=TRUE, type = "html", omit = "sentence_year.f", notes = c("Also controlling for sentence year fixed effects", "Huber-White robust standard errors"), omit.stat = c("rsq", "f", "ser"), out = "araujo_reg.html")
-
-byrne_reg_1 <- lm(above_median ~ byrne_dummy + sentence_date + sentence_year.f, data = model_1_data)
-cov <- vcovHC(byrne_reg_1, type = "HC") 
-byrne_reg_1_robust.se <- sqrt(diag(cov))
-byrne_reg_2 <- lm(counter_F4_pj ~ byrne_dummy + sentence_date + sentence_year.f, data = model_2_data)
-cov <- vcovHC(byrne_reg_2, type = "HC") 
-byrne_reg_2_robust.se <- sqrt(diag(cov))
-byrne_reg_3 <- lm(severe_sentence ~ byrne_dummy + sentence_date + sentence_year.f, data = model_3_data)
-cov <- vcovHC(byrne_reg_3, type = "HC") 
-byrne_reg_3_robust.se <- sqrt(diag(cov))
-
-stargazer(byrne_reg_1, byrne_reg_2, byrne_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), se = list(byrne_reg_1_robust.se, byrne_reg_2_robust.se, byrne_reg_2_robust.se), align=TRUE, type = "html", omit = "sentence_year.f", notes = c("Also controlling for sentence year fixed effects", "Huber-White robust standard errors"), omit.stat = c("rsq", "f", "ser"), out = "byrne_reg.html")
-
-raines_reg_1 <- lm(above_median ~ raines_dummy + sentence_date + sentence_year.f, data = model_1_data)
-cov <- vcovHC(raines_reg_1, type = "HC") 
-raines_reg_1_robust.se <- sqrt(diag(cov))
-raines_reg_2 <- lm(counter_F4_pj ~ raines_dummy + sentence_date + sentence_year.f, data = model_2_data)
-cov <- vcovHC(raines_reg_2, type = "HC") 
-raines_reg_2_robust.se <- sqrt(diag(cov))
-raines_reg_3 <- lm(severe_sentence ~ raines_dummy + sentence_date + sentence_year.f, data = model_3_data)
-cov <- vcovHC(raines_reg_3, type = "HC") 
-raines_reg_3_robust.se <- sqrt(diag(cov))
-
-stargazer(raines_reg_1, raines_reg_2, raines_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), se = list(raines_reg_1_robust.se, raines_reg_2_robust.se, raines_reg_2_robust.se), align=TRUE, type = "html", omit = "sentence_year.f", notes = c("Also controlling for sentence year fixed effects", "Huber-White robust standard errors"), omit.stat = c("rsq", "f", "ser"), out = "raines_reg.html")
+reg_tables("boyle_dummy", "boyle_ols.html", "boyle_logit.html")
+reg_tables("walowski_dummy", "walowski_ols.html", "walowski_logit.html")
+reg_tables("araujo_dummy", "araujo_ols.html", "byrne_logit.html")
+reg_tables("byrne_dummy", "byrne_ols.html", "byrne_logit.html")
+reg_tables("raines_dummy", "raines_ols.html", "raines_logit.html")
 ```
 
 ## Bootstrapping regression
