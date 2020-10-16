@@ -5,7 +5,8 @@ author: "Jacob Toner Gosselin"
 date: 2020-10-15 
 categories: sentencing ideas
 ---
-*Before you read this, if you're a Chicago resident, make sure you check out Injustice Watch's [Judicial Election Guide](https://www.injusticewatch.org/interactives/judicial-election-guide/2020-general/en/) and fill out your sample ballot!*
+*Before you read this, if you're a Chicago resident, make sure you check out Injustice Watch's [Judicial Election Guide](https://www.injusticewatch.org/interactives/judicial-election-guide/2020-general/en/) and fill out your sample ballot! Also, my full methodology can be found [here](CCSAO_sentencing_analysis.html) and my code can be found [here](https://github.com/jaketg97/Jacob-Toner-Gosselin/tree/main/cook_county_sentencing)*
+
 ## Background
 Judicial elections, like many parts of Chicago city politics, are a wonderful tool for ensuring public accountability from powerful state actors **in theory**, and (mostly) an undemocratic clusterfuck **in practice**. In case that in-depth analysis was unsatisfying, I encourage you to check out [this article](https://www.injusticewatch.org/news/2020/why-judicial-elections-matter-and-other-common-questions-about-the-march-primary/) for more info on the politics, past and present, of judicial races (and stick around, because Injustice Watch is the best in the business when it comes to judicial reporting in Cook County).
 
@@ -14,9 +15,6 @@ This post is focused on only one of the many flaws in this system: the warped in
 In spring 2018, though, an opportunity arose to rectify that. Cook County State's Attorney Kim Foxx released sentencing records going back well over a decade. In a city not known for transparency, the decision to release and continually update that data may be the greatest legacy she leaves behind. It can be found [here](https://www.cookcountystatesattorney.org/data).
 
 ## Creating the ranking
-
-My full methodology can be found [here](CCSAO_sentencing_analysis.html). Before I go further though, I want to note that I really hope others start taking a look at this data too ([my code](https://jaketg97.github.io/Jacob-Toner-Gosselin/cook_county_sentencing/CCSAO_sentencing_analysis.Rmd), by the way, can help with the preliminary cleaning). I think it offers a great opportunity to change the way we assess judicial impact.
-
 The first half of my code is dedicated to creating a "severity metric". This is done by aggregating the data by judges, calculating 
 1. The percent of prison sentences above the median for a given felony class (i.e. is a class 1 felony prison sentence above the median prison sentence given to a class 1 felony, etc...).
 2. The percent of class 4 felony sentences resulting in prison time. 
