@@ -91,7 +91,7 @@ All in all, I see this as the fairest attempt I can make (right now) at measurin
 * For bootstrapping regressions in R: [Stanford Guide](https://statweb.stanford.edu/~owen/courses/305a/FoxOnBootingRegInR.pdf)
 * For OLS vs. Logit models when facing binary dependent variables: [StatModeling Columbia blog post](https://statmodeling.stat.columbia.edu/2020/01/10/linear-or-logistic-regression-with-binary-outcomes/)
 
-*Thanks to Ben, Owen, and Peter for looking at this/helping me talk through modeling concerns*
+*Thanks to Ben, Owen, Peter and Professor Jayachandran for their advice in handling my p-val concerns.*
 
 ## OLS Regression Tables
 
