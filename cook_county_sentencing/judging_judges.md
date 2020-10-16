@@ -5,6 +5,7 @@ author: "Jacob Toner Gosselin"
 date: 2020-10-15 
 categories: sentencing ideas
 ---
+*Before you read this, if you're a Chicago resident, make sure you check out Injustice Watch's [Judicial Election Guide](https://www.injusticewatch.org/interactives/judicial-election-guide/2020-general/en/) and fill out your sample ballot!*
 ## Background
 Judicial elections, like many parts of Chicago city politics, are a wonderful tool for ensuring public accountability from powerful state actors **in theory**, and (mostly) an undemocratic mess **in practice**. In case that in-depth analysis was unsatisfying, I encourage you to check out [this article](https://www.injusticewatch.org/news/2020/why-judicial-elections-matter-and-other-common-questions-about-the-march-primary/) for more info on the politics, past and present, of judicial races (and stick around, because Injustice Watch is the best in the business when it comes to judicial reporting in Cook County).
 
