@@ -2,7 +2,7 @@
 layout: post
 title: "Judging judges (round 2)"
 author: "Jacob Toner Gosselin"
-date: 2020-10-13 
+date: 2020-10-15 
 categories: sentencing ideas
 ---
 ## Background
@@ -88,7 +88,7 @@ All in all, I see this as the fairest attempt I can make (right now) at measurin
 ## Sources Consulted
 * For addressing non-normality of residuals: [Frontiers in Psychology Review of approaches](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6232275/) 
 * For bootstrapping regressions in R: [Stanford Guide](https://statweb.stanford.edu/~owen/courses/305a/FoxOnBootingRegInR.pdf)
-* For OLS vs. Logit models when facing binary dependent variables: [StatModeling Colubmia blog post](https://statmodeling.stat.columbia.edu/2020/01/10/linear-or-logistic-regression-with-binary-outcomes/)
+* For OLS vs. Logit models when facing binary dependent variables: [StatModeling Columbia blog post](https://statmodeling.stat.columbia.edu/2020/01/10/linear-or-logistic-regression-with-binary-outcomes/)
 
 *Thanks to Ben, Owen, and Peter for looking at this/helping me talk through modeling concerns*
 
