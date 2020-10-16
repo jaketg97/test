@@ -2,7 +2,7 @@
 layout: post
 title: "Judging judges (round 2)"
 author: "Jacob Toner Gosselin"
-date: 2020-10-15 
+date: 2020-10-16 
 categories: sentencing ideas
 ---
 *Before you read this, if you're a Chicago resident, make sure you check out Injustice Watch's [Judicial Election Guide](https://www.injusticewatch.org/interactives/judicial-election-guide/2020-general/en/) and fill out your sample ballot! Also, my full methodology can be found [here](CCSAO_sentencing_analysis.html) and my code can be found [here](https://github.com/jaketg97/Jacob-Toner-Gosselin/tree/main/cook_county_sentencing).*
