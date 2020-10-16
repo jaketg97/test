@@ -11,6 +11,7 @@
 
 <meta name="author" content="Jacob Gosselin" />
 
+<meta name="date" content="2020-10-15" />
 
 <title>Cook County Criminal Judge Sentencing Analysis</title>
 
@@ -364,7 +365,7 @@ summary {
 
 <h1 class="title toc-ignore">Cook County Criminal Judge Sentencing Analysis</h1>
 <h4 class="author">Jacob Gosselin</h4>
-<h4 class="date">10/9/2020</h4>
+<h4 class="date">10/15/2020</h4>
 
 </div>
 
@@ -618,8 +619,8 @@ Steven G Watkins
 <p>A ranking is one thing, but for context we want to see if the judges at the top of our ranking do seem to hand down “severe” sentences at a significant rate. Otherwise, the differences we see in the variables that make up our severity metric (percent of prison sentences “above the median” and percent of class 4 felony sentences resulting in prison time) could just be statistical noise.</p>
 <p>Two years ago, when I was only looking at Judge Maura Slattery Boyle, I did this by “bootstrap”, i.e. resampling data with replacement. My logic was that doing it this way I wouldn’t have to assume the distribution of the statistic (in this case, the two aforementioned variables). I could draw a 95% confidence interval around the variables for Judge Slattery Boyle, and then compare that confidence interval to the actual values of the variables in the entire population. If the bottom end of the confidence interval was above the actual value of the variable in the entire dataset (which was the case), I could say at a p-val of .05 that Judge Slattery-Boyle’s sentences weren’t randomly picked from the population at large. In other words, she was sentencing at a higher rate than the “average” judge.</p>
 <p>In retrospect, this approach wasn’t particularly elegant or effective. I didn’t want to do a simple linear regression because I was dealing with two dummy variables, and the distribution of the regression residuals wouldn’t be even close to normal. My understanding then (and now, although I’d love if someone could walk me through this like I was 5) was that while non-normal residuals don’t violate the Gauss-Markov theorem, they did make it impossible to interpret the t statistics/p-values produced, and the p-value was all I really wanted.</p>
-<p>However, looking back now I’ve had a change of heart for three reasons. Number one, as long as the Gauss-Markov assumptions are satisfied (we can adjust for heteroskedasticity using robust standard errors), the coefficient produced by my linear regression is still BLUE and consistent, meaning that given the massive sample size offered by this data (well over 100k cases), I feel more comfortable interpreting the coefficient than I did then. Number two, the biggest concern I always had was omitted variable bias, and by using a linear regression to assess significance I’m able to control for two additional variables that I didn’t account for in my bootstrap method: sentence date (as a continuous variable, assuming sentences have gotten more lenient over time) and sentence years (as fixed effects, assuming sentencing norms/rules might change year to year). And number three, I can use bootstrapping with my linear regression model, which gives me the best of both worlds: added control variables, and standard errors that should be robust to the non-normality of my residuals.</p>
-<p>So, below I have five regression tables for five judges: Maura Slattery Boyle (still leading by my severity metric, and I want to see if controlling for the additional covariates changes the results for her), Ursula Walowski, Mauricio Araujo, Thomas Byrne, and William Raines (all up for retention and in the top third of judges by sentencing severity). Each table has three columns for three dependent variables</p>
+<p>However, looking back now I’ve had a change of heart for three reasons. Number one, as long as the Gauss-Markov assumptions are satisfied (we can adjust for heteroskedasticity using robust standard errors), the coefficient produced by my linear regression is still BLUE and consistent, meaning that given the massive sample size offered by this data (well over 100k cases), I feel more comfortable interpreting the coefficient than I did then. Number two, the biggest concern I always had was omitted variable bias, and by using a linear regression to assess significance I’m able to control for two additional variables that I didn’t account for in my bootstrap method: sentence date (as a continuous variable, assuming sentences have gotten more lenient over time) and sentence years (as fixed effects, assuming sentencing norms/rules might change year to year). And number three, I can test my assumption that my OLS coefficients are trustworthy by A) fitting a logistic regression in addition, since logit models don’t assume residuals are normally distributed for their p-vals; and B) using bootstrapping with my linear regression model, to construct an empirical confidence interval around my OLS coefficient.</p>
+<p>So, below I have five OLS regression tables and five logit regression tables for five judges: Maura Slattery Boyle (still leading by my severity metric, and I want to see if controlling for the additional covariates changes the results for her), Ursula Walowski, Mauricio Araujo, Thomas Byrne, and William Raines (all up for retention and in the top third of judges by sentencing severity). Each table has three columns for three dependent variables</p>
 <ol style="list-style-type: decimal">
 <li>Dummy variable for sentence being above the median (0 if not, 1 if so, only using sentences that resulted in prison or jail time)</li>
 <li>Dummy variable for sentence being a class 4 felony and resulting in prison time (0 if class 4 felony sentenced to probation, 1 if class 4 felony sentenced to prison or jail, only using sentences on class 4 felonies where the outcome was prison or jail)</li>
@@ -700,7 +701,7 @@ boyle_dummy
 (0.013)
 </td>
 <td>
-(0.013)
+(0.009)
 </td>
 </tr>
 <tr>
@@ -737,7 +738,7 @@ sentence_date
 (0.00002)
 </td>
 <td>
-(0.00002)
+(0.00001)
 </td>
 </tr>
 <tr>
@@ -774,7 +775,7 @@ Constant
 (0.018)
 </td>
 <td>
-(0.018)
+(0.147)
 </td>
 </tr>
 <tr>
@@ -836,6 +837,245 @@ Adjusted R<sup>2</sup>
 </td>
 <td colspan="3" style="text-align:right">
 Also controlling for sentence year fixed effects
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3" style="text-align:right">
+Huber-White robust standard errors
+</td>
+</tr>
+</table>
+<table style="text-align:center">
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3">
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="3" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+Above median sentence
+</td>
+<td>
+Class 4 prison sentence
+</td>
+<td>
+Severe sentence
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(1)
+</td>
+<td>
+(2)
+</td>
+<td>
+(3)
+</td>
+</tr>
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+boyle_dummy
+</td>
+<td>
+0.078<sup>***</sup>
+</td>
+<td>
+0.132<sup>***</sup>
+</td>
+<td>
+0.104<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.011)
+</td>
+<td>
+(0.014)
+</td>
+<td>
+(0.009)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+sentence_date
+</td>
+<td>
+0.00002
+</td>
+<td>
+-0.00001
+</td>
+<td>
+0.00000
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.00001)
+</td>
+<td>
+(0.00002)
+</td>
+<td>
+(0.00001)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+1.246<sup>**</sup>
+</td>
+<td>
+0.013
+</td>
+<td>
+1.048<sup>**</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.535)
+</td>
+<td>
+(0.498)
+</td>
+<td>
+(0.513)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+129,586
+</td>
+<td>
+96,051
+</td>
+<td>
+214,571
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Log Likelihood
+</td>
+<td>
+-93,754.010
+</td>
+<td>
+-69,284.640
+</td>
+<td>
+-151,892.400
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Akaike Inf. Crit.
+</td>
+<td>
+187,584.000
+</td>
+<td>
+138,625.300
+</td>
+<td>
+303,876.700
+</td>
+</tr>
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td colspan="3" style="text-align:right">
+<sup><em></sup>p&lt;0.1; <sup><strong></sup>p&lt;0.05; <sup></strong></em></sup>p&lt;0.01
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3" style="text-align:right">
+Also controlling for sentence year fixed effects
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3" style="text-align:right">
+Huber-White robust standard errors
 </td>
 </tr>
 </table>
@@ -911,7 +1151,7 @@ walowski_dummy
 (0.021)
 </td>
 <td>
-(0.021)
+(0.015)
 </td>
 </tr>
 <tr>
@@ -948,7 +1188,7 @@ sentence_date
 (0.00002)
 </td>
 <td>
-(0.00002)
+(0.00001)
 </td>
 </tr>
 <tr>
@@ -985,7 +1225,7 @@ Constant
 (0.018)
 </td>
 <td>
-(0.018)
+(0.147)
 </td>
 </tr>
 <tr>
@@ -1049,6 +1289,245 @@ Adjusted R<sup>2</sup>
 Also controlling for sentence year fixed effects
 </td>
 </tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3" style="text-align:right">
+Huber-White robust standard errors
+</td>
+</tr>
+</table>
+<table style="text-align:center">
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3">
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="3" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+Above median sentence
+</td>
+<td>
+Class 4 prison sentence
+</td>
+<td>
+Severe sentence
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(1)
+</td>
+<td>
+(2)
+</td>
+<td>
+(3)
+</td>
+</tr>
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+walowski_dummy
+</td>
+<td>
+0.042<sup>**</sup>
+</td>
+<td>
+0.125<sup>***</sup>
+</td>
+<td>
+0.073<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.018)
+</td>
+<td>
+(0.022)
+</td>
+<td>
+(0.014)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+sentence_date
+</td>
+<td>
+0.00002
+</td>
+<td>
+-0.00001
+</td>
+<td>
+0.00000
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.00001)
+</td>
+<td>
+(0.00002)
+</td>
+<td>
+(0.00001)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+1.231<sup>**</sup>
+</td>
+<td>
+0.015
+</td>
+<td>
+1.029<sup>**</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.535)
+</td>
+<td>
+(0.498)
+</td>
+<td>
+(0.513)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+129,586
+</td>
+<td>
+96,051
+</td>
+<td>
+214,571
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Log Likelihood
+</td>
+<td>
+-93,777.100
+</td>
+<td>
+-69,315.120
+</td>
+<td>
+-151,947.300
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Akaike Inf. Crit.
+</td>
+<td>
+187,630.200
+</td>
+<td>
+138,686.200
+</td>
+<td>
+303,986.600
+</td>
+</tr>
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td colspan="3" style="text-align:right">
+<sup><em></sup>p&lt;0.1; <sup><strong></sup>p&lt;0.05; <sup></strong></em></sup>p&lt;0.01
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3" style="text-align:right">
+Also controlling for sentence year fixed effects
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3" style="text-align:right">
+Huber-White robust standard errors
+</td>
+</tr>
 </table>
 <table style="text-align:center">
 <tr>
@@ -1109,7 +1588,7 @@ araujo_dummy
 0.003
 </td>
 <td>
--0.027
+-0.027<sup>**</sup>
 </td>
 </tr>
 <tr>
@@ -1122,7 +1601,7 @@ araujo_dummy
 (0.016)
 </td>
 <td>
-(0.016)
+(0.011)
 </td>
 </tr>
 <tr>
@@ -1159,7 +1638,7 @@ sentence_date
 (0.00002)
 </td>
 <td>
-(0.00002)
+(0.00001)
 </td>
 </tr>
 <tr>
@@ -1196,7 +1675,7 @@ Constant
 (0.018)
 </td>
 <td>
-(0.018)
+(0.147)
 </td>
 </tr>
 <tr>
@@ -1258,6 +1737,245 @@ Adjusted R<sup>2</sup>
 </td>
 <td colspan="3" style="text-align:right">
 Also controlling for sentence year fixed effects
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3" style="text-align:right">
+Huber-White robust standard errors
+</td>
+</tr>
+</table>
+<table style="text-align:center">
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3">
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="3" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+Above median sentence
+</td>
+<td>
+Class 4 prison sentence
+</td>
+<td>
+Severe sentence
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(1)
+</td>
+<td>
+(2)
+</td>
+<td>
+(3)
+</td>
+</tr>
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+araujo_dummy
+</td>
+<td>
+0.052<sup>***</sup>
+</td>
+<td>
+0.003
+</td>
+<td>
+-0.027<sup>**</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.015)
+</td>
+<td>
+(0.017)
+</td>
+<td>
+(0.011)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+sentence_date
+</td>
+<td>
+0.00002
+</td>
+<td>
+-0.00001
+</td>
+<td>
+0.00000
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.00001)
+</td>
+<td>
+(0.00002)
+</td>
+<td>
+(0.00001)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+1.231<sup>**</sup>
+</td>
+<td>
+0.015
+</td>
+<td>
+1.034<sup>**</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.535)
+</td>
+<td>
+(0.498)
+</td>
+<td>
+(0.513)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+129,586
+</td>
+<td>
+96,051
+</td>
+<td>
+214,571
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Log Likelihood
+</td>
+<td>
+-93,774.380
+</td>
+<td>
+-69,331.770
+</td>
+<td>
+-151,957.300
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Akaike Inf. Crit.
+</td>
+<td>
+187,624.700
+</td>
+<td>
+138,719.500
+</td>
+<td>
+304,006.600
+</td>
+</tr>
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td colspan="3" style="text-align:right">
+<sup><em></sup>p&lt;0.1; <sup><strong></sup>p&lt;0.05; <sup></strong></em></sup>p&lt;0.01
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3" style="text-align:right">
+Also controlling for sentence year fixed effects
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3" style="text-align:right">
+Huber-White robust standard errors
 </td>
 </tr>
 </table>
@@ -1320,7 +2038,7 @@ byrne_dummy
 -0.015
 </td>
 <td>
-0.023
+0.023<sup>**</sup>
 </td>
 </tr>
 <tr>
@@ -1333,7 +2051,7 @@ byrne_dummy
 (0.018)
 </td>
 <td>
-(0.018)
+(0.012)
 </td>
 </tr>
 <tr>
@@ -1370,7 +2088,7 @@ sentence_date
 (0.00002)
 </td>
 <td>
-(0.00002)
+(0.00001)
 </td>
 </tr>
 <tr>
@@ -1407,7 +2125,7 @@ Constant
 (0.018)
 </td>
 <td>
-(0.018)
+(0.147)
 </td>
 </tr>
 <tr>
@@ -1469,6 +2187,245 @@ Adjusted R<sup>2</sup>
 </td>
 <td colspan="3" style="text-align:right">
 Also controlling for sentence year fixed effects
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3" style="text-align:right">
+Huber-White robust standard errors
+</td>
+</tr>
+</table>
+<table style="text-align:center">
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3">
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="3" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+Above median sentence
+</td>
+<td>
+Class 4 prison sentence
+</td>
+<td>
+Severe sentence
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(1)
+</td>
+<td>
+(2)
+</td>
+<td>
+(3)
+</td>
+</tr>
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+byrne_dummy
+</td>
+<td>
+0.074<sup>***</sup>
+</td>
+<td>
+-0.015
+</td>
+<td>
+0.023<sup>**</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.015)
+</td>
+<td>
+(0.018)
+</td>
+<td>
+(0.012)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+sentence_date
+</td>
+<td>
+0.00002
+</td>
+<td>
+-0.00001
+</td>
+<td>
+0.00000
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.00001)
+</td>
+<td>
+(0.00002)
+</td>
+<td>
+(0.00001)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+1.234<sup>**</sup>
+</td>
+<td>
+0.015
+</td>
+<td>
+1.032<sup>**</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.535)
+</td>
+<td>
+(0.498)
+</td>
+<td>
+(0.513)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+129,586
+</td>
+<td>
+96,051
+</td>
+<td>
+214,571
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Log Likelihood
+</td>
+<td>
+-93,767.000
+</td>
+<td>
+-69,331.430
+</td>
+<td>
+-151,958.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Akaike Inf. Crit.
+</td>
+<td>
+187,610.000
+</td>
+<td>
+138,718.900
+</td>
+<td>
+304,008.100
+</td>
+</tr>
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td colspan="3" style="text-align:right">
+<sup><em></sup>p&lt;0.1; <sup><strong></sup>p&lt;0.05; <sup></strong></em></sup>p&lt;0.01
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3" style="text-align:right">
+Also controlling for sentence year fixed effects
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3" style="text-align:right">
+Huber-White robust standard errors
 </td>
 </tr>
 </table>
@@ -1544,7 +2501,7 @@ raines_dummy
 (0.018)
 </td>
 <td>
-(0.018)
+(0.014)
 </td>
 </tr>
 <tr>
@@ -1581,7 +2538,7 @@ sentence_date
 (0.00002)
 </td>
 <td>
-(0.00002)
+(0.00001)
 </td>
 </tr>
 <tr>
@@ -1618,7 +2575,7 @@ Constant
 (0.018)
 </td>
 <td>
-(0.018)
+(0.147)
 </td>
 </tr>
 <tr>
@@ -1680,6 +2637,245 @@ Adjusted R<sup>2</sup>
 </td>
 <td colspan="3" style="text-align:right">
 Also controlling for sentence year fixed effects
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3" style="text-align:right">
+Huber-White robust standard errors
+</td>
+</tr>
+</table>
+<table style="text-align:center">
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3">
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="3" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+Above median sentence
+</td>
+<td>
+Class 4 prison sentence
+</td>
+<td>
+Severe sentence
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(1)
+</td>
+<td>
+(2)
+</td>
+<td>
+(3)
+</td>
+</tr>
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+raines_dummy
+</td>
+<td>
+-0.124<sup>***</sup>
+</td>
+<td>
+0.161<sup>***</sup>
+</td>
+<td>
+0.115<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.016)
+</td>
+<td>
+(0.019)
+</td>
+<td>
+(0.014)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+sentence_date
+</td>
+<td>
+0.00002
+</td>
+<td>
+-0.00002
+</td>
+<td>
+0.00000
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.00001)
+</td>
+<td>
+(0.00002)
+</td>
+<td>
+(0.00001)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+1.267<sup>**</sup>
+</td>
+<td>
+0.018
+</td>
+<td>
+1.011<sup>**</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.535)
+</td>
+<td>
+(0.498)
+</td>
+<td>
+(0.513)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+129,586
+</td>
+<td>
+96,051
+</td>
+<td>
+214,571
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Log Likelihood
+</td>
+<td>
+-93,750.210
+</td>
+<td>
+-69,297.430
+</td>
+<td>
+-151,925.100
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Akaike Inf. Crit.
+</td>
+<td>
+187,576.400
+</td>
+<td>
+138,650.900
+</td>
+<td>
+303,942.300
+</td>
+</tr>
+<tr>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td colspan="3" style="text-align:right">
+<sup><em></sup>p&lt;0.1; <sup><strong></sup>p&lt;0.05; <sup></strong></em></sup>p&lt;0.01
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3" style="text-align:right">
+Also controlling for sentence year fixed effects
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3" style="text-align:right">
+Huber-White robust standard errors
 </td>
 </tr>
 </table>
@@ -1745,11 +2941,12 @@ bootMed
 </td>
 </tr>
 </table>
-<p>  Happily, our bootstrap estimates fall in line well (almost perfectly in fact) with our coefficient from the regular OLS regression (see column 3 of our regression table for Judge Slattery Boyle for reference). I won’t replicate this experiment with all the judges (I’ve put my laptop through enough) but I take this as a good sign that the sample size is mitigating the impacts of our wonky residuals, and therefore our coefficients for all models are pretty robust.</p>
+<p>  I won’t replicate this bootstrap experiment with all the judges (I’ve put my laptop through enough) but I take this as a good sign that the sample size is mitigating the impacts of our wonky residuals, and therefore our coefficients for all models are pretty robust.</p>
 </div>
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
+<p>Happily, our bootstrap estimates fall in line well (almost perfectly in fact) with our coefficient from the regular OLS regression (see column 3 of our regression table for Judge Slattery Boyle for reference). Our p-vals from the logit models show significance for most judge dummies too. For the record, I’m not using my logit coefficients just because they’re weird to intrepret in comparison to our OLS coefficients (and because with large sample size I think OLS is still the best model, even with a binary dependent variable).</p>
 <p>All in all I see this as the fairest attempt I can make at measuring sentencing severity and assessing it’s significance rigorously. I’d loved to be proved wrong though.</p>
 <p>It’s also worth noting that, while cases are assigned randomly to judges (I confirmed this during my stint at Injustice Watch), the greatest source of omitted variable bias comes from our lack of access to defendent records. Even a simple binary indicating whether an individual had been convicted prior to this case would do wonders for mitigating OVB concerns. Really hope to see that soon.</p>
 </div>

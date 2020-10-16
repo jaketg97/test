@@ -1,7 +1,7 @@
 ---
 title: "Cook County Criminal Judge Sentencing Analysis"
 author: "Jacob Gosselin"
-date: "10/9/2020"
+date: "10/15/2020"
 output:
   html_document: default
   word_document: default
@@ -125,9 +125,9 @@ Two years ago, when I was only looking at Judge Maura Slattery Boyle, I did this
 
 In retrospect, this approach wasn't particularly elegant or effective. I didn't want to do a simple linear regression because I was dealing with two dummy variables, and the distribution of the regression residuals wouldn't be even close to normal. My understanding then (and now, although I'd love if someone could walk me through this like I was 5) was that while non-normal residuals don't violate the Gauss-Markov theorem, they did make it impossible to interpret the t statistics/p-values produced, and the p-value was all I really wanted.
 
-However, looking back now I've had a change of heart for three reasons. Number one, as long as the Gauss-Markov assumptions are satisfied (we can adjust for heteroskedasticity using robust standard errors), the coefficient produced by my linear regression is still BLUE and consistent, meaning that given the massive sample size offered by this data (well over 100k cases), I feel more comfortable interpreting the coefficient than I did then. Number two, the biggest concern I always had was omitted variable bias, and by using a linear regression to assess significance I'm able to control for two additional variables that I didn't account for in my bootstrap method: sentence date (as a continuous variable, assuming sentences have gotten more lenient over time) and sentence years (as fixed effects, assuming sentencing norms/rules might change year to year). And number three, I can use bootstrapping with my linear regression model, which gives me the best of both worlds: added control variables, and standard errors that should be robust to the non-normality of my residuals. 
+However, looking back now I've had a change of heart for three reasons. Number one, as long as the Gauss-Markov assumptions are satisfied (we can adjust for heteroskedasticity using robust standard errors), the coefficient produced by my linear regression is still BLUE and consistent, meaning that given the massive sample size offered by this data (well over 100k cases), I feel more comfortable interpreting the coefficient than I did then. Number two, the biggest concern I always had was omitted variable bias, and by using a linear regression to assess significance I'm able to control for two additional variables that I didn't account for in my bootstrap method: sentence date (as a continuous variable, assuming sentences have gotten more lenient over time) and sentence years (as fixed effects, assuming sentencing norms/rules might change year to year). And number three, I can test my assumption that my OLS coefficients are trustworthy by A) fitting a logistic regression in addition, since logit models don't assume residuals are normally distributed for their p-vals; and B) using bootstrapping with my linear regression model, to construct an empirical confidence interval around my OLS coefficient. 
 
-So, below I have five regression tables for five judges: Maura Slattery Boyle (still leading by my severity metric, and I want to see if controlling for the additional covariates changes the results for her), Ursula Walowski, Mauricio Araujo, Thomas Byrne, and William Raines (all up for retention and in the top third of judges by sentencing severity). Each table has three columns for three dependent variables 
+So, below I have five OLS regression tables and five logit regression tables for five judges: Maura Slattery Boyle (still leading by my severity metric, and I want to see if controlling for the additional covariates changes the results for her), Ursula Walowski, Mauricio Araujo, Thomas Byrne, and William Raines (all up for retention and in the top third of judges by sentencing severity). Each table has three columns for three dependent variables 
 
 1. Dummy variable for sentence being above the median (0 if not, 1 if so, only using sentences that resulted in prison or jail time)
 2. Dummy variable for sentence being a class 4 felony and resulting in prison time (0 if class 4 felony sentenced to probation, 1 if class 4 felony sentenced to prison or jail, only using sentences on class 4 felonies where the outcome was prison or jail)
@@ -157,10 +157,10 @@ dev.off()
 reg_tables <- function(judge_dummy, ols_reg_table, logit_reg_table) {
   
   ols_reg_1 <- lm(paste("above_median ~ ", judge_dummy, " + sentence_date + sentence_year.f"), data = model_1_data)
-  cov <- vcovHC(boyle_reg_1, type = "HC") 
+  cov <- vcovHC(ols_reg_1, type = "HC") 
   ols_reg_1_robust.se <- sqrt(diag(cov))
   ols_reg_2 <- lm(paste("counter_F4_pj ~ ", judge_dummy, " + sentence_date + sentence_year.f"), data = model_2_data)
-  cov <- vcovHC(boyle_reg_2, type = "HC") 
+  cov <- vcovHC(ols_reg_2, type = "HC") 
   ols_reg_2_robust.se <- sqrt(diag(cov))
   ols_reg_3 <- lm(paste("severe_sentence ~ ", judge_dummy, " + sentence_date + sentence_year.f"), data = model_3_data)
   cov <- vcovHC(ols_reg_3, type = "HC") 
@@ -211,9 +211,11 @@ boot.ci(boyle_reg_3_boot, type="perc", conf=.99)
 stargazer(summary(boyle_reg_3_boot), summary = FALSE, type = "html", out = "slattery_boyle_boot.html")
 ```
 \  
-Happily, our bootstrap estimates fall in line well (almost perfectly in fact) with our coefficient from the regular OLS regression (see column 3 of our regression table for Judge Slattery Boyle for reference). I won't replicate this experiment with all the judges (I've put my laptop through enough) but I take this as a good sign that the sample size is mitigating the impacts of our wonky residuals, and therefore our coefficients for all models are pretty robust. 
+I won't replicate this bootstrap experiment with all the judges (I've put my laptop through enough) but I take this as a good sign that the sample size is mitigating the impacts of our wonky residuals, and therefore our coefficients for all models are pretty robust. 
 
 # Conclusion 
+
+Happily, our bootstrap estimates fall in line well (almost perfectly in fact) with our coefficient from the regular OLS regression (see column 3 of our regression table for Judge Slattery Boyle for reference). Our p-vals from the logit models show significance for most judge dummies too. For the record, I'm not using my logit coefficients just because they're weird to intrepret in comparison to our OLS coefficients (and because with large sample size I think OLS is still the best model, even with a binary dependent variable).
 
 All in all I see this as the fairest attempt I can make at measuring sentencing severity and assessing it's significance rigorously. I'd loved to be proved wrong though. 
 
