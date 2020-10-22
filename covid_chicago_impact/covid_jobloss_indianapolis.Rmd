@@ -1,0 +1,111 @@
+---
+title: "Covid job losses in Indianapolis"
+author: "Jacob Toner Gosselin"
+date: "10/21/2020"
+output: html_document
+---
+
+```{r setup, echo=FALSE, message=FALSE, results='hide', warning=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+library(readxl)
+library(ggmap)
+library(ggplot2)
+library(tigris)
+library(leaflet)
+```
+
+The Urban Institute put together [estimates](https://www.urban.org/features/where-low-income-jobs-are-being-lost-covid-19) of low income jobs lost by Census tract. I've included their methodology in our shared Teams drive; the main point is they used data from the Bureau of Labor Statistics Current Employment Statistics program, which measures net change in employment from February 2020 to the most recent month of data (currently April 2020, they're updating as data is released monthly). I'll be looking at the Census tracts that make up the Economic Mobility District, and comparing them to tracts in Indianapolis and Indiana.
+
+```{r Reading in the Data, subsetting by district, county, and state, echo=FALSE, results="hide", message=FALSE}
+full <- read.csv("https://ui-lodes-job-change-public.s3.amazonaws.com/job_loss_by_tract.csv")
+state <- subset(full, state_name=="Indiana")
+county <- subset(state, county_name=="Marion County")
+mobility_district <- subset(county, GEOID=="18097351700" | GEOID== "18097352600" | GEOID=="18097352700" | GEOID=="18097352800" | GEOID=="18097354400" | GEOID=="18097354500" | GEOID=="18097354700" | GEOID=="18097354800" | GEOID=="18097354900" | GEOID=="18097355000" | GEOID=="18097355100" | GEOID=="18097355600" | GEOID=="18097355700" )
+county_tracts <- tracts(state=18,county=97)
+mobility_district_tracts <- subset(county_tracts, GEOID=="18097351700" | GEOID== "18097352600" | GEOID=="18097352700" | GEOID=="18097352800" | GEOID=="18097354400" | GEOID=="18097354500" | GEOID=="18097354700" | GEOID=="18097354800" | GEOID=="18097354900" | GEOID=="18097355000" | GEOID=="18097355100" | GEOID=="18097355600" | GEOID=="18097355700")
+```
+
+## Summary of Mobility District 
+
+Below is the total low income jobs estimated lost in the mobility district (Census tracts 3517, 3526, 3527, 3528, 3544, 3545, 3547, 3548, 3549, 3550, 3551, 3556, 3557), the total percent (weighted by # of jobs, not just average of averages) of low income jobs estimated lost in the the mobility district, and the summary statistics (mean, median, quartiles, and extremes).
+
+```{r Initial Summary, echo=FALSE}
+sum(mobility_district$X000)
+sum(mobility_district$X000)/sum(mobility_district$total_li_workers_employed)
+summary(mobility_district$low_income_worker_job_loss_rate)
+```
+
+The Urban Institute projects 1668 low income jobs will be lost in our area, an 18.0% loss. Generally our Census tracts range from 17.4-19.5% low income job loss rates. 
+
+## Comparison to County and State
+```{r Comparison, echo=FALSE}
+sum(county$X000)/sum(county$total_li_workers_employed)
+summary(county$low_income_worker_job_loss_rate)
+
+sum(state$X000)/sum(state$total_li_workers_employed)
+summary(state$low_income_worker_job_loss_rate)
+```
+
+Comparing to the values for Marion county, we can see the mobility district Census tracts are more harshly impacted than the county at large. The projected job loss rate for all the district tracts combined is 18.0%, well above the 17.2% projected for the county at large. More importantly, when we look at the range of losses for all census tracts in the county, we can see the mobility district is in the upper quartile of impact (i.e. the third quartile is 17.8%, which is < 18.0%, so we are more impacted than 75% of tracts in Marion county). 
+
+Put another way, if we considered the mobility district one large census tract, we'd rank 51/224 in terms of greatest projected low income job loss. Our most impacted Census tract, 3544, is the third most impacted tract in the county (3/224).
+
+Statewide, we're well above the projected loss (16.8%). The mobility district is again in the upper quartile of impact (third quartile is 17.6% which is < 18.0%, so we are more impacted than 75% of census tracts in the state). 3544, our most impacted tract, is projected to have the 38th greatest loss in low income jobs out of all 1508 tracts in the state. 
+
+## Mapping
+
+Below are interactive maps showing projected low income job loss rate by Census tract in the mobility district, and in the county at large.
+
+### Mobility District Map
+```{r Mapping1, echo=FALSE, warning=FALSE}
+county_merged <- sp::merge(county_tracts, county, "GEOID")
+mobility_merged <- sp::merge(mobility_district_tracts, mobility_district, "GEOID")
+
+popup <- paste0("GEOID: ", mobility_merged$GEOID, "<br>", "Percent of Low Income Jobs Lost: ", round(mobility_merged$low_income_worker_job_loss_rate,2))
+pal <- colorNumeric(
+  palette = "YlGnBu",
+  domain = mobility_merged$low_income_worker_job_loss_rate
+)
+
+mobility_map<-leaflet() %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(data = mobility_merged, 
+              fillColor = ~pal(low_income_worker_job_loss_rate), 
+              color = "#b2aeae", # you need to use hex colors
+              fillOpacity = 0.7, 
+              weight = 1, 
+              smoothFactor = 0.2,
+              popup = popup) %>%
+  addLegend(pal=pal,
+            values = round(mobility_merged$low_income_worker_job_loss_rate, 2), 
+            position = "bottomright", 
+            title = "Percent of Low Income Jobs Lost") 
+
+mobility_map
+
+```
+
+### County Map
+```{r Mapping2, echo=FALSE, warning=FALSE}
+popup <- paste0("GEOID: ", county_merged$GEOID, "<br>", "Percent of Low Income Jobs Lost: ", round(county_merged$low_income_worker_job_loss_rate,2))
+pal <- colorNumeric(
+  palette = "YlGnBu",
+  domain = county_merged$low_income_worker_job_loss_rate
+)
+
+county_map<-leaflet() %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(data = county_merged, 
+              fillColor = ~pal(low_income_worker_job_loss_rate), 
+              color = "#b2aeae", # you need to use hex colors
+              fillOpacity = 0.7, 
+              weight = 1, 
+              smoothFactor = 0.2,
+              popup = popup) %>%
+  addLegend(pal = pal, 
+            values = round(county_merged$low_income_worker_job_loss_rate,2), 
+            position = "bottomright", 
+            title = "Percent of Low Income Jobs Lost")
+
+county_map
+```
