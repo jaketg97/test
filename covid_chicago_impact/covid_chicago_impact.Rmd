@@ -1,30 +1,68 @@
 ---
-title: "covid_chicago_impact"
+title: "Covid-19 in Chicago"
 author: "Jacob Toner Gosselin"
 date: "10/25/2020"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+library(readr)
+library(tigris)
+library(leaflet)
+library(tidyverse)
+library(tidycensus)
+library(htmlwidgets)
+library(ggplot2)
+library(ggmap)
+library(readxl)
 ```
 
-## R Markdown
+## Overview
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Looking to illustrate Covid-19's impact in Chicago (namely, how it's being felt differently in different parts of the city). Will be using case data at the zip code level from the [City of Chicago](https://data.cityofchicago.org/api/views/yhhz-zm2v/rows.csv?accessType=DOWNLOAD), projected job loss data at the Census tract level by [The Urban Institute](https://www.urban.org/features/where-low-income-jobs-are-being-lost-covid-19), and demographic data from the Census (using their API, queried by R using the tidycensus library).
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r}
+chicago_covid_cases_all <- read.csv("https://data.cityofchicago.org/api/views/yhhz-zm2v/rows.csv?accessType=DOWNLOAD")
+chicago_covid_cases <- subset(chicago_covid_cases_all, chicago_covid_cases_all$Week.Number == max(chicago_covid_cases_all$Week.Number))
+zip_tract_crosswalk <- read_xlsx("ZIP_TRACT_092020.xlsx")
+chicago_covid_cases$ZIP.Code <- as.character(chicago_covid_cases$ZIP.Code)
+job_loss_national <- read.csv("https://ui-lodes-job-change-public.s3.amazonaws.com/job_loss_by_tract.csv")
 
-```{r cars}
-summary(cars)
+chicago_covid_cases <- merge(chicago_covid_cases, zip_tract_crosswalk, by.x = "ZIP.Code", by.y = "ZIP")
+chicago_covid_cases <- rename(chicago_covid_cases, GEOID=TRACT)
 ```
 
-## Including Plots
+## Chicago Covid-19 Deaths Map, by Census Tract
 
-You can also embed plots, for example:
+```{r, include = FALSE}
+chicago_tracts <- tracts(state = "IL", county = "Cook")
+covid_deaths_map_data <- sp::merge(chicago_tracts, chicago_covid_cases, "GEOID", duplicateGeoms = TRUE)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+covid_deaths_map_data <- subset(covid_deaths_map_data, covid_deaths_map_data$Deaths...Cumulative != "NA")
+
+popup <- paste0("TRACT: ", covid_deaths_map_data$GEOID, "<br>", "Covid-19 Deaths: ", covid_deaths_map_data$Deaths...Cumulative)
+pal <- colorNumeric(
+  palette = "YlGnBu",
+  domain = covid_deaths_map_data$Deaths...Cumulative
+)
+
+deaths_map<-leaflet() %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(data = covid_deaths_map_data, 
+              fillColor = ~pal(Deaths...Cumulative), 
+              color = "#b2aeae", # you need to use hex colors
+              fillOpacity = 0.7, 
+              weight = 1, 
+              smoothFactor = 0.2,
+              popup = popup) %>%
+  addLegend(pal=pal,
+            values = covid_deaths_map_data$Deaths...Cumulative, 
+            position = "bottomright", 
+            title = "Covid-19 Total Deaths") 
+saveWidget(deaths_map, file="deaths_map.html")
+```
+```{r, echo = FALSE}
+deaths_map
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
