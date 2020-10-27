@@ -31,13 +31,14 @@ job_loss_national <- read.csv("https://ui-lodes-job-change-public.s3.amazonaws.c
 
 chicago_covid_cases <- merge(chicago_covid_cases, zip_tract_crosswalk, by.x = "ZIP.Code", by.y = "ZIP")
 chicago_covid_cases <- rename(chicago_covid_cases, GEOID=TRACT)
+chicago_tracts <- tracts(state = "IL", county = "Cook")
 ```
 
 ## Chicago Covid-19 Deaths Map, by Census Tract
 
 ```{r, include = FALSE}
-chicago_tracts <- tracts(state = "IL", county = "Cook")
-covid_deaths_map_data <- sp::merge(chicago_tracts, chicago_covid_cases, "GEOID", duplicateGeoms = TRUE)
+chicago_zips <- zctas(cb = TRUE, starts_with = "60")
+covid_deaths_map_data <- sp::merge(chicago_zips, chicago_covid_cases, "GEOID", duplicateGeoms = TRUE)
 
 covid_deaths_map_data <- subset(covid_deaths_map_data, covid_deaths_map_data$Deaths...Cumulative != "NA")
 
