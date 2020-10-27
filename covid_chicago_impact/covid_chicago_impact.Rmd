@@ -22,7 +22,7 @@ library(readxl)
 
 Looking to illustrate Covid-19's impact in Chicago (namely, how it's being felt differently in different parts of the city). Will be using case data at the zip code level from the [City of Chicago](https://data.cityofchicago.org/api/views/yhhz-zm2v/rows.csv?accessType=DOWNLOAD), projected job loss data at the Census tract level by [The Urban Institute](https://www.urban.org/features/where-low-income-jobs-are-being-lost-covid-19), and demographic data from the Census (using their API, queried by R using the tidycensus library).
 
-```{r}
+```{r, include = FALSE}
 chicago_covid_cases_all <- read.csv("https://data.cityofchicago.org/api/views/yhhz-zm2v/rows.csv?accessType=DOWNLOAD")
 chicago_covid_cases <- subset(chicago_covid_cases_all, chicago_covid_cases_all$Week.Number == max(chicago_covid_cases_all$Week.Number))
 zip_tract_crosswalk <- read_xlsx("ZIP_TRACT_092020.xlsx")
