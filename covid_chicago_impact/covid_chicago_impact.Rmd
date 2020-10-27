@@ -40,8 +40,7 @@ chicago_tracts <- tracts(state = "IL", county = "Cook")
 chicago_zips <- zctas(cb = TRUE, starts_with = "60")
 covid_deaths_map_data <- sp::merge(chicago_zips, chicago_covid_cases, by.x = "ZCTA5CE10", by.y = "ZIP.Code", duplicateGeoms = TRUE)
 covid_deaths_map_data <- subset(covid_deaths_map_data, covid_deaths_map_data$Deaths...Cumulative != "NA")
-
-popup <- paste0("Zip Code: ", covid_deaths_map_data$ZIP.Code, "<br>", "Covid-19 Deaths: ", covid_deaths_map_data$Deaths...Cumulative)
+popup <- paste0("Zip Code: ", covid_deaths_map_data$ZCTA5CE10, "<br>", "Covid-19 Deaths: ", covid_deaths_map_data$Deaths...Cumulative)
 pal <- colorNumeric(
   palette = "YlGnBu",
   domain = covid_deaths_map_data$Deaths...Cumulative
