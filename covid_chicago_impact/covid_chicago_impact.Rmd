@@ -42,7 +42,7 @@ covid_deaths_map_data <- sp::merge(chicago_zips, chicago_covid_cases, by.x = "ZC
 covid_deaths_map_data <- subset(covid_deaths_map_data, covid_deaths_map_data$Deaths...Cumulative != "NA")
 popup <- paste0("Zip Code: ", covid_deaths_map_data$ZCTA5CE10, "<br>", "Covid-19 Deaths: ", covid_deaths_map_data$Deaths...Cumulative)
 pal <- colorNumeric(
-  palette = "YlGnBu",
+  palette = c('#fee0d2','#fc9272','#de2d26'),
   domain = covid_deaths_map_data$Deaths...Cumulative
 )
 
@@ -51,7 +51,7 @@ deaths_map<-leaflet() %>%
   addPolygons(data = covid_deaths_map_data, 
               fillColor = ~pal(Deaths...Cumulative), 
               color = "#b2aeae", # you need to use hex colors
-              fillOpacity = 0.7, 
+              fillOpacity = 0.03, 
               weight = 1, 
               smoothFactor = 0.2,
               popup = popup) %>%
