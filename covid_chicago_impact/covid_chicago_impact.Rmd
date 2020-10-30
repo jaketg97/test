@@ -81,7 +81,7 @@ cases_map<-leaflet() %>%
             values = covid_map_data$Case.Rate...Weekly, 
             position = "bottomright", 
             title = "Covid-19 Weekly Case Rate") 
-saveWidget(deaths_map, file="cases_map.html")
+saveWidget(cases_map, file="cases_map.html")
 
 ```
 
