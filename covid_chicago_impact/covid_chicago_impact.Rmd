@@ -38,17 +38,18 @@ chicago_tracts <- tracts(state = "IL", county = "Cook")
 
 ```{r, include = FALSE}
 chicago_zips <- zctas(cb = TRUE, starts_with = "60")
-covid_deaths_map_data <- sp::merge(chicago_zips, chicago_covid_cases, by.x = "ZCTA5CE10", by.y = "ZIP.Code", duplicateGeoms = TRUE)
-covid_deaths_map_data <- subset(covid_deaths_map_data, covid_deaths_map_data$Deaths...Cumulative != "NA")
-popup <- paste0("Zip Code: ", covid_deaths_map_data$ZCTA5CE10, "<br>", "Covid-19 Deaths: ", covid_deaths_map_data$Deaths...Cumulative)
+covid_map_data <- sp::merge(chicago_zips, chicago_covid_cases, by.x = "ZCTA5CE10", by.y = "ZIP.Code", duplicateGeoms = TRUE)
+covid_map_data <- subset(covid_map_data, Deaths...Cumulative != "NA")
+
+# DEATHS MAP
+popup <- paste0("Zip Code: ", covid_map_data$ZCTA5CE10, "<br>", "Covid-19 Deaths: ", covid_map_data$Deaths...Cumulative)
 pal <- colorNumeric(
   palette = c('#fee0d2','#fc9272','#de2d26'),
-  domain = covid_deaths_map_data$Deaths...Cumulative
+  domain = covid_map_data$Deaths...Cumulative
 )
-
 deaths_map<-leaflet() %>%
   addProviderTiles("CartoDB.Positron") %>%
-  addPolygons(data = covid_deaths_map_data, 
+  addPolygons(data = covid_map_data, 
               fillColor = ~pal(Deaths...Cumulative), 
               color = "#b2aeae", # you need to use hex colors
               fillOpacity = 0.03, 
@@ -56,11 +57,34 @@ deaths_map<-leaflet() %>%
               smoothFactor = 0.2,
               popup = popup) %>%
   addLegend(pal=pal,
-            values = covid_deaths_map_data$Deaths...Cumulative, 
+            values = covid_map_data$Deaths...Cumulative, 
             position = "bottomright", 
             title = "Covid-19 Total Deaths") 
 saveWidget(deaths_map, file="deaths_map.html")
+
+#CASES MAP
+popup <- paste0("Zip Code: ", covid_map_data$ZCTA5CE10, "<br>", "Covid-19 Weekly Case Rate: ", covid_map_data$Case.Rate...Weekly)
+pal <- colorNumeric(
+  palette = c('#fee0d2','#fc9272','#de2d26'),
+  domain = covid_map_data$Case.Rate...Weekly
+)
+cases_map<-leaflet() %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(data = covid_map_data, 
+              fillColor = ~pal(Case.Rate...Weekly), 
+              color = "#b2aeae", # you need to use hex colors
+              fillOpacity = 0.03, 
+              weight = 1, 
+              smoothFactor = 0.2,
+              popup = popup) %>%
+  addLegend(pal=pal,
+            values = covid_map_data$Case.Rate...Weekly, 
+            position = "bottomright", 
+            title = "Covid-19 Weekly Case Rate") 
+saveWidget(deaths_map, file="cases_map.html")
+
 ```
+
 ```{r, echo = FALSE}
 deaths_map
 ```
