@@ -1,0 +1,40 @@
+library(readxl)
+library(ggplot2)
+library(maps)
+
+x <- read_excel("/Volumes/GoogleDrive/My Drive/2018-2019/BA Thesis/Data/Data Cleaning/Enrollment Data/enrollment_2015_abb.xlsx")
+colnames(x) <- c("state", "issuer_id", "county_code", "enrollment_count","state fip","rating_area_local","rating_area")
+x <- subset(x, x$state!="AK" & x$state!="NE")
+x$enrollment_count <- as.integer(x$enrollment_count)
+x$id <- paste(x$rating_area_local, x$issuer_id)
+x_1 <- aggregate(x$enrollment_count, by=list(x$id), FUN=sum, na.rm=TRUE)
+colnames(x_1) <- c("id", "enrollment_count")
+x_2 <- merge(x_1, x, "id")
+y <- aggregate(x_2$enrollment_count.x, by=list(x_2$rating_area), FUN=sum, na.rm=TRUE)
+colnames(y) <- c("rating_area", "enrollment_count")
+z<-merge(x_2, y, "rating_area")
+z$mkt_share_squared <- ((z$enrollment_count.x/z$enrollment_count)*100)^2
+insurer_hhi_2015 <- aggregate(z$mkt_share_squared, by=list(z$rating_area), FUN=sum, na.rm=TRUE)
+colnames(insurer_hhi_2015) <- c("rating_area", "insurer_hhi")
+
+x <- read_excel("/Volumes/GoogleDrive/My Drive/2018-2019/BA Thesis/Data/Data Cleaning/Enrollment Data/enrollment_2016_abb.xlsx")
+colnames(x) <- c("state", "issuer_id", "county_code", "enrollment_count","state fip","rating_area_local","rating_area")
+x <- subset(x, x$state!="AK" & x$state!="NE")
+x$enrollment_count <- as.integer(x$enrollment_count)
+x$id <- paste(x$rating_area_local, x$issuer_id)
+x_1 <- aggregate(x$enrollment_count, by=list(x$id), FUN=sum, na.rm=TRUE)
+colnames(x_1) <- c("id", "enrollment_count")
+x_2 <- merge(x_1, x, "id")
+y <- aggregate(x_2$enrollment_count.x, by=list(x_2$rating_area), FUN=sum, na.rm=TRUE)
+colnames(y) <- c("rating_area", "enrollment_count")
+z<-merge(x_2, y, "rating_area")
+z$mkt_share_squared <- ((z$enrollment_count.x/z$enrollment_count)*100)^2
+insurer_hhi_2016 <- aggregate(z$mkt_share_squared, by=list(z$rating_area), FUN=sum, na.rm=TRUE)
+colnames(insurer_hhi_2016) <- c("rating_area", "insurer_hhi")
+crosswalk <- read_excel("Enrollment Data/crosswalk.xlsx")
+colnames(crosswalk)<-c("fips", "rating_area")
+
+insurer_hhi_2015<-merge(crosswalk, insurer_hhi_2015, "rating_area")
+insurer_hhi_2016<-merge(crosswalk, insurer_hhi_2016, "rating_area")
+
+
