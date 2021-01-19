@@ -1,128 +1,62 @@
-#################################################
+###################################################################
 # Calling libraries
-#################################################
+###################################################################
 library(readxl)
 library(tidyverse)
 
-#################################################
-# Generate 2015 Insurer HHI by Rating Area (insurer_hhi_2015_RA)
-#################################################
+###############################################################
+# Reading in data
+###############################################################
 crosswalk <- read_excel("ratingarea_county_crosswalk.xlsx", sheet = "temp", col_types = c("text", "text", "text", "text", "text"))
 #crosswalk$county_code <- as.integer(crosswalk$county_code)
 crosswalk <- as.data.frame(cbind(crosswalk$ratingarea, crosswalk$county_code, crosswalk$state_fips))
 colnames(crosswalk) <- c("rating_area", "county_code", "state_fips")
 
-x <- read_excel("2015-Issuer-Data-Final_.xlsx", sheet = "2015 Issuer")
-x <- as.data.frame(cbind(x$issuer_hios_id, x$tenant_id, x$plcy_county_fips_code, x$ever_enrolled_plan_sel))
-colnames(x) <- c("issuer_id", "state", "county_code", "enrollment_count")
-x <- merge(crosswalk, x, by = "county_code")
-x$rating_area <- paste(x$state_fips, x$rating_area, sep = "")
+aca_2015 <- read_excel("2015-Issuer-Data-Final_.xlsx", sheet = "2015 Issuer")
+aca_2015 <- as.data.frame(cbind(aca_2015$issuer_hios_id, aca_2015$tenant_id, aca_2015$plcy_county_fips_code, aca_2015$ever_enrolled_plan_sel))
+colnames(aca_2015) <- c("issuer_id", "state", "county_code", "enrollment_count")
+aca_2015 <- merge(crosswalk, aca_2015, by = "county_code")
+aca_2015$rating_area <- paste(aca_2015$state_fips, aca_2015$rating_area, sep = "")
+aca_2015 <- subset(aca_2015, aca_2015$state!="AK" & aca_2015$state!="NE")
+aca_2015$enrollment_count <- as.integer(aca_2015$enrollment_count)
 
-x <- subset(x, x$state!="AK" & x$state!="NE")
-x$enrollment_count <- as.integer(x$enrollment_count)
-x$id <- paste(x$rating_area, x$issuer_id)
-x_1 <- aggregate(x$enrollment_count, by=list(x$id), FUN=sum, na.rm=TRUE)
-colnames(x_1) <- c("id", "enrollment_count")
-x_2 <- merge(x_1, x, "id")
-y <- aggregate(x_2$enrollment_count.x, by=list(x_2$rating_area), FUN=sum, na.rm=TRUE)
-colnames(y) <- c("rating_area", "enrollment_count")
-z<-merge(x_2, y, "rating_area")
-z$mkt_share_squared <- ((z$enrollment_count.x/z$enrollment_count)*100)^2
-insurer_hhi_2015 <- aggregate(z$mkt_share_squared, by=list(z$rating_area), FUN=sum, na.rm=TRUE)
-colnames(insurer_hhi_2015) <- c("state_fip_rating_area", "insurer_hhi_RA")
+aca_2016 <- read_excel("2016-Enrollment-Disenrollment-Report.xlsx", sheet = "M2_S")
+aca_2016 <- as.data.frame(cbind(aca_2016$`HIOS ID`, aca_2016$`Tenant ID`, aca_2016$`Policy County FIPS Code`, aca_2016$`Ever Enrolled Count`))
+colnames(aca_2016) <- c("issuer_id", "state", "county_code", "enrollment_count")
+aca_2016 <- merge(crosswalk, aca_2016, by = "county_code")
+aca_2016$rating_area <- paste(aca_2016$state_fips, aca_2016$rating_area, sep = "")
+aca_2016 <- subset(aca_2016, aca_2016$state!="AK" & aca_2016$state!="NE")
+aca_2016$enrollment_count <- as.integer(aca_2016$enrollment_count)
 
-crosswalk$state_fip_rating_area <- paste(crosswalk$state_fips, crosswalk$rating_area, sep = "")
-insurer_hhi_2015_RA <- merge(crosswalk, insurer_hhi_2015, by = "state_fip_rating_area")
+###############################################################
+# Defining functions
+###############################################################
 
-##########################################################
-# Generate 2015 Insurer HHI by county (insurer_hhi_2015_c)
-##########################################################
-crosswalk <- read_excel("ratingarea_county_crosswalk.xlsx", sheet = "temp", col_types = c("text", "text", "text", "text", "text"))
-#crosswalk$county_code <- as.integer(crosswalk$county_code)
-crosswalk <- as.data.frame(cbind(crosswalk$ratingarea, crosswalk$county_code, crosswalk$state_fips))
-colnames(crosswalk) <- c("rating_area", "county_code", "state_fips")
+calc_hhi_helper <- function(x){
+  x$id_1 <- x$issuer_id
+  y <- aggregate(x$enrollment_count, by=list(x$id_1), FUN=sum, na.rm=TRUE)
+  colnames(y) <- c("id", "total")
+  total <- sum(y$total)
+  y$share <- (y$total/total)*100
+  hhi <- sum(y$share^2)
+  return(hhi)
+}
 
-x <- read_excel("2015-Issuer-Data-Final_.xlsx", sheet = "2015 Issuer")
-x <- as.data.frame(cbind(x$issuer_hios_id, x$tenant_id, x$plcy_county_fips_code, x$ever_enrolled_plan_sel))
-colnames(x) <- c("issuer_id", "state", "county_code", "enrollment_count")
-x <- merge(crosswalk, x, by = "county_code")
-x$rating_area <- paste(x$state_fips, x$rating_area, sep = "")
+calc_hhi <- function(x, y) {
+  data <- subset(x, county_code == y)
+  hhi <- calc_hhi_helper(data)
+  return(hhi) 
+}
 
-x <- subset(x, x$state!="AK" & x$state!="NE")
-x$enrollment_count <- as.integer(x$enrollment_count)
-x$id <- paste(x$county_code, x$issuer_id)
-x_1 <- aggregate(x$enrollment_count, by=list(x$id), FUN=sum, na.rm=TRUE)
-colnames(x_1) <- c("id", "enrollment_count")
-x_2 <- merge(x_1, x, "id")
-y <- aggregate(x_2$enrollment_count.x, by=list(x_2$county_code), FUN=sum, na.rm=TRUE)
-colnames(y) <- c("county_code", "enrollment_count")
-z<-merge(x_2, y, "county_code")
-z$mkt_share_squared <- ((z$enrollment_count.x/z$enrollment_count)*100)^2
-insurer_hhi_2015 <- aggregate(z$mkt_share_squared, by=list(z$county_code), FUN=sum, na.rm=TRUE)
-colnames(insurer_hhi_2015) <- c("county_code", "insurer_hhi_c")
+###############################################################
+# Generating HHIs
+###############################################################
+counties_2015 <- unique(aca_2015$county_code, margin = 1)
+hhi_2015 <- lapply(counties_2015, calc_hhi, x=aca_2015)
+insurer_hhi_2015 <- do.call(rbind, Map(data.frame, county_code=counties_2015, insurer_hhi_15=hhi_2015))
 
-crosswalk$state_fip_rating_area <- paste(crosswalk$state_fips, crosswalk$rating_area, sep = "")
-insurer_hhi_2015_c <- merge(crosswalk, insurer_hhi_2015, by = "county_code")
+counties_2016 <- unique(aca_2016$county_code, margin = 1)
+hhi_2016 <- lapply(counties_2016, calc_hhi, x=aca_2016)
+insurer_hhi_2016 <- do.call(rbind, Map(data.frame, county_code=counties_2016, insurer_hhi_16=hhi_2016))
 
-###################################################################
-# Generate 2016 Insurer HHI by Rating Area (insurer_hhi_2016_RA)
-###################################################################
-crosswalk <- read_excel("ratingarea_county_crosswalk.xlsx", sheet = "temp", col_types = c("text", "text", "text", "text", "text"))
-#crosswalk$county_code <- as.integer(crosswalk$county_code)
-crosswalk <- as.data.frame(cbind(crosswalk$ratingarea, crosswalk$county_code, crosswalk$state_fips))
-colnames(crosswalk) <- c("rating_area", "county_code", "state_fips")
-
-x <- read_excel("2016-Enrollment-Disenrollment-Report.xlsx", sheet = "M2_S")
-x <- as.data.frame(cbind(x$`HIOS ID`, x$`Tenant ID`, x$`Policy County FIPS Code`, x$`Ever Enrolled Count`))
-colnames(x) <- c("issuer_id", "state", "county_code", "enrollment_count")
-x <- merge(crosswalk, x, by = "county_code")
-x$rating_area <- paste(x$state_fips, x$rating_area, sep = "")
-
-x <- subset(x, x$state!="AK" & x$state!="NE")
-x$enrollment_count <- as.integer(x$enrollment_count)
-x$id <- paste(x$rating_area, x$issuer_id)
-x_1 <- aggregate(x$enrollment_count, by=list(x$id), FUN=sum, na.rm=TRUE)
-colnames(x_1) <- c("id", "enrollment_count")
-x_2 <- merge(x_1, x, "id")
-y <- aggregate(x_2$enrollment_count.x, by=list(x_2$rating_area), FUN=sum, na.rm=TRUE)
-colnames(y) <- c("rating_area", "enrollment_count")
-z<-merge(x_2, y, "rating_area")
-z$mkt_share_squared <- ((z$enrollment_count.x/z$enrollment_count)*100)^2
-insurer_hhi_2016 <- aggregate(z$mkt_share_squared, by=list(z$rating_area), FUN=sum, na.rm=TRUE)
-colnames(insurer_hhi_2016) <- c("state_fip_rating_area", "insurer_hhi_RA")
-
-crosswalk$state_fip_rating_area <- paste(crosswalk$state_fips, crosswalk$rating_area, sep = "")
-insurer_hhi_2016_RA <- merge(crosswalk, insurer_hhi_2016, by = "state_fip_rating_area")
-
-##########################################################
-# Generate 2016 Insurer HHI by county (insurer_hhi_2015_c)
-##########################################################
-crosswalk <- read_excel("ratingarea_county_crosswalk.xlsx", sheet = "temp", col_types = c("text", "text", "text", "text", "text"))
-#crosswalk$county_code <- as.integer(crosswalk$county_code)
-crosswalk <- as.data.frame(cbind(crosswalk$ratingarea, crosswalk$county_code, crosswalk$state_fips))
-colnames(crosswalk) <- c("rating_area", "county_code", "state_fips")
-
-x <- read_excel("2016-Enrollment-Disenrollment-Report.xlsx", sheet = "M2_S")
-x <- as.data.frame(cbind(x$`HIOS ID`, x$`Tenant ID`, x$`Policy County FIPS Code`, x$`Ever Enrolled Count`))
-colnames(x) <- c("issuer_id", "state", "county_code", "enrollment_count")
-x <- merge(crosswalk, x, by = "county_code")
-x$rating_area <- paste(x$state_fips, x$rating_area, sep = "")
-
-x <- subset(x, x$state!="AK" & x$state!="NE")
-x$enrollment_count <- as.integer(x$enrollment_count)
-x$id <- paste(x$county_code, x$issuer_id)
-x_1 <- aggregate(x$enrollment_count, by=list(x$id), FUN=sum, na.rm=TRUE)
-colnames(x_1) <- c("id", "enrollment_count")
-x_2 <- merge(x_1, x, "id")
-y <- aggregate(x_2$enrollment_count.x, by=list(x_2$county_code), FUN=sum, na.rm=TRUE)
-colnames(y) <- c("county_code", "enrollment_count")
-z<-merge(x_2, y, "county_code")
-z$mkt_share_squared <- ((z$enrollment_count.x/z$enrollment_count)*100)^2
-insurer_hhi_2016 <- aggregate(z$mkt_share_squared, by=list(z$county_code), FUN=sum, na.rm=TRUE)
-colnames(insurer_hhi_2016) <- c("county_code", "insurer_hhi_c")
-
-crosswalk$state_fip_rating_area <- paste(crosswalk$state_fips, crosswalk$rating_area, sep = "")
-insurer_hhi_2016_c <- merge(crosswalk, insurer_hhi_2016, by = "county_code")
-
-rm(x, x_1, x_2, y, z, crosswalk, insurer_hhi_2015, insurer_hhi_2016)
-
+rm(crosswalk, aca_2015, aca_2016, counties_2015, counties_2016, hhi_2015, hhi_2016)

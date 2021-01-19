@@ -3,147 +3,106 @@
 ##################################################
 library(readxl)
 library(tigris)
-
+library(geosphere)
 data("fips_codes")
 
 ####################################################################
-# Generate 2014 Hospital HHI by Rating Area (hospital_hhi_2014_RA)
+# Importing/subsetting/getting lat/lon for data
 ####################################################################
-
-x <- read_excel("AHA_2014.xlsx")
-x$county <- gsub("(.*),.*", "\\1", x$`Hospital's County name`)
-x$county <- paste(x$county, "County", sep=" ")
-x <- merge(x, fips_codes, by.x = c("State (physical)", "county"), by.y = c("state", "county"))
-x$county_code <- paste(x$state_code, x$county_code, sep = "")
+aha_2014 <- read_excel("AHA_2014.xlsx")
+aha_2014$county <- gsub("(.*),.*", "\\1", aha_2014$`Hospital's County name`)
+aha_2014$county <- paste(aha_2014$county, "County", sep=" ")
+aha_2014 <- merge(aha_2014, fips_codes, by.x = c("State (physical)", "county"), by.y = c("state", "county"))
+aha_2014$county_code <- paste(aha_2014$state_code, aha_2014$county_code, sep = "")
 
 crosswalk <- read_excel("ratingarea_county_crosswalk.xlsx", sheet = "temp", col_types = c("text", "text", "text", "text", "text"))
-#crosswalk$county_code <- as.integer(crosswalk$county_code)
+crosswalk$county_code <- as.integer(crosswalk$county_code)
 crosswalk <- as.data.frame(cbind(crosswalk$ratingarea, crosswalk$county_code, crosswalk$state_fips))
 colnames(crosswalk) <- c("rating_area", "county_code", "state_fips")
 
-x <- merge(x, crosswalk, "county_code")
-x$rating_area <- paste(x$state_fips, x$rating_area, sep = "") #marking rating area with state fips, to prevent repeats
+aha_2014 <- merge(aha_2014, crosswalk, "county_code")
+aha_2014$rating_area <- paste(aha_2014$state_fips, aha_2014$rating_area, sep = "") #marking rating area with state fips, to prevent repeats
+aha_2014 <- subset(aha_2014, aha_2014$`State (physical)` %in% full_14_15$state)
 
-x$id_1 <- ifelse(is.na(x$`System ID`), x$`AHA ID`, x$`System ID`)
-x$id_2 <-paste(x$id_1, x$rating_area)
-y <- aggregate(x$Admissions, by=list(x$id_2), FUN=sum, na.rm=TRUE)
-colnames(y)<-c("id_2", "system_admissions")
-z <- merge(x, y, "id_2")
-z$dup <-duplicated(z$id_2)
-z <-subset(z, z$dup==FALSE)
-y <- aggregate(z$Admissions, by=list(z$rating_area), FUN=sum, na.rm=TRUE)
-colnames(y) <- c("rating_area", "county_admissions")
-z <- merge(z, y, "rating_area")
-z$mkt_share_squared <- ((z$Admissions/z$county_admissions)*100)^2
-hospital_hhi_2014 <- aggregate(z$mkt_share_squared, by=list(z$rating_area), FUN=sum, na.rm=TRUE)
-colnames(hospital_hhi_2014) <- c("state_fip_rating_area", "hospital_hhi_RA")
+#temp_14 <- geocode(location = aha_2014$`Address 1 (physical)`)
+temp_14 <- read.csv("temp_14.csv")
+aha_2014$lon <- temp_14$lon
+aha_2014$lat <- temp_14$lat
 
-crosswalk$state_fip_rating_area <- paste(crosswalk$state_fips, crosswalk$rating_area, sep = "")
-hospital_hhi_2014_RA <-merge(crosswalk, hospital_hhi_2014, "state_fip_rating_area")
+aha_2015 <- read_excel("aha_2015.xlsx")
+aha_2015$county <- gsub("(.*),.*", "\\1", aha_2015$`Hospital's County name`)
+aha_2015$county <- paste(aha_2015$county, "County", sep=" ")
+aha_2015 <- merge(aha_2015, fips_codes, by.x = c("State (physical)", "county"), by.y = c("state", "county"))
+aha_2015$county_code <- paste(aha_2015$state_code, aha_2015$county_code, sep = "")
 
-################################################################
-# Generate 2014 Hospital HHI by county (hospital_hhi_2014_c)
-################################################################
+aha_2015 <- merge(aha_2015, crosswalk, "county_code")
+aha_2015$rating_area <- paste(aha_2015$state_fips, aha_2015$rating_area, sep = "") #marking rating area with state fips, to prevent repeats
+aha_2015 <- subset(aha_2015, aha_2015$`State (physical)` %in% full_15_16$state)
 
-x <- read_excel("AHA_2014.xlsx")
-x$county <- gsub("(.*),.*", "\\1", x$`Hospital's County name`)
-x$county <- paste(x$county, "County", sep=" ")
-x <- merge(x, fips_codes, by.x = c("State (physical)", "county"), by.y = c("state", "county"))
-x$county_code <- paste(x$state_code, x$county_code, sep = "")
+#temp_15 <- geocode(location = aha_2015$`Address 1 (physical)`)
+temp_15 <- read.csv("temp_15.csv")
+aha_2015$lon <- temp_15$lon
+aha_2015$lat <- temp_15$lat
 
-crosswalk <- read_excel("ratingarea_county_crosswalk.xlsx", sheet = "temp", col_types = c("text", "text", "text", "text", "text"))
-#crosswalk$county_code <- as.integer(crosswalk$county_code)
-crosswalk <- as.data.frame(cbind(crosswalk$ratingarea, crosswalk$county_code, crosswalk$state_fips))
-colnames(crosswalk) <- c("rating_area", "county_code", "state_fips")
+#adding rurality
+rural_urban <- read_xls("ruralurbancodes2013.xls")
+rural_urban$county_code <- rural_urban$FIPS
+rural_urban <- data.frame(rural_urban$county_code, rural_urban$RUCC_2013)
+colnames(rural_urban) <- c("county_code", "rucc_code")
 
-x <- merge(x, crosswalk, "county_code")
-x$rating_area <- paste(x$state_fips, x$rating_area, sep = "") #marking rating area with state fips, to prevent repeats
+aha_2014 <- merge(aha_2014, rural_urban, by="county_code")
+aha_2015 <- merge(aha_2015, rural_urban, by="county_code")
 
-x$id_1 <- ifelse(is.na(x$`System ID`), x$`AHA ID`, x$`System ID`)
-x$id_2 <-paste(x$id_1, x$county_code)
-y <- aggregate(x$Admissions, by=list(x$id_2), FUN=sum, na.rm=TRUE)
-colnames(y)<-c("id_2", "system_admissions")
-z <- merge(x, y, "id_2")
-z$dup <-duplicated(z$id_2)
-z <-subset(z, z$dup==FALSE)
-y <- aggregate(z$Admissions, by=list(z$county_code), FUN=sum, na.rm=TRUE)
-colnames(y) <- c("county_code", "county_admissions")
-z <- merge(z, y, "county_code")
-z$mkt_share_squared <- ((z$Admissions/z$county_admissions)*100)^2
-hospital_hhi_2014 <- aggregate(z$mkt_share_squared, by=list(z$county_code), FUN=sum, na.rm=TRUE)
-colnames(hospital_hhi_2014) <- c("county_code", "hospital_hhi_c")
+#####################################################################
+# Defining functions
+#####################################################################
 
-crosswalk$state_fip_rating_area <- paste(crosswalk$state_fips, crosswalk$rating_area, sep = "")
-hospital_hhi_2014_c <-merge(crosswalk, hospital_hhi_2014, "county_code")
+calc_hhi_helper <- function(x){
+  if (dim(x)[1] == 0) {
+    return(-99) 
+  }
+  x$id_1 <- ifelse(is.na(x$`System ID`), x$`AHA ID`, x$`System ID`)
+  y <- aggregate(x$Admissions, by=list(x$id_1), FUN=sum, na.rm=TRUE)
+  colnames(y) <- c("id", "total")
+  total <- sum(y$total)
+  y$share <- (y$total/total)*100
+  hhi <- sum(y$share^2)
+  return(hhi)
+} 
 
-###################################################################
-# Generate 2015 Hospital HHI by rating area (hospital_hhi_2015_RA)
-###################################################################
+calc_hhi_2014 <- function(x, y) {
+  data <- aha_2014
+  data$range <- ifelse(data$rucc_code<=3, 41.2, 45.7)
+  data$new_lat <- x
+  data$new_lon <- y
+  data$distance <- distGeo(data.frame(data$lon, data$lat), data.frame(data$new_lon, data$new_lat))/1609.35
+  data <- subset(data, data$distance <= data$range)
+  hhi <- calc_hhi_helper(data)
+  return(hhi)
+}
 
-x <- read_excel("AHA_2015.xlsx")
-x$county <- gsub("(.*),.*", "\\1", x$`Hospital's County name`)
-x$county <- paste(x$county, "County", sep=" ")
-x <- merge(x, fips_codes, by.x = c("State (physical)", "county"), by.y = c("state", "county"))
-x$county_code <- paste(x$state_code, x$county_code, sep = "")
+calc_hhi_2015 <- function(x, y) {
+  data <- aha_2015
+  data$range <- ifelse(data$rucc_code<=3, 41.2, 45.7)
+  data$new_lat <- x
+  data$new_lon <- y
+  data$distance <- distGeo(data.frame(data$lon, data$lat), data.frame(data$new_lon, data$new_lat))/1609.35
+  data <- subset(data, data$distance <= data$range)
+  hhi <- calc_hhi_helper(data)
+  return(hhi)
+}
 
-crosswalk <- read_excel("ratingarea_county_crosswalk.xlsx", sheet = "temp", col_types = c("text", "text", "text", "text", "text"))
-#crosswalk$county_code <- as.integer(crosswalk$county_code)
-crosswalk <- as.data.frame(cbind(crosswalk$ratingarea, crosswalk$county_code, crosswalk$state_fips))
-colnames(crosswalk) <- c("rating_area", "county_code", "state_fips")
+###############################################################
+# Generating HHIs
+###############################################################
+lat_2014 <- full_14_15$lat
+lon_2014 <- full_14_15$lon
+hhi_2014 <- mapply(calc_hhi_2014, lat_2014, lon_2014)
+full_14_15$hospital_hhi_14 <- do.call(rbind, Map(data.frame, hospital_hhi = hhi_2014))
 
-x <- merge(x, crosswalk, "county_code")
-x$rating_area <- paste(x$state_fips, x$rating_area, sep = "") #marking rating area with state fips, to prevent repeats
+lat_2015 <- full_15_16$lat
+lon_2015 <- full_15_16$lon
+hhi_2015 <- mapply(calc_hhi_2015, lat_2015, lon_2015)
+full_15_16$hospital_hhi_15 <- do.call(rbind, Map(data.frame, hospital_hhi = hhi_2015))
 
-x$id_1 <- ifelse(is.na(x$`System ID`), x$`AHA ID`, x$`System ID`)
-x$id_2 <-paste(x$id_1, x$rating_area)
-y <- aggregate(x$Admissions, by=list(x$id_2), FUN=sum, na.rm=TRUE)
-colnames(y)<-c("id_2", "system_admissions")
-z <- merge(x, y, "id_2")
-z$dup <-duplicated(z$id_2)
-z <-subset(z, z$dup==FALSE)
-y <- aggregate(z$Admissions, by=list(z$rating_area), FUN=sum, na.rm=TRUE)
-colnames(y) <- c("rating_area", "county_admissions")
-z <- merge(z, y, "rating_area")
-z$mkt_share_squared <- ((z$Admissions/z$county_admissions)*100)^2
-hospital_hhi_2015 <- aggregate(z$mkt_share_squared, by=list(z$rating_area), FUN=sum, na.rm=TRUE)
-colnames(hospital_hhi_2015) <- c("state_fip_rating_area", "hospital_hhi_RA")
-
-crosswalk$state_fip_rating_area <- paste(crosswalk$state_fips, crosswalk$rating_area, sep = "")
-hospital_hhi_2015_RA <-merge(crosswalk, hospital_hhi_2015, "state_fip_rating_area")
-
-################################################################
-# Generate 2015 Hospital HHI by county (hospital_hhi_2015_c)
-################################################################
-
-x <- read_excel("AHA_2015.xlsx")
-x$county <- gsub("(.*),.*", "\\1", x$`Hospital's County name`)
-x$county <- paste(x$county, "County", sep=" ")
-x <- merge(x, fips_codes, by.x = c("State (physical)", "county"), by.y = c("state", "county"))
-x$county_code <- paste(x$state_code, x$county_code, sep = "")
-
-crosswalk <- read_excel("ratingarea_county_crosswalk.xlsx", sheet = "temp", col_types = c("text", "text", "text", "text", "text"))
-#crosswalk$county_code <- as.integer(crosswalk$county_code)
-crosswalk <- as.data.frame(cbind(crosswalk$ratingarea, crosswalk$county_code, crosswalk$state_fips))
-colnames(crosswalk) <- c("rating_area", "county_code", "state_fips")
-
-x <- merge(x, crosswalk, "county_code")
-x$rating_area <- paste(x$state_fips, x$rating_area, sep = "") #marking rating area with state fips, to prevent repeats
-
-x$id_1 <- ifelse(is.na(x$`System ID`), x$`AHA ID`, x$`System ID`)
-x$id_2 <-paste(x$id_1, x$county_code)
-y <- aggregate(x$Admissions, by=list(x$id_2), FUN=sum, na.rm=TRUE)
-colnames(y)<-c("id_2", "system_admissions")
-z <- merge(x, y, "id_2")
-z$dup <-duplicated(z$id_2)
-z <-subset(z, z$dup==FALSE)
-y <- aggregate(z$Admissions, by=list(z$county_code), FUN=sum, na.rm=TRUE)
-colnames(y) <- c("county_code", "county_admissions")
-z <- merge(z, y, "county_code")
-z$mkt_share_squared <- ((z$Admissions/z$county_admissions)*100)^2
-hospital_hhi_2015 <- aggregate(z$mkt_share_squared, by=list(z$county_code), FUN=sum, na.rm=TRUE)
-colnames(hospital_hhi_2015) <- c("county_code", "hospital_hhi_c")
-
-crosswalk$state_fip_rating_area <- paste(crosswalk$state_fips, crosswalk$rating_area, sep = "")
-hospital_hhi_2015_c <-merge(crosswalk, hospital_hhi_2015, "county_code")
-
-rm(x, y, z, crosswalk, fips_codes, hospital_hhi_2014, hospital_hhi_2015)
+rm(aha_2014, aha_2015, lon_2014, lon_2015, lat_2014, lat_2015, hhi_2014, hhi_2015)
