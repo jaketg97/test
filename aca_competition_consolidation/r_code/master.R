@@ -3,6 +3,7 @@
 #################################################
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+library(stargazer)
 
 #################################################
 # Building clean dataset
@@ -73,17 +74,36 @@ full_14_15$hospital_hhi_logged <- log(full_14_15$hospital_hhi_2014)
 full_15_16$insurer_hhi_logged <- log(full_15_16$insurer_hhi_2016)
 full_15_16$hospital_hhi_logged <- log(full_15_16$hospital_hhi_2015)
 
-rm(insurer_hhi_2015, insurer_hhi_2016, temp_14, temp_15, temp_c_14, temp_c_15, calc_hhi, calc_hhi_2014, calc_hhi_2015, calc_hhi_helper, fips_codes, crosswalk, rural_urban)
+#adding census data
+source("../r_code/add_census.R")
 
-
-model_14_15 <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+rucc_code_13.f+rating_area.f, data=full_14_15)
-model_15_16 <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+rucc_code_13.f+rating_area.f, data=full_15_16)
-
+#putting it all together and removing shit
 full_14_15$year <- 2015
 full_15_16$year <- 2016
-
 full_combined <- rbind(subset(full_14_15, select = -c(insurer_hhi_2015, hospital_hhi_2014)), subset(full_15_16, select = -c(insurer_hhi_2016, hospital_hhi_2015)))
 full_combined$year.f <- factor(full_combined$year)
 
-model_full <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+rucc_code_13.f+rating_area.f+year.f, data=full_combined)
+write.csv(full_14_15, "../clean_data/full_14_15.csv")
+write.csv(full_15_16, "../clean_data/full_15_16.csv")
+write.csv(full_combined, "../clean_data/full_combined.csv")
+
+rm(insurer_hhi_2015, insurer_hhi_2016, temp_14, temp_15, temp_c_14, temp_c_15, calc_hhi, calc_hhi_2014, calc_hhi_2015, calc_hhi_helper, fips_codes, crosswalk, rural_urban)
+
+#################################################
+# Running linear models
+#################################################
+
+model_14_15 <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+rating_area.f, data=full_14_15)
+model_15_16 <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+rating_area.f, data=full_15_16)
+model_full <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+rating_area.f+year.f, data=full_combined)
+
+#################################################
+# Making tables
+#################################################
+stargazer(model_14_15, model_15_16, model_full, type = "latex", title = "Main results", dep.var.labels = 
+            c("Logged Insurer HHI (2015)", "Logged Insurer HHI (2016)", "Logged Insurer HHI (combined)"), 
+          covariate.labels = c("Logged Hospital HHI", "No hospitals in range", "Poverty rate", "Median age", "Rurality (RUCC Code)", "Year"), 
+          omit = c("white_popn_percent", "black_popn_percent", "native_popn_percent", "rating_area.f"), out = "../paper/tables/main_results.tex")
+
+binsreg(full_combined$insurer_hhi_logged, full_combined$hospital_hhi_logged, w=data.frame(c(full_combined$rating_area.f), c(full_combined$year.f), c(full_combined$rucc_code_13), c(full_combined$median_age)))
 hhi_effect <- effect("hospital_hhi_logged", model_full)
