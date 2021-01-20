@@ -16,7 +16,6 @@ aha_2014 <- merge(aha_2014, fips_codes, by.x = c("State (physical)", "county"), 
 aha_2014$county_code <- paste(aha_2014$state_code, aha_2014$county_code, sep = "")
 
 crosswalk <- read_excel("ratingarea_county_crosswalk.xlsx", sheet = "temp", col_types = c("text", "text", "text", "text", "text"))
-crosswalk$county_code <- as.integer(crosswalk$county_code)
 crosswalk <- as.data.frame(cbind(crosswalk$ratingarea, crosswalk$county_code, crosswalk$state_fips))
 colnames(crosswalk) <- c("rating_area", "county_code", "state_fips")
 
@@ -25,6 +24,7 @@ aha_2014$rating_area <- paste(aha_2014$state_fips, aha_2014$rating_area, sep = "
 aha_2014 <- subset(aha_2014, aha_2014$`State (physical)` %in% full_14_15$state)
 
 #temp_14 <- geocode(location = aha_2014$`Address 1 (physical)`)
+#write.csv(temp_14, "temp_14.csv")
 temp_14 <- read.csv("temp_14.csv")
 aha_2014$lon <- temp_14$lon
 aha_2014$lat <- temp_14$lat
@@ -40,6 +40,7 @@ aha_2015$rating_area <- paste(aha_2015$state_fips, aha_2015$rating_area, sep = "
 aha_2015 <- subset(aha_2015, aha_2015$`State (physical)` %in% full_15_16$state)
 
 #temp_15 <- geocode(location = aha_2015$`Address 1 (physical)`)
+#write.csv(temp_15, "temp_15.csv")
 temp_15 <- read.csv("temp_15.csv")
 aha_2015$lon <- temp_15$lon
 aha_2015$lat <- temp_15$lat

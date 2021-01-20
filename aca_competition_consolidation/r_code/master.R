@@ -25,6 +25,7 @@ full_15_16$county <- paste(full_15_16$county, full_15_16$state, sep = ", ")
 
 #getting geodata for counties (from google)
 #temp_c_14 <- geocode(location = full_14_15$county)
+#write.csv(temp_c_14, "temp_c_14.csv")
 temp_c_14 <- read.csv("temp_c_14.csv")
 full_14_15$lon <- temp_c_14$lon
 full_14_15$lat <- temp_c_14$lat
@@ -72,10 +73,17 @@ full_14_15$hospital_hhi_logged <- log(full_14_15$hospital_hhi_2014)
 full_15_16$insurer_hhi_logged <- log(full_15_16$insurer_hhi_2016)
 full_15_16$hospital_hhi_logged <- log(full_15_16$hospital_hhi_2015)
 
-rm(insurer_hhi_2015, insurer_hhi_2016, lon_2014, temp_14, temp_15, temp_c_14, temp_c_15, calc_hhi, calc_hhi_2014, calc_hhi_2015, calc_hhi_helper, fips_codes, crosswalk, rural_urban)
+rm(insurer_hhi_2015, insurer_hhi_2016, temp_14, temp_15, temp_c_14, temp_c_15, calc_hhi, calc_hhi_2014, calc_hhi_2015, calc_hhi_helper, fips_codes, crosswalk, rural_urban)
 
 
-model_14_15 <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+rucc_code_13.f+rating_area_state, data=full_14_15)
-model_15_16 <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+rucc_code_13.f+rating_area_state, data=full_15_16)
+model_14_15 <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+rucc_code_13.f+rating_area.f, data=full_14_15)
+model_15_16 <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+rucc_code_13.f+rating_area.f, data=full_15_16)
 
+full_14_15$year <- 2015
+full_15_16$year <- 2016
 
+full_combined <- rbind(subset(full_14_15, select = -c(insurer_hhi_2015, hospital_hhi_2014)), subset(full_15_16, select = -c(insurer_hhi_2016, hospital_hhi_2015)))
+full_combined$year.f <- factor(full_combined$year)
+
+model_full <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+rucc_code_13.f+rating_area.f+year.f, data=full_combined)
+hhi_effect <- effect("hospital_hhi_logged", model_full)
