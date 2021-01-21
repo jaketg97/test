@@ -4,6 +4,10 @@
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 library(stargazer)
+library(tigris)
+library(binsreg)
+library(effects)
+library(ggplot2)
 
 #################################################
 # Building clean dataset
@@ -77,6 +81,15 @@ full_15_16$hospital_hhi_logged <- log(full_15_16$hospital_hhi_2015)
 #adding census data
 source("../r_code/add_census.R")
 
+#adding region
+data("state")
+regions <- data.frame(state.abb, state.region)
+colnames(regions) <- c("state_abb", "region")
+full_14_15 <- merge(full_14_15, regions, by = "state_abb")
+full_15_16 <- merge(full_15_16, regions, by = "state_abb")
+full_14_15$region.f <- factor(full_14_15$region)
+full_15_16$region.f <- factor(full_15_16$region)
+
 #putting it all together and removing shit
 full_14_15$year <- 2015
 full_15_16$year <- 2016
@@ -97,13 +110,26 @@ model_14_15 <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_popn
 model_15_16 <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+rating_area.f, data=full_15_16)
 model_full <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+rating_area.f+year.f, data=full_combined)
 
+model_south <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+rating_area.f+year.f, data=subset(full_combined, region == "South"))
+model_northeast <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+rating_area.f+year.f, data=subset(full_combined, region == "Northeast"))
+model_northcentral <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+rating_area.f+year.f, data=subset(full_combined, region == "North Central"))
+model_west <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+rating_area.f+year.f, data=subset(full_combined, region == "West"))
+
+
 #################################################
 # Making tables
 #################################################
-stargazer(model_14_15, model_15_16, model_full, type = "latex", title = "Main results", dep.var.labels = 
-            c("Logged Insurer HHI (2015)", "Logged Insurer HHI (2016)", "Logged Insurer HHI (combined)"), 
-          covariate.labels = c("Logged Hospital HHI", "No hospitals in range", "Poverty rate", "Median age", "Rurality (RUCC Code)", "Year"), 
-          omit = c("white_popn_percent", "black_popn_percent", "native_popn_percent", "rating_area.f"), out = "../paper/tables/main_results.tex")
+stargazer(model_14_15, model_15_16, model_full, type = "latex", column.labels = c("2015", "2016", "Combined"), font.size = "scriptsize", dep.var.labels = "Insurer HHI (logged)", covariate.labels = c("Hospital HHI (logged)", "No hospitals in range", "Rurality (RUCC code)"), 
+          omit = c("white_popn_percent", "black_popn_percent", "native_popn_percent", "rating_area.f", "poverty_rate", "median_age", "year.f"), notes = "Also controlling for rating area/year fixed effects, and county demographics",
+          out = "../paper/tables/year_results.tex")
 
+stargazer(model_northeast, model_northcentral, model_south, model_west, type = "latex", font.size = "scriptsize", column.labels = c("Northeast", "North Central", "South", "West"), 
+          dep.var.labels = "Insurer HHI (logged)", covariate.labels = c("Hospital HHI (logged)", "No hospitals in range", "Rurality (RUCC code)"), 
+          omit = c("white_popn_percent", "black_popn_percent", "native_popn_percent", "rating_area.f", "poverty_rate", "median_age", "year.f"), notes = "Also controlling for rating area/year fixed effects, and county demographics",
+          out = "../paper/tables/region_results.tex")
+
+#################################################
+# Making graphs
+#################################################
 binsreg(full_combined$insurer_hhi_logged, full_combined$hospital_hhi_logged, w=data.frame(c(full_combined$rating_area.f), c(full_combined$year.f), c(full_combined$rucc_code_13), c(full_combined$median_age)))
-hhi_effect <- effect("hospital_hhi_logged", model_full)
+plot(effect("hospital_hhi_logged", model_full))

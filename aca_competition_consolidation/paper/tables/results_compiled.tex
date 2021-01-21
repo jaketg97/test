@@ -1,0 +1,62 @@
+\documentclass[letterpaper,12pt,pdftex]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{appendix}
+\usepackage{bigstrut}
+\usepackage{booktabs}
+\usepackage[capposition=top]{floatrow}
+\usepackage[pdftex]{color,graphicx}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage[colon]{natbib}
+\usepackage{pdflscape}
+\usepackage{pdfpages}
+\usepackage{rotating}
+\usepackage{setspace}
+\usepackage{soul}	% required for highlighting \hl{ ... }
+\usepackage{tabularx}
+\usepackage{threeparttable}
+\usepackage[compact]{titlesec}
+\usepackage{verbatim}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{longtable}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{xcolor}
+
+%%%% Added because of new MikTex bug with graphics package %%%%%%%%%%%
+\makeatletter
+\def\set@curr@file#1{%
+  \begingroup
+    \escapechar\m@ne
+    \xdef\@curr@file{\expandafter\string\csname #1\endcsname}%
+  \endgroup
+}
+\def\quote@name#1{"\quote@@name#1\@gobble""}
+\def\quote@@name#1"{#1\quote@@name}
+\def\unquote@name#1{\quote@@name#1\@gobble"}
+\makeatother
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% NOTE: ADD PATH TO FIGURES FOLDER HERE %
+\graphicspath{{}}
+
+\title{Tables}
+
+\date{\today}
+
+\begin{document}
+
+\onehalfspacing
+\listoftables
+\clearpage
+
+\input{year_results.tex}
+
+\input{region_results.tex}
+
+
+\end{document}
