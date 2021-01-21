@@ -1,0 +1,357 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb} 
+\usepackage[retainorgcmds]{IEEEtrantools}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{subfig}
+\usepackage{kpfonts}    % for nice fonts
+\usepackage{microtype} 
+\usepackage{booktabs}   % for nice tables
+\usepackage{bm}         % for bold math
+\usepackage{listings}   % for inserting code
+\usepackage{verbatim}   % useful for program listings
+\usepackage{color}  
+\usepackage[colorlinks=true, citecolor=black]{hyperref}
+% use for hypertext
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{natbib}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{setspace}
+\usepackage{caption}
+
+\doublespacing
+\begin{document}
+\begin{titlepage}
+\begin{center}
+THE	UNIVERSITY	OF	CHICAGO
+\\[1.5in]
+Insurer Competition in the Age of Provider Consolidation:
+\\\textit{Measuring the impact of reduced competition between healthcare providers on competition and price in the ACA individual market}
+\\[1in]
+A	BACHELOR	THESIS	SUBMITTED	TO	\\
+\bigskip
+THE	FACULTY	OF	THE	DEPARTMENT	OF	ECONOMICS	\\
+\bigskip
+FOR	HONORS	WITH	THE	DEGREE	OF	\\
+\bigskip
+BACHELOR	OF	THE	ARTS	IN	ECONOMICS
+\\[1.5in]
+BY JACOB TONER GOSSSELIN
+\\[1in]
+CHICAGO,	ILLINOIS	\\
+MAY	2019
+\end{center}
+\end{titlepage}
+
+\vspace{\fill}
+\begin{abstract}
+In the past decade, competition between healthcare providers has declined significantly. This paper investigates the impact of this decline on insurers in the ACA's individual market. Using public data from CMS, and private data from the American Hospital Association (AHA), I construct an HHI measurement for hospital and insurer competition in 34 of the 36 states using federally facilitated marketplaces, across 2015 and 2016 (hospital HHI is lagged by one year). I perform a multivariate linear regression across 2400 counties in these states, controlling for county and state level variables. I find higher hospital HHI levels are associated with higher insurer HHI levels at a coefficient of .94, log linearized. I conclude that declining provider competition reduces competition on ACA exchanges, which suggests that provider consolidation increases premiums at a higher rate than estimated by earlier research.
+\end{abstract}
+\footnotetext[1]{I am extremely grateful first and foremost to my thesis advisor, Dr. Colleen M. Grogan, for all her guidance over the course of this project. I also appreciate the help of Dr. Kotaro Yoshida and Dr. Victor O. Lima, for their advice and assistance in securing fellowship funding. Finally, thank you to the Dean's Fund and the Becker Friedman Institute for sponsoring this project.}
+\vspace{\fill}
+\section*{Introduction}
+In the past decade, there has been a dramatic reduction in competition among healthcare providers, largely due to consolidation. While this decrease has potential benefits (i.e. greater integration of care through hospital systems), it also poses an existential threat to the individual marketplace for health insurance. As this paper shows, reduced competition among healthcare providers reduces competition among insurers, eliminating choice and increasing prices for consumers. 
+
+Since the Affordable Care Act (ACA) came into effect in 2014, the state of its exchanges has been closely studied as an indicator of the law's success. These regulated markets operate in self-contained "rating areas" (collections of counties, for the most part), and allow individuals to buy coverage separate from their employer. Though these exchanges represent only a fraction of the insured population (roughly 4\%, or 9 million individuals nationwide), they've adopted outsized political significance. In the past few years, diminishing competition in exchanges nationwide has sparked panic about these markets' sustainability \citep{kff1}. 
+
+Qualitative studies have pointed to competition among healthcare providers as "essential to a robust and competitive insurer market" \citep{brookings}. Most quantitative work, however, has ignored provider competition when looking at diminishing insurer choice, focusing instead on other county characteristics. Though there has been some research relating competition among healthcare providers to ACA exchanges (i.e. Scheffler et. al. (2018)) this work has premium prices as the dependent variable, and controls for insurer competition in its regressions. Thus, it too lacks an assessment of how provider competition impacts insurer competition, and may produce coefficients that underestimate its impact on premium prices. 
+
+This paper seeks to fill this hole, by answering three questions: 1) How is competition between short term general hospitals related to competition on ACA exchanges; 2) Is this relationship consistent across rurality and region; and 3) If this relationship does exist, how could it effect premium prices? It is organized as follows: Section 1 reviews the relevant research on market dynamics in the ACA, and explain how my work fits into this existing literature; Section 2 goes over my data sources and HHI construction; Section 3, explains my model; Section 4 reviews review my results; Section 5 explains the limitations of my model; Section 6 and 7, discusses my results and their policy implications; and Section 8 outlines potential directions for future work. 
+
+\section{Background}
+By 2016, the third year of ACA exchanges' operation, it was clear that maintaining a healthy level of competition in these markets posed a greater challenge than anticipated. While the drop off in market participation in the past two years (2017 and 2018) can be in part attributed to the law's precarious future under the Trump Administration, even before the 2016 election warning signs had emerged: between 2015 and 2016, the percent of enrollees in the individual market with three or more insurers to choose from fell from 91\% to 85\%, and the average "benchmark" premium rose by 4.4\% \citep{kff1}.
+
+In response to these concerning trends, the Brookings Institution's Center for Health policy commissioned a field study across multiple state exchanges in 2016 \citep{brookings}. Researchers interviewed stakeholders, i.e. insurers, consumer groups, and state regulators, in California, Michigan, Florida, North Carolina, and Texas. They walked away with four main conclusions: (1) health insurance markets are local, meaning the success or failure of insurers, even national ones, are determined by local factors; (2) higher than expected claims cost were the source of much of the early turmoil in in insurance markets; (3) there has been a substantial shift towards narrower networks of healthcare providers, as a way of forcing hospitals to compete for enrollees by reducing reimbursement rates; and (4) Hospital and physician competition is "essential" for a robust and competitive insurer market.
+
+These conclusions were prescient, but it took another year for them to be confirmed quantitatively. First, Griffith et. al. (2018), using four years of marketplace data, analyzed factors correlated with competition in ACA exchanges \citep{county}. These factors were both state based and county based. Using multivariate and bivariate regressions, they concluded that rurality, demographics, health spending, and state policy environment had a significant impact on the number of insurers participating in a given rating area. In other words, they found that health insurance markets are local.
+
+Soon after, a report commissioned by the consulting firm Avalere found that 72\% of insurance plans offered on ACA exchanges in 2018 were "narrow", i.e. they offered a less broad network of healthcare providers to consumers than the typical insurance plan \citep{avalere}. They observed this was the culmination of a move that began as soon as markets opened in 2014; as Morrisey et. al. concluded, ACA exchanges nationwide had undergone a substantial shift towards narrow networks. 
+The cause of this shift was simple: ACA regulations prevented insurers from competing over enrollees as they had in the past, through practices like denial of coverage and medical underwriting. Instead, insurers on ACA exchanges shifted to competing over providers; they narrowed their networks, and forced hospitals and doctors to offer cheaper reimbursement rates to have their enrollees as patients. In practice, this approach has produced promising results: a paper by Harvard and Northwestern researchers found that narrow network plans were 16\% cheaper than their broad network counterparts, and that these plans reduced medical costs \citep{dafny}. 
+
+While this characteristic of ACA markets implies a link between provider competition and insurer competition, this relationship wasn't investigated until recently, when Scheffler et. al. (2018) looked at the impact provider consolidation had on premiums in California's state run ACA exchange \citep{cali}. Using a multivariate model, they regressed the Herfindahl-Hirschman Index (HHI) of short term general hospitals (measuring horizontal consolidation), the percent of physicians contracting with hospitals (measuring vertical consolidation) and the HHI of insurers in a given marketplace on the benchmark premium (all independent variables were lagged by a year). They found that a 10\% increase in hospital HHI was associated with a 1.8\% increase in marketplace premiums, while a 10\% increase in insurer HHI was associated with a 2\% increase in premiums.
+
+These results are compelling, but incomplete. While Scheffler et. al. demonstrates one link between provider competition and ACA markets, through premium price, they do not consider the impact provider competition has on ACA market competition. This link is essential, as the relationship between provider competition and exchange competition effects not only consumer choice but consumer price, since, as Scheffler et. al. concluded, insurer HHI partially determines premiums. 
+
+\section{Data Construction}
+To measure insurer HHI, I pulled issuer-level enrollment data from the Center for Medicare and Medicaid Services (CMS). This enrollment data is for all federally facilitated marketplaces (FFMs), i.e. marketplaces run by the federal government. It includes 36 states. I removed Alaska and Nebraska from my analysis, as their rating areas are not based on county borders, making it near impossible to control for county-level variables. The enrollment data also withholds information on counties with 10 or less enrollees in a given plan, due to privacy concerns; these counties are also not included in my work. My analysis thus encompasses 34 states and over 2400 counties, across two years. 
+
+My enrollment data is for 2015 and 2016; these years provide the most stable market conditions, as insurers already had a year of experience in ACA exchanges (2014) and President Trump was not yet elected (2017-2018). They also provide a good spread of HHI's in both years, (see Figure 1 below). I constructed my HHI measurement by calculating market share for each insurer in a given rating area as a percent of total enrollees, and summing the results. This produces insurer HHI by rating area; I generalized to county, assigning each county in a given rating area the appropriate insurer HHI. 
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height=4.5in,angle=0]{hist_insurerhhi_compared.eps}
+\caption{Insurer HHI Distribution}\label{Figure 1}
+\end{center}
+\end{figure}
+
+The rest of my variables are lagged by one year, since insurers decide on participating in a given rating area before November of the previous year. To measure provider competition, I used data from the American Hospital Association (AHA) Annual Survey on short term general care hospitals in 2014 and 2015. I use short term general care hospitals as this is the most common type of hospital nationwide, and the most relevant for insurers building provider networks on the ACA exchange (long term care facilities are usually used by Medicare or Medicaid enrollees). For a given rating area, I calculated hospital market share as a percent of total enrollees; each hospital system was treated as a single firm, since they bargain with insurers on reimbursement rates collectively. As in the case of insurer HHI, I assign each county in a given rating area the appropriate hospital HHI. This approach is identical to Scheffler et. al. (2018) both in data source (AHA) and in data construction. Again, the spread of HHIs is conducive to my analysis (see Figure 2 below). 
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height=5in,angle=0]{hist_hospitalhhi_compared.eps}
+\caption{Hospital HHI Distribution}\label{Figure 2}
+\end{center}
+\end{figure}
+
+There were 19 counties without a short-term general hospital in their rating area each year; they were assigned a HHI of 10,000. I also added a dummy variable for this case, and ran my regressions with these rating areas removed (my results were consistent across the board).
+
+I control for all variables found to be significant in Griffith et. al. (2018), and add a few controls of my own for good measure. At the state level, I control for state policy environment using data from the National Bureau of State Legislatures (NBSL), Medicaid expansion status using data from the Kaiser Family Foundation (KFF), and average Medical Loss Ratio (MLR) rebate per capita using data from CMS (these are rebates paid by insurers when their medical claims cost is too low). At the county level, I control for population demographics, poverty rate, and mortality rate using data from the Census Bureau's American Community Survey. I control for rurality using the 2013 rural urban continuum codes (RUCC) assigned by the Department of Agriculture. I control for Medicare spending per capita using data from CMS. 
+
+\begin{table}
+\centering
+\begin{tabular}{l l l}
+\toprule
+\textbf{Variables} & \textbf{Geographic Level} & \textbf{Source}\\
+\midrule
+Insurer HHI & Rating Area & CMS \\
+Hospital HHI & Rating Area & AHA \\
+State Policy Environment & State & NBSL \\
+Medicaid Expansion Status & State & KFF \\
+Average MLR Rebate & State & CMS \\
+Population Demographics & County & Census\\
+Rurality & County & DOA\\
+Medicare Spending & County & CMS \\
+\bottomrule
+\end{tabular}
+\caption{Model Variables}
+\end{table}
+
+The resulting dataset is thus a collection of state level variables, rating area level variables, and county level variables, merged across two years. Each observation is a given county in a given year (i.e. Cook County in 2015). 
+
+\section{Model}
+
+My model is a simple multivariate regression, with insurer HHI as my dependent variable ($y_t$), hospital HHI as my independent variable of interest ($x_{t-1}$), and a set of control variables outlined above ($\chi_{t-1}$). As mentioned earlier, I lagged all my independent variables by one year.
+\[y_{t}=\beta_t*x_{t-1}+\gamma_t*\chi_{t-1}+\epsilon_t \]
+I log linearized both hospital HHI and insurer HHI. Along with my control variables listed above, I added dummy variable for year (0 in 2015, 1 in 2016) and an interaction term between year and hospital HHI. The bivariate relationship between insurer HHI and hospital HHI is illustrated in Figure 3 and Figure 4 below. I attempted a fixed effects model and a difference in differences model, which did not produce meaningful results (I discuss this in Section 7).
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[height=2.9in,angle=0]{scatter_hosp_insurer.eps}
+\caption{Insurer HHI vs. Hospital HHI, Scatterplot}\label{Figure 3}
+\vspace{5mm}
+\includegraphics[height=2.9in,angle=0]{binscatter_hosp_insurer.eps}
+\caption{Insurer HHI vs. Hospital HHI, Binned Scatterplot}\label{Figure 4}
+\end{center}
+\end{figure}
+
+\section{Results}
+I ran my regressions on the overall dataset, and on subsets of the data by year, rurality, and region. My results are summarized in the tables below. All coefficients are the result of a log to log comparison, so they can be interpreted as a percent to percent relationship. 
+
+My overall coefficient is .94; in other words, a 10\% increase in hospital HHI is associated with a 9.4\% increase in insurer HHI in my combined dataset. By year, my coefficients are .98 and .85 for 2015 and 2016 respectively (the interaction coefficient is insignificant). The decline across the years is likely less a consequence of provider competition becoming less important to insurer competition, and rather the result of other local factors playing increasingly important roles (e.g. Medicaid expansion status becomes far more significant in 2016). By rurality, coefficients are relatively constant across the spectrum (RUCC code 1=most urban measurement, RUCC code 9=most rural measurement). And by region, our coefficient is largest in the South, where ACA exchanges have struggled most (this is also where most of our observations are though, as mentioned in Section 5). 
+
+In general, my results are remarkable consistent. Across all years, RUCC codes, and regions, increases in hospital HHI are shown to be associated with increases in insurer HHI at a significance of 5\%. And all coefficients for the most part hover around .8-1. 
+\newline
+
+\noindent\makebox[\textwidth]{%
+\begin{tabular}{lccc} \hline
+ & (1) & (2) & (3) \\
+ & Insurer HHI & Insurer HHI & Insurer HHI \\
+VARIABLES & 2015 & 2016 & Combined \\ \hline
+ &  &  &  \\
+Hospital HHI (Log Linearized) & 0.983*** & 0.856*** & 0.939*** \\
+Robust Standard Errors & (0.0160) & (0.0189) & (0.0145) \\
+Observations & 2,419 & 2,403 & 4,822 \\
+ R-squared & 0.683 & 0.637 & 0.649 \\ \hline
+\multicolumn{4}{c}{Table 2: Regressions by Year \textit{(*** p$<$0.01, ** p$<$0.05, * p$<$0.1)} } \\
+\end{tabular}
+}
+
+\noindent\makebox[\textwidth]{%
+\begin{tabular}{lcccc} 
+\\
+\\
+\\
+\hline
+ & (1) & (2) & (3) & (4) \\
+ & Insurer HHI & Insurer HHI & Insurer HHI & Insurer HHI \\
+VARIABLES & RUCC Code 1 & RUCC Code 3 & RUCC Code 6 & RUCC Code 9 \\ \hline
+ &  &  &  &  \\
+Hospital HHI (Log Linearized) & 0.938*** & 0.901*** & 1.010*** & 0.827*** \\
+Robust Standard Errors & (0.0583) & (0.0685) & (0.0285) & (0.0426) \\
+Observations & 617 & 552 & 996 & 579 \\
+R-squared & 0.448 & 0.512 & 0.740 & 0.563 \\ \hline
+\end{tabular}
+}
+\begin{center}
+Table 3: Regressions by Rurality \textit{(*** p$<$0.01, ** p$<$0.05, * p$<$0.1)} 
+\end{center}
+\vspace{.5in}
+
+
+\noindent\makebox[\textwidth]{%
+\begin{tabular}{lcccc} 
+\\
+\hline
+ & (1) & (2) & (3) & (4) \\
+ & Insurer HHI & Insurer HHI & Insurer HHI & Insurer HHI \\
+VARIABLES & West & South & Northeast & Midwest \\ \hline
+ &  &  &  &  \\
+Hospital HHI (Log Linearized) & 0.897*** & 1.069*** & 0.711*** & 0.112** \\
+Robust Standard Errors & (0.0435) & (0.0165) & (0.0857) & (0.0540) \\
+Observations & 411 & 2,450 & 228 & 1,733 \\
+R-squared & 0.835 & 0.813 & 0.670 & 0.227 \\ \hline
+\end{tabular}
+}
+\begin{center}
+Table 4: Regressions by Region \textit{(*** p$<$0.01, ** p$<$0.05, * p$<$0.1)} 
+\end{center}
+\pagebreak
+
+\section{Limitations}
+The limitations of my work are those typical of a multivariate linear model; namely, the possibility of endogeneity due to either omitted variable bias or simultaneity. In regards to omitted variable bias, while this concern is lessened by the fact that I control for all significant variation in county factors which influence marketplace choice, according to the findings in Griffith et. al. (2018), the sheer number of differences between counties make it near impossible to guarantee all relevant variables are included. As I mention in Section 7, the only way to truly avoid potential omitted variable bias is to apply a model which controls for time-invariant differences between counties, i.e. a fixed effects model or a difference in differences model. In regards to simultaneity, the relationship between marketplace insurers and hospitals implies this shouldn't be a major concern: as mentioned above, marketplace insurers only make up 4\% of insured individuals nationwide, and enrollees produce a minuscule amount of hospital revenue (especially compared to the high-cost patients usually covered by Medicare). However, some marketplace insurers also participate in the employer sponsored market, and enrollees in this market do make up a significant amount of hospital revenue. Thus, there could be simultaneity if ACA exchange firms which also offer in the employer sponsored market make decisions about market entry jointly. 
+
+My regressions are also limited to two years of ACA market data (2015 and 2016) and 34 states. The 34 states I studied are primarily rural and southern; most urban coastal states, i.e. New York, California, etc. run their own exchanges. They were also mostly Republican led in 2014 and 2015. My dataset is also limited by time. I chose 2015 and 2016 because I perceive decreasing provider competition to be an existential threat to ACA markets (i.e. not the result of the current instability around the law). My goal was to measure the impact of provider competition in a "stable" ACA market. 
+
+As a result of these limits on my dataset, the coefficients I observe may not perfectly match the current reality of ACA exchange dynamics. It is worth noting that several of my control variables produced coefficients that were either insignificant or contradictory to the findings of Griffith et. al., confirming that the limited geographic range did impact findings. This concern however, is ameliorated by the fact that the variables affected (Medicaid expansion status, rurality, and state policy environment) were ones with poor sample distributions; as mentioned above, my dataset has a good range of hospital HHI's and insurer HHI's. 
+
+Finally, my hospital HHI measurement doesn't account for vertical consolidation. In the past decade, the percent of primary care physicians working for a hospital system has skyrocketed. This type of market power almost certainly effects contract negotiations between insurers and hospitals, and is not accounted for in my work.
+
+Besides these aforementioned concerns, my model is fairly rigorous. Robust standard errors prevent heteroskedasticity concerns. My variance inflation factors are non-concerning, ruling out multicollinearity. My R-squared in my overall model is 68\%, which is reasonable given the data. The bivariate relationship between hospital HHI and insurer HHI is stronger than the multivariate in all subsets of the data (results are listed in the Appendix). As mentioned above, my dataset provides a good spread of insurer and hospital HHI. And the nature of the relationship between hospitals and exchange insurers implies that the effect we see in the data is causal: our hospital HHI is lagged by one year, and since the ACA exchange makes up only a small share of the overall population, it is extremely unlikely hospital competition is influenced by competition on the ACA exchange. The reverse however has already been confirmed in aforementioned qualitative work \citep{brookings}.  
+
+\section{Discussion}
+
+The results of my regressions confirm the final observation made by Morrisey et. al. (2017); that hospital and physician competition are essential to a robust and competitive insurer market under the ACA. The immediate implications of this are two-fold: first, decreasing hospital competition threatens consumer choice in ACA markets, and second, its impact on ACA premiums has likely been underestimated. 
+
+While the first point is self-evident (rising hospital HHI results in higher insurer HHI, which corresponds to less competitive markets and therefore less firms for consumers to choose from), the second is more complicated. Returning to Scheffler et. al. (2018), we see that his work concluded that hospital HHI was related to premium price with an elasticity of .182, i.e. a 10\% increase in hospital HHI resulted in a 1.82\% increase in premium price the following year. Scheffler also included insurer HHI in his regressions; he found that insurer HHI was related to premium price with an elasticity of .204. 
+
+While Scheffler's work captures the impact hospital consolidation has on premium prices in the short term, i.e. the effect a hospital merger has on premium prices the following year, it fails to capture the long-term impact of rising hospital HHI on premium prices through insurer HHI. 
+
+To demonstrate, let us consider a hypothetical (AHA data guidelines prevent me from using a specific case). The average monthly benchmark premium in 2015 was \$276, and the average insurer HHI was 1356 \citep{kff1}. Suppose in a given county with this average premium price and average insurer HHI, a hospital merger occurred, which raised hospital HHI by 10\%. By Scheffler's results, this merger would raise monthly premiums by 1.8\%, or \$4.96. By my results, this merger would raise insurer HHI by 9.4\%, or 127 points. 
+
+This increase in insurer HHI, by Scheffler's results, would correspond to another rise in premiums the following year (i.e. 2017), of 1.92\%, or \$5.39 monthly. Thus, the true long term impact of this hospital merger on consumer costs isn't a 1.8\% increase in premiums, but (hypothetically) a 3.75\% increase across two years. That's \$10.35 monthly based on the benchmark premium, or \$124.20 annually.  
+
+Obviously these numbers aren't precise, and shouldn't be taken as such. Scheffler's study focused solely on California's state run exchanges, while my work encompasses 34 primarily rural and southern states with federally facilitated marketplaces. Moreover, the implication of my paper is that Scheffler's work is incomplete, so applying his coefficients to my results is obviously an imperfect approach. The purpose of this exercise though, is to demonstrate that by not accounting for the relationship between competition on ACA exchanges and competition between healthcare providers, researchers underestimate the impact of declining provider competition on premiums by roughly a factor of two.
+
+\section{Policy Implications}
+
+Resolving this issue requires, first and foremost, legislation addressing monopoly power in the healthcare provider market. Arguably the best suggestions on this front can be found in another report from the Brookings Institution's Center for Health Policy \citep{policy}. The report has a plethora of good suggestions, but I will solely focus on those that relate to my paper's subject matter, i.e. competition amongst healthcare providers as it relates to insurers on the individual marketplace. 
+First, legislation should be enacted to allow the Federal Trade Commission (FTC) to enforce all anti-trust laws with respect to nonprofit healthcare firms. Under the Federal Trade Commission Act, Section 4, the FTC is not allowed to enforce many of its laws due to these firms' nonprofit status. Resolving this is essential in addressing the horizontal consolidation observed in this paper, as roughly 60\% of short term general care hospitals are non-profits. 
+
+Second, any willing provider (AWP) laws should be eliminated. These laws require insurers to include any provider in their network who so desires. They have a particularly nasty effect on insurers' ability to compete in the individual market; as I mentioned in Section 1, the new regulations brought about by the ACA pushed insurers to narrow their provider networks. This approach forced healthcare providers to compete with one another to be included in a given insurer's network, cutting healthcare costs in the process. AWP laws completely undermine this process. While network adequacy legislation is essential to ensure insurers aren't burdening enrollees with non-existent provider networks, AWP laws are far from necessary to achieve this goal. Rather, their primary effect is to undercut insurers' ability to compete in ACA exchanges, and to magnify the effect of limited provider competition on the individual market.
+
+These two proposals would go a long way towards rectifying the destructive impact of hospital consolidation on the individual market. Unfortunately, that's only one side of the coin. While consolidation has been the focus of this paper so far (and rightfully so, given its dramatic rise in the past decade), it alone isn't responsible for the fall in competition amongst healthcare providers: the well documented closure of rural hospitals has similarly devastated competition in counties nationwide. As my data shows, the mean hospital HHI in "rural" counties (i.e. counties with a RUCC code higher than 7) increased by 5.3\% between 2015 and 2016, while in non-rural counties mean hospital HHI only increased by 2.1\%. 
+
+The solution here is not less government, but more. First, expanding Medicaid in the 14 states which continue to refuse federal support (i.e. federally funding states to raise their Medicaid program's income threshold to 133\% of the poverty line, as initially proposed by the ACA) would provide financial relief to hundreds of hospitals nationwide. As shown in Blavin (2016), hospitals in states with the Medicaid expansion have significantly higher Medicaid payment rates and significantly lower uncompensated care costs \citep{blavin}.
+
+Even with expanded Medicaid though, in some rural counties it seems unlikely that insurers will ever face a competitive provider market, making it impossible for them to negotiate reasonable reimbursement rates with healthcare providers in the area. In this case, some form of rate setting, whereby state governments set standard reimbursement costs for medical procedures, should be considered. A variation of this model was implemented statewide in Maryland in 2014; preliminary results are positive, as costs were contained and quality of care improved in many areas \citep{patel}. This approach would prevent the few hospitals that operate in rural counties from demanding exorbitant reimbursement rates from insurers. In the process, it would eliminate the uneven power dynamic between hospitals and insurers when hospital competition is low, and hopefully ease insurer market entry in these rural counties. 
+
+Finally, it is important to note that these suggestions are from an economist, and healthcare, like many areas of public policy, is an interdisciplinary field. As referenced earlier, there are many researchers that contend that consolidation in the healthcare industry can benefit consumers through improved care and efficiency; the ACA even promoted consolidation through programs like Accountable Care Organizations (ACOs), a provider-led initiative to cut Medicare costs. Though most research on consolidation among hospitals suggests it has no effect on patient quality of care \citep{xu}, it's important any reform in healthcare is viewed through an interdisciplinary lens, which values patient experience as much as lowered costs and improved competition. 
+
+\section{Directions for Future Work}
+The most immediate extension of this work is to retest Scheffler's model in such a way that acknowledges the relationship between provider competition and insurer competition. The goal here would be to produce an accurate coefficient for hospital HHI's impact on premium prices.
+
+Another obvious extension would be a model which estimates the relationship between insurer and provider competition while controlling for time invariant differences between counties, using fixed effects or difference in differences. The latter model would be particularly interesting, as the treatment effect could be specified as hospital mergers (i.e. provider consolidation) or hospital closures (i.e. rural healthcare shortages). Unfortunately, this extension is impossible for the next few years: there are currently only four years of marketplace data to be used in such an analysis. 
+
+Another extension, which researchers wouldn't have to wait a decade for, would be to consider the relationship between provider competition and competition in the Medicaid Managed Care market. Managed Care Organizations (MCOs) are private companies which contract with states to deliver Medicaid benefits. Currently 39 states (and DC) use MCOs to administer Medicaid benefits. Only 30 states publicly share enrollment data, but in those 30 alone there are 48 million enrollees, three times as many as are in the entire individual market. Thus, investigating whether falling competition amongst healthcare providers poses the same risk to the Medicaid MCO market as it does to ACA exchanges would be an extremely worthwhile endeavor. 
+
+\section*{Conclusion}
+In closing, it's worth reflecting on the importance of ACA exchanges. As mentioned above, these markets cover only a small fraction of health insurance enrollees nationwide. And while the market conditions faced by 9 million consumers every year are certainly worth studying in their own right, it would be foolish to ignore that the significance of competition and premiums on ACA exchanges are often exaggerated for political purposes.
+
+To the economist, though, I'd argue the success or failure of these markets is of paramount importance. ACA exchanges, regardless of their characterization, are a market based solution to healthcare in the United States. Their goal is to provide consumers with low cost choices for health insurance, without the unscrupulous practices notorious in the pre-ACA individual market. 
+
+While their current state may suggest this goal is far from achievable, the challenges these markets have faced in their first four years, from intentional sabotage by state governments, to, as shown in this paper, declining competition amongst healthcare providers, make it impossible for us to know what they are capable of in ideal (or even relatively ideal) conditions. Resolving these issues won't be easy; but failing to do so means abandoning the dream of an ethical market for health insurance.
+
+\pagebreak
+
+\bibliographystyle{chicago}  
+\bibliography{bib}
+
+\pagebreak
+
+\section*{Appendix}
+Insurer HHI was calculated using the issuer-level enrollment data publicly available from the Center for Medicare and Medicaid Services. The data provided the number of purchases of a given issuer in a given county; counties with less than ten purchases were withheld from the data. Each state publicly lists the counties contained in its assigned rating areas; I constructed an Excel spreadsheet with this data, and merged it with my enrollment data. I then aggregated my enrollment count by rating area, and used that number to calculate market share for each issuer in each rating area. Each issuer in a given rating area was considered a firm.
+
+I used an identical process for hospitals, using AHA data, but I added an additional step to ensure hospitals in the same system were treated as one entity.
+
+Heat maps summarizing my results can be seen on the following pages. Grayed out sections reflect counties with withheld data. Bivariate regression results are also listed in Table 5, Table 6, and Table 7. 
+
+\pagebreak
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[height=4in,angle=0]{insurerhhimap_2015.png}
+\caption{Insurer HHI Heat Map, 2015}\label{Figure 5}
+\vspace{5mm}
+\includegraphics[height=4in,angle=0]{insurerhhimap_2016.png}
+\caption{Insurer HHI Heat Map, 2016}\label{Figure 6}
+\end{center}
+\end{figure}
+
+\pagebreak
+\begin{figure}[!h]
+\begin{center}
+\includegraphics[height=4in,angle=0]{hospitalhhimap_2014.png}
+\caption{Hospital HHI Heat Map, 2014}\label{Figure 7}
+\vspace{5mm}
+\includegraphics[height=4in,angle=0]{hospitalhhimap_2015.png}
+\caption{Hospital HHI Heat Map, 2015}\label{Figure 8}
+\end{center}
+\end{figure}
+
+\clearpage
+\noindent\makebox[\textwidth]{%
+\begin{tabular}{lccc} 
+\\
+\\
+\\
+\hline
+ & (1) & (2) & (3) \\
+ & Insurer HHI & Insurer HHI & Insurer HHI \\
+VARIABLES & 2015 & 2016 & Combined \\ \hline
+ &  &  &  \\
+Hospital HHI (Log Linearized) & 1.042*** & 0.958*** & 1.001*** \\
+ & (0.0142) & (0.0147) & (0.0128) \\
+Observations & 2,468 & 2,457 & 4,925 \\
+ R-squared & 0.633 & 0.567 & 0.601 \\ \hline
+\end{tabular}
+}
+\begin{center}
+Table 5: Bivariate Regressions by Year \textit{(*** p$<$0.01, ** p$<$0.05, * p$<$0.1)} 
+\end{center}
+\vspace{.5in}
+
+
+\noindent\makebox[\textwidth]{%
+\begin{tabular}{lcccc} \hline
+ & (1) & (2) & (3) & (4) \\
+ & Insurer HHI & Insurer HHI & Insurer HHI & Insurer HHI \\
+VARIABLES & West & South & Northeast & Midwest \\ \hline
+ &  &  &  &  \\
+Hospital HHI (Log Linearized) & 1.070*** & 1.115*** & 0.874*** & 0.225*** \\
+ & (0.0358) & (0.0127) & (0.0427) & (0.0574) \\
+Observations & 426 & 2,526 & 228 & 1,745 \\
+ R-squared & 0.756 & 0.772 & 0.580 & 0.040 \\ \hline
+\end{tabular}
+}
+\begin{center}
+Table 6: Bivariate Regressions by Region \textit{(*** p$<$0.01, ** p$<$0.05, * p$<$0.1)} 
+\end{center}
+
+
+\noindent\makebox[\textwidth]{%
+\begin{tabular}{lcccc} 
+\\
+\\
+\\
+\hline
+ & (1) & (2) & (3) & (4) \\
+ & Insurer HHI & Insurer HHI & Insurer HHI & Insurer HHI \\
+VARIABLES & RUCC Code 1 & RUCC Code 3 & RUCC Code 6 & RUCC Code 9 \\ \hline
+ &  &  &  &  \\
+Hospital HHI (Log Linearized) & 0.775*** & 0.894*** & 1.043*** & 0.823*** \\
+ & (0.0556) & (0.0611) & (0.0245) & (0.0420) \\
+Observations & 647 & 568 & 1,007 & 597 \\
+ R-squared & 0.327 & 0.418 & 0.706 & 0.507 \\ \hline
+\end{tabular}
+}
+\begin{center}
+Table 7: Bivariate Regressions by Rurality \textit{(*** p$<$0.01, ** p$<$0.05, * p$<$0.1)} 
+\end{center}
+
+
+
+%remember to use \citep{} for citation
+\end{document}
