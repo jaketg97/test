@@ -8,6 +8,8 @@ library(tigris)
 library(binsreg)
 library(effects)
 library(ggplot2)
+library(ggthemes)
+library(RColorBrewer)
 library(rgeos)
 
 #################################################
@@ -132,5 +134,10 @@ stargazer(model_northeast, model_northcentral, model_south, model_west, type = "
 #################################################
 # Making graphs
 #################################################
+source("../r_code/make_graphs.R")
+
+    
+
+?geom_histogram()
 binsreg(full_combined$insurer_hhi_logged, full_combined$hospital_hhi_logged, w=data.frame(c(full_combined$rating_area.f), c(full_combined$year.f), c(full_combined$rucc_code_13), c(full_combined$median_age)))
 plot(effect("hospital_hhi_logged", model_full))
