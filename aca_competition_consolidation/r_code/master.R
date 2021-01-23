@@ -8,6 +8,7 @@ library(tigris)
 library(binsreg)
 library(effects)
 library(ggplot2)
+library(rgeos)
 
 #################################################
 # Building clean dataset
@@ -28,16 +29,15 @@ full_15_16 <- merge(fips_codes, full_15_16, by = "county_code")
 full_14_15$county <- paste(full_14_15$county, full_14_15$state, sep = ", ")
 full_15_16$county <- paste(full_15_16$county, full_15_16$state, sep = ", ")
 
-#getting geodata for counties (from google)
-#temp_c_14 <- geocode(location = full_14_15$county)
-#write.csv(temp_c_14, "temp_c_14.csv")
-temp_c_14 <- read.csv("temp_c_14.csv")
-full_14_15$lon <- temp_c_14$lon
-full_14_15$lat <- temp_c_14$lat
+#getting geodata for counties (centroid of census boundaries)
+geodata <- counties(state = full_14_15$state_abb)
+geodata <- subset(geodata, geodata@data[["GEOID"]] %in% full_14_15$county_code)
+geodata_1 <- gCentroid(spgeom = geodata, byid = TRUE)
+geodata <- data.frame(geodata@data[["GEOID"]], geodata_1@coords)
+colnames(geodata) <- c("county_code", "lon", "lat")
 
-temp_c_15 <- data.frame(full_14_15$county_code, full_14_15$lon, full_14_15$lat) #reusing previously pulled data
-colnames(temp_c_15) <- c("county_code", "lon", "lat")
-full_15_16 <- merge(x=full_15_16, y=temp_c_15, by = "county_code")
+full_14_15 <- merge(geodata, full_14_15, by = "county_code")
+full_15_16 <- merge(geodata, full_15_16, by = "county_code")
 
 #adding rurality
 rural_urban <- read_xls("ruralurbancodes2013.xls")
@@ -50,9 +50,11 @@ full_15_16 <- merge(full_15_16, rural_urban, by="county_code")
 
 #adding hospital HHI
 source("../r_code/build_hospital_hhi.R")
+full_14_15$hospital_hhi_14 <- unlist(full_14_15$hospital_hhi_14)
+full_15_16$hospital_hhi_15 <- unlist(full_15_16$hospital_hhi_15)
 
-colnames(full_14_15) = c("county_code", "state_abb", "state_name", "county_name", "insurer_hhi_2015", "county_lon", "county_lat", "rucc_code_13", "hospital_hhi_2014")
-colnames(full_15_16) = c("county_code", "state_abb", "state_name", "county_name", "insurer_hhi_2016", "county_lon", "county_lat", "rucc_code_13", "hospital_hhi_2015")
+colnames(full_14_15) = c("county_code", "county_lon", "county_lat", "state_abb", "state_name", "county_name", "insurer_hhi_2015", "rucc_code_13", "hospital_hhi_2014")
+colnames(full_15_16) = c("county_code", "county_lon", "county_lat", "state_abb", "state_name", "county_name", "insurer_hhi_2016", "rucc_code_13", "hospital_hhi_2015")
 
 
 full_14_15$no_hospitals <- ifelse(full_14_15$hospital_hhi_2014 == -99, TRUE, FALSE)
@@ -60,8 +62,7 @@ full_14_15$hospital_hhi_2014[full_14_15$hospital_hhi_2014==-99] <- 10000
 full_15_16$no_hospitals <- ifelse(full_15_16$hospital_hhi_2015 == -99, TRUE, FALSE)
 full_15_16$hospital_hhi_2015[full_15_16$hospital_hhi_2015==-99] <- 10000
 
-full_14_15$hospital_hhi_2014 <- unlist(full_14_15$hospital_hhi_2014)
-full_15_16$hospital_hhi_2015 <- unlist(full_15_16$hospital_hhi_2015)
+
 
 #factoring RUCC and rating areas
 full_14_15$rucc_code_13.f <- factor(full_14_15$rucc_code_13)
