@@ -135,5 +135,5 @@ stargazer(model_northeast, model_northcentral, model_south, model_west, type = "
 # Making graphs and maps
 #################################################
 source("../r_code/make_graphs.R")
-source("../r_code/make_maps")
+#source("../r_code/make_maps")
 

@@ -1,12 +1,20 @@
 library(tigris)
 library(leaflet)
 library(htmlwidgets)
+library(urbnmapr)
 
 setwd("../paper/maps")
 
 counties_geocoded <- counties(state = unique(full_combined$state_abb))
 mapping_14_15 <- sp::merge(counties_geocoded, full_14_15, by.x = "GEOID", by.y = "county_code")
 mapping_15_16 <- sp::merge(counties_geocoded, full_15_16, by.x = "GEOID", by.y = "county_code")
+
+mapping_14_15 %>%
+  ggplot(aes(long, lat, group = group, fill = insurer_hhi_2015)) +
+  geom_polygon(color = NA) +
+  coord_map(projection = "albers", lat0 = 39, lat1 = 45) +
+  geom_polygon(data = states, mapping = aes(long, lat, group = group), fill = NA, color = "#ffffff") +
+  labs(fill = "Insurer HHI") + ggtitle("Insurer HHI, 2015")
 
 popup <- paste0("GEOID: ", mapping_14_15$GEOID, "<br>", "Insurer HHI: ", round(mapping_14_15$insurer_hhi_2015, .01))
 pal <- colorNumeric(
