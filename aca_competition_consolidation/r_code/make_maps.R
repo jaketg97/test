@@ -2,6 +2,8 @@ library(tigris)
 library(leaflet)
 library(htmlwidgets)
 
+setwd("../paper/maps")
+
 counties_geocoded <- counties(state = unique(full_combined$state_abb))
 mapping_14_15 <- sp::merge(counties_geocoded, full_14_15, by.x = "GEOID", by.y = "county_code")
 mapping_15_16 <- sp::merge(counties_geocoded, full_15_16, by.x = "GEOID", by.y = "county_code")
@@ -26,7 +28,7 @@ map_insurerhhi_2015 <- leaflet() %>%
             position = "bottomright", 
             title = "Insurer HHI") 
 
-saveWidget(map_insurerhhi_2015, file="../paper/maps/map_insurerhhi_2015")
+saveWidget(map_insurerhhi_2015, file="map_insurerhhi_2015")
 
 popup <- paste0("GEOID: ", mapping_15_16$GEOID, "<br>", "Insurer HHI: ", round(mapping_15_16$insurer_hhi_2016, .01))
 pal <- colorNumeric(
@@ -48,4 +50,4 @@ map_insurerhhi_2016 <- leaflet() %>%
             position = "bottomright", 
             title = "Insurer HHI") 
 
-saveWidget(map_insurerhhi_2016, file="../paper/maps/map_insurerhhi_2016")
+saveWidget(map_insurerhhi_2016, file="map_insurerhhi_2016")
