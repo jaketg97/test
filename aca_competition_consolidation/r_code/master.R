@@ -103,7 +103,7 @@ write.csv(full_14_15, "../clean_data/full_14_15.csv")
 write.csv(full_15_16, "../clean_data/full_15_16.csv")
 write.csv(full_combined, "../clean_data/full_combined.csv")
 
-rm(insurer_hhi_2015, insurer_hhi_2016, temp_14, temp_15, temp_c_14, temp_c_15, calc_hhi, calc_hhi_2014, calc_hhi_2015, calc_hhi_helper, fips_codes, crosswalk, rural_urban)
+rm(insurer_hhi_2015, insurer_hhi_2016, temp_14, temp_15, calc_hhi, calc_hhi_2014, calc_hhi_2015, calc_hhi_helper, fips_codes, crosswalk, rural_urban)
 
 #################################################
 # Running linear models
@@ -132,12 +132,8 @@ stargazer(model_northeast, model_northcentral, model_south, model_west, type = "
           out = "../paper/tables/region_results.tex")
 
 #################################################
-# Making graphs
+# Making graphs and maps
 #################################################
 source("../r_code/make_graphs.R")
+source("../r_code/make_maps")
 
-    
-
-?geom_histogram()
-binsreg(full_combined$insurer_hhi_logged, full_combined$hospital_hhi_logged, w=data.frame(c(full_combined$rating_area.f), c(full_combined$year.f), c(full_combined$rucc_code_13), c(full_combined$median_age)))
-plot(effect("hospital_hhi_logged", model_full))
