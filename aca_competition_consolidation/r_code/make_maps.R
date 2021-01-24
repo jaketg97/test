@@ -3,8 +3,6 @@ library(leaflet)
 library(htmlwidgets)
 library(urbnmapr)
 
-setwd("../paper/maps")
-
 mapping_14_15 <- sp::merge(counties, full_14_15, by.x = "county_fips", by.y = "county_code")
 mapping_15_16 <- sp::merge(counties, full_15_16, by.x = "county_fips", by.y = "county_code")
 
