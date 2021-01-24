@@ -31,12 +31,20 @@ ggplot(data = full_combined, aes(x=hospital_hhi_logged, color=region.f)) +
 ggsave(filename = "../paper/graphs/kd_region_hospitalhhi.png", height = 4, width = 5.5, dpi = 600)
 
 binscat <- binsreg(full_combined$insurer_hhi_logged, full_combined$hospital_hhi_logged, 
-          w=data.frame(c(full_combined$rating_area.f), c(full_combined$year.f), c(full_combined$rucc_code_13), c(full_combined$median_age)))
+          w=data.frame(c(full_combined$rating_area.f), c(full_combined$year.f), c(full_combined$rucc_code_13), c(full_combined$median_age), 
+                       c(full_combined$black_popn_percent), c(full_combined$native_popn_percent), c(full_combined$white_popn_percent)))
 
 binscat$bins_plot + labs(title="Binned scatterplot, Insurer HHI vs. Hospital HHI", x="Hospital HHI (logged)", 
-  y="Insurer HHI (logged)") + theme_stata(scheme="s2color") 
+  y="Insurer HHI (logged)") + theme_stata(scheme="s2color") + ylim(7.5, 9)
 
 ggsave(filename = "../paper/graphs/binscatter_results.png", height = 4, width = 5.5, dpi = 600)
+
+binscat_bivariate <- binsreg(full_combined$insurer_hhi_logged, full_combined$hospital_hhi_logged)
+
+binscat_bivariate$bins_plot + labs(title="Binned scatterplot, Insurer HHI vs. Hospital HHI", x="Hospital HHI (logged)", 
+  y="Insurer HHI (logged)") + theme_stata(scheme="s2color") + ylim(7.5, 9)
+
+ggsave(filename = "../paper/graphs/binscatter_bivariate_results.png", height = 4, width = 5.5, dpi = 600)
 
 ggplot(data = full_combined, aes(x=hospital_hhi_logged, y=insurer_hhi_logged, color=year.f)) + geom_point() + 
   labs(title="Scatterplot, Insurer HHI vs. Hospital HHI", x="Hospital HHI (logged)", y="Insurer HHI (logged)") + theme_stata(scheme="s2color")
@@ -44,12 +52,13 @@ ggplot(data = full_combined, aes(x=hospital_hhi_logged, y=insurer_hhi_logged, co
 ggsave(filename = "../paper/graphs/scatter_byyear.png", height = 4, width = 5.5, dpi = 600)
 
 ggplot(data = full_combined, aes(x=hospital_hhi_logged, y=insurer_hhi_logged, color=year.f)) + geom_smooth(method="lm") + 
-  labs(title="Scatterplot, Insurer HHI vs. Hospital HHI", x="Hospital HHI (logged)", y="Insurer HHI (logged)") + theme_stata(scheme="s2color")
+  labs(title="Scatterplot, Insurer HHI vs. Hospital HHI", x="Hospital HHI (logged)", y="Insurer HHI (logged)") + 
+    theme_stata(scheme="s2color") + ylim(7, 9.5)
 
 ggsave(filename = "../paper/graphs/smoothedscatter_byyear.png", height = 4, width = 5.5, dpi = 600)
 
 ggplot(data = full_combined, aes(x=hospital_hhi_logged, y=insurer_hhi_logged, color=region.f)) + geom_point() + labs(title="Scatterplot, Insurer HHI vs. Hospital HHI", x="Hospital HHI (logged)", 
-  y="Insurer HHI (logged)") + theme_stata(scheme="s2color")
+  y="Insurer HHI (logged)") + theme_stata(scheme="s2color") 
 
 ggsave(filename = "../paper/graphs/scatter_byregion.png", height = 4, width = 5.5, dpi = 600)
 
@@ -58,15 +67,15 @@ ggplot(data = full_combined, aes(x=hospital_hhi_logged, y=insurer_hhi_logged, co
 
 ggsave(filename = "../paper/graphs/smoothedscatter_byregion.png", height = 4, width = 5.5, dpi = 600)
 
-overall_effect_plot <- effect_plot(model_full, hospital_hhi_logged, rug = TRUE, interval = TRUE)
+overall_effect_plot <- effect_plot(model_full, hospital_hhi_logged, rug = FALSE, data = full_combined, plot.points = TRUE)
 
 overall_effect_plot + labs(title="Effect Plot, Insurer HHI vs. Hospital HHI", x="Hospital HHI (logged)", 
-  y="Insurer HHI (logged)") + theme_stata(scheme="s2color") 
+  y="Insurer HHI (logged)") + theme_stata(scheme="s2color") + ylim(7, 9.5)
 
 ggsave(filename = "../paper/graphs/effectplot_mainresults.png", height = 4, width = 5.5, dpi = 600)
 
 make_effect_plots <- function(x, y) {
-  effect_plot <- effect_plot(x, hospital_hhi_logged, rug=TRUE, interval=TRUE)
+  effect_plot <- effect_plot(x, hospital_hhi_logged, rug=TRUE)
   effect_plot <- effect_plot + labs(title=y, 
     x="Hospital HHI (logged)", y="Insurer HHI (logged)") + theme_stata(scheme="s2color")
   return(effect_plot)

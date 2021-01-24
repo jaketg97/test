@@ -5,9 +5,8 @@ library(urbnmapr)
 
 setwd("../paper/maps")
 
-counties_geocoded <- counties(state = unique(full_combined$state_abb))
-mapping_14_15 <- sp::merge(counties_geocoded, full_14_15, by.x = "GEOID", by.y = "county_code")
-mapping_15_16 <- sp::merge(counties_geocoded, full_15_16, by.x = "GEOID", by.y = "county_code")
+mapping_14_15 <- sp::merge(counties, full_14_15, by.x = "county_fips", by.y = "county_code")
+mapping_15_16 <- sp::merge(counties, full_15_16, by.x = "county_fips", by.y = "county_code")
 
 mapping_14_15 %>%
   ggplot(aes(long, lat, group = group, fill = insurer_hhi_2015)) +
@@ -16,46 +15,31 @@ mapping_14_15 %>%
   geom_polygon(data = states, mapping = aes(long, lat, group = group), fill = NA, color = "#ffffff") +
   labs(fill = "Insurer HHI") + ggtitle("Insurer HHI, 2015")
 
-popup <- paste0("GEOID: ", mapping_14_15$GEOID, "<br>", "Insurer HHI: ", round(mapping_14_15$insurer_hhi_2015, .01))
-pal <- colorNumeric(
-  palette = "YlGnBu",
-  domain = mapping_14_15$insurer_hhi_2015
-)
+ggsave(filename = "../paper/maps/insurerHHI_2015.png", dpi = 1000)
 
-map_insurerhhi_2015 <- leaflet() %>%
-  addProviderTiles("CartoDB.Positron") %>%
-  addPolygons(data = mapping_14_15, 
-              fillColor = ~pal(insurer_hhi_2015), 
-              color = "#b2aeae", # you need to use hex colors
-              fillOpacity = 0.7, 
-              weight = 1, 
-              smoothFactor = 0.2,
-              popup = popup) %>%
-  addLegend(pal=pal,
-            values = subset(mapping_14_15$insurer_hhi_2015, mapping_14_15$insurer_hhi_2015 != "NA"), 
-            position = "bottomright", 
-            title = "Insurer HHI") 
+mapping_14_15 %>%
+  ggplot(aes(long, lat, group = group, fill = hospital_hhi_2014)) +
+  geom_polygon(color = NA) +
+  coord_map(projection = "albers", lat0 = 39, lat1 = 45) +
+  geom_polygon(data = states, mapping = aes(long, lat, group = group), fill = NA, color = "#ffffff") +
+  labs(fill = "Hospital HHI") + ggtitle("Hospital HHI, 2014")
 
-saveWidget(map_insurerhhi_2015, file="map_insurerhhi_2015")
+ggsave(filename = "../paper/maps/hospitalHHI_2014.png", dpi = 1000)
 
-popup <- paste0("GEOID: ", mapping_15_16$GEOID, "<br>", "Insurer HHI: ", round(mapping_15_16$insurer_hhi_2016, .01))
-pal <- colorNumeric(
-  palette = "YlGnBu",
-  domain = mapping_15_16$insurer_hhi_2016
-)
+mapping_15_16 %>%
+  ggplot(aes(long, lat, group = group, fill = insurer_hhi_2016)) +
+  geom_polygon(color = NA) +
+  coord_map(projection = "albers", lat0 = 39, lat1 = 45) +
+  geom_polygon(data = states, mapping = aes(long, lat, group = group), fill = NA, color = "#ffffff") +
+  labs(fill = "Insurer HHI") + ggtitle("Insurer HHI, 2016")
 
-map_insurerhhi_2016 <- leaflet() %>%
-  addProviderTiles("CartoDB.Positron") %>%
-  addPolygons(data = mapping_15_16, 
-              fillColor = ~pal(insurer_hhi_2016), 
-              color = "#b2aeae", # you need to use hex colors
-              fillOpacity = 0.7, 
-              weight = 1, 
-              smoothFactor = 0.2,
-              popup = popup) %>%
-  addLegend(pal=pal,
-            values = subset(mapping_15_16$insurer_hhi_2016, mapping_15_16$insurer_hhi_2016 != "NA"), 
-            position = "bottomright", 
-            title = "Insurer HHI") 
+ggsave(filename = "../paper/maps/insurerHHI_2016.png", dpi = 1000)
 
-saveWidget(map_insurerhhi_2016, file="map_insurerhhi_2016")
+mapping_15_16 %>%
+  ggplot(aes(long, lat, group = group, fill = hospital_hhi_2015)) +
+  geom_polygon(color = NA) +
+  coord_map(projection = "albers", lat0 = 39, lat1 = 45) +
+  geom_polygon(data = states, mapping = aes(long, lat, group = group), fill = NA, color = "#ffffff") +
+  labs(fill = "Hospital HHI") + ggtitle("Hospital HHI, 2015")
+
+ggsave(filename = "../paper/maps/hospitalHHI_2015.png", dpi = 1000)
