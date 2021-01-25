@@ -10,6 +10,7 @@ My name's Jake, and I'm an aspiring applied microeconomist hoping to specialize 
 - **[Insurer Competition in the Age of Provider Consolidation](main_files/Insurer Competition in the Age of Provider Consolidation.pdf):** Wow that's a mouthful. Undergraduate thesis completed with the help of my wonderful advisor Professor Colleen Grogan. Using public data from CMS, and private data from the American Hospital Association (AHA), I tried to measure the impact of reduced healthcare provider competition on competition and prices in ACA exchanges. Imperfect work, but I think the general findings are correct.
 
 ## Now, for the good stuff 
+- **[1/25/2020: Covid cases and deaths in Chicago, by zip code](covid_chicago_impact/covid_chicago_impact.html)**
 - **[10/23/2020: Covid job losses in Indiana](covid_indiana_impact/covid_jobloss_indianapolis.html)**
 - **[10/16/2020: Judging judges (round 2)](https://jaketg97.github.io/Jacob-Toner-Gosselin/cook_county_sentencing/judging_judges)**
 
