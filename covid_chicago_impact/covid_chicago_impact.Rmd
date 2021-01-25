@@ -1,7 +1,7 @@
 ---
 title: "Covid-19 in Chicago"
 author: "Jacob Toner Gosselin"
-date: "10/25/2020"
+date: "01/25/2021"
 output: html_document
 ---
 
@@ -16,6 +16,7 @@ library(htmlwidgets)
 library(ggplot2)
 library(ggmap)
 library(readxl)
+library(leafsync)
 ```
 
 ## Overview
@@ -32,11 +33,7 @@ job_loss_national <- read.csv("https://ui-lodes-job-change-public.s3.amazonaws.c
 chicago_covid_cases <- merge(chicago_covid_cases, zip_tract_crosswalk, by.x = "ZIP.Code", by.y = "ZIP")
 chicago_covid_cases <- rename(chicago_covid_cases, GEOID=TRACT)
 chicago_tracts <- tracts(state = "IL", county = "Cook")
-```
 
-## Chicago Covid-19 Deaths Map, by Census Tract
-
-```{r, include = FALSE}
 chicago_zips <- zctas(cb = TRUE, starts_with = "60")
 covid_map_data <- sp::merge(chicago_zips, chicago_covid_cases, by.x = "ZCTA5CE10", by.y = "ZIP.Code", duplicateGeoms = TRUE)
 covid_map_data <- subset(covid_map_data, Deaths...Cumulative != "NA")
@@ -82,10 +79,10 @@ cases_map<-leaflet() %>%
             position = "bottomright", 
             title = "Covid-19 Weekly Case Rate") 
 saveWidget(cases_map, file="cases_map.html")
-
 ```
 
+## Case rates and cumulative deaths by Zip Code
 ```{r, echo = FALSE}
-deaths_map
+sync(cases_map, deaths_map)
 ```
 
