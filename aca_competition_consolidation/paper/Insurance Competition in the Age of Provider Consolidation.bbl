@@ -1,0 +1,124 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{Berenson}{Berenson}{2015}]{berenson_addressing_2015}
+Berenson, R. (2015, January).
+\newblock Addressing {Pricing} {Power} in {Integrated} {Delivery}: {The}
+  {Limits} of {Antitrust}.
+\newblock {\em Journal of Health Politics, Policy and Law\/}~{\em 40\/}(4),
+  711--744.
+
+\bibitem[\protect\citeauthoryear{Bivand, Rundel, Pebesma, Stuetz, Hufthammer,
+  Giraudoux, Davis, and Santilli}{Bivand et~al.}{2020}]{bivand_rgeos_2020}
+Bivand, R., C.~Rundel, E.~Pebesma, R.~Stuetz, K.~O. Hufthammer, P.~Giraudoux,
+  M.~Davis, and S.~Santilli (2020, September).
+\newblock rgeos: {Interface} to {Geometry} {Engine} - {Open} {Source}
+  ('{GEOS}').
+
+\bibitem[\protect\citeauthoryear{Blavin and Ramos}{Blavin and
+  Ramos}{2021}]{blavin_medicaid_2021}
+Blavin, F. and C.~Ramos (2021, January).
+\newblock Medicaid {Expansion}: {Effects} {On} {Hospital} {Finances} {And}
+  {Implications} {For} {Hospitals} {Facing} {COVID}-19 {Challenges}: {Study}
+  examines {Medicaid} expansion effects on hospital finances and implications
+  for hospitals facing {COVID}-19 challenges.
+\newblock {\em Health Affairs\/}~{\em 40\/}(1), 82--90.
+
+\bibitem[\protect\citeauthoryear{Boozary, Feyman, Reinhardt, and Jha}{Boozary
+  et~al.}{2019}]{boozary_association_2019}
+Boozary, A.~S., Y.~Feyman, U.~E. Reinhardt, and A.~K. Jha (2019, April).
+\newblock The {Association} {Between} {Hospital} {Concentration} {And}
+  {Insurance} {Premiums} {In} {ACA} {Marketplaces}.
+\newblock {\em Health Affairs\/}~{\em 38\/}(4), 668--674.
+
+\bibitem[\protect\citeauthoryear{Cox, Claxton, Rosa, and Levitt}{Cox
+  et~al.}{2015}]{cox_analysis_2015}
+Cox, C., G.~Claxton, M.~Rosa, and L.~Levitt (2015, June).
+\newblock Analysis of 2016 {Premium} {Changes} and {Insurer} {Participation} in
+  the {Affordable} {Care} {Act}’s {Health} {Insurance} {Marketplaces}.
+\newblock pp.\ ~7.
+
+\bibitem[\protect\citeauthoryear{Dafny, Hendel, Marone, and Ody}{Dafny
+  et~al.}{2017}]{dafny_narrow_2017}
+Dafny, L.~S., I.~Hendel, V.~Marone, and C.~Ody (2017).
+\newblock Narrow {Networks} {On} {The} {Health} {Insurance} {Marketplaces}:
+  {Prevalence}, {Pricing}, {And} {The} {Cost} {Of} {Network} {Breadth}.
+\newblock {\em Health Affairs\/}~{\em 36\/}(9), 1606--1614.
+\newblock \_eprint: https://doi.org/10.1377/hlthaff.2016.1669.
+
+\bibitem[\protect\citeauthoryear{Fang and Ko}{Fang and
+  Ko}{2020}]{fang_why_2020}
+Fang, H. and A.~Ko (2020).
+\newblock Why {Do} {Insurers} {Selectively} {Enter} {Counties} within a
+  {Rating} {Area} on the {ACA} {Marketplaces}?
+\newblock pp.\ ~51.
+
+\bibitem[\protect\citeauthoryear{Fiedler}{Fiedler}{2020}]{fiedler_capping_2020}
+Fiedler, M. (2020, November).
+\newblock Capping {Prices} or {Creating} a {Public} {Option}: {How} {Would}
+  {They} {Change} {What} {We} {Pay} for {Health} {Care}?
+\newblock {\em The Brookings Institution\/}, 154.
+
+\bibitem[\protect\citeauthoryear{Fox and Weisberg}{Fox and
+  Weisberg}{2017}]{fox_bootstrapping_2017}
+Fox, J. and S.~Weisberg (2017, October).
+\newblock Bootstrapping {Regression} {Models} in {R}.
+\newblock {\em An R Companion to Applied Regression, Second Edition\/}, 20.
+
+\bibitem[\protect\citeauthoryear{Gaynor and Ginsburg}{Gaynor and
+  Ginsburg}{2017}]{gaynor_making_2017}
+Gaynor, M. and P.~B. Ginsburg (2017).
+\newblock Making {Health} {Care} {Markets} {Work}: {Competition} {Policy} for
+  {Health} {Care}.
+\newblock {\em SSRN Electronic Journal\/}.
+
+\bibitem[\protect\citeauthoryear{Gresenz, Rogowski, and Escarce}{Gresenz
+  et~al.}{2004}]{gresenz_updated_2004}
+Gresenz, C.~R., J.~Rogowski, and J.~Escarce (2004).
+\newblock Updated {Variable}-{Radius} {Measures} of {Hospital} {Competition}.
+\newblock {\em Health Services Research\/}, 14.
+
+\bibitem[\protect\citeauthoryear{Griffith, Jones, and Sommers}{Griffith
+  et~al.}{2018}]{griffith_diminishing_2018}
+Griffith, K., D.~K. Jones, and B.~D. Sommers (2018, October).
+\newblock Diminishing {Insurance} {Choices} {In} {The} {Affordable} {Care}
+  {Act} {Marketplaces}: {A} {County}-{Based} {Analysis}.
+\newblock {\em Health Affairs\/}~{\em 37\/}(10), 1678--1684.
+
+\bibitem[\protect\citeauthoryear{Haeder, Weimer, and Mukamel}{Haeder
+  et~al.}{2015}]{haeder_narrow_2015}
+Haeder, S.~F., D.~L. Weimer, and D.~B. Mukamel (2015).
+\newblock Narrow {Networks} and the {Affordable} {Care} {Act}.
+\newblock {\em JAMA\/}~{\em 314\/}(7), 669--670.
+\newblock \_eprint:
+  https://jamanetwork.com/journals/jama/articlepdf/2367284/jvp150096.pdf.
+
+\bibitem[\protect\citeauthoryear{Kahle and Wickham}{Kahle and
+  Wickham}{2013}]{kahle_ggmap_2013}
+Kahle, D. and H.~Wickham (2013).
+\newblock ggmap: {Spatial} {Visualization} with ggplot2.
+\newblock {\em The R Journal\/}~{\em 5\/}(1), 144.
+
+\bibitem[\protect\citeauthoryear{Morrisey, Rivlin, Nathan, and Hall}{Morrisey
+  et~al.}{2017}]{morrisey_five-state_2017}
+Morrisey, M.~A., A.~M. Rivlin, R.~P. Nathan, and M.~A. Hall (2017, February).
+\newblock Five-state study of {ACA} marketplace competition.
+\newblock {\em The Brookings Institution\/}, 22.
+
+\bibitem[\protect\citeauthoryear{Rajkumar, Patel, Murphy, Colmers, Blum,
+  Conway, and Sharfstein}{Rajkumar et~al.}{2014}]{rajkumar_marylands_2014}
+Rajkumar, R., A.~Patel, K.~Murphy, J.~M. Colmers, J.~D. Blum, P.~H. Conway, and
+  J.~M. Sharfstein (2014).
+\newblock Maryland's {All}-{Payer} {Approach} to {Delivery}-{System} {Reform}.
+\newblock {\em The New England Journal of Medicine\/}~{\em 370\/}(6), 493--495.
+\newblock Place: United States Publisher: Massachusetts Medical Society.
+
+\bibitem[\protect\citeauthoryear{Scheffler, Arnold, and Whaley}{Scheffler
+  et~al.}{2018}]{scheffler_consolidation_2018}
+Scheffler, R.~M., D.~R. Arnold, and C.~M. Whaley (2018).
+\newblock Consolidation {Trends} {In} {California}’s {Health} {Care}
+  {System}: {Impacts} {On} {ACA} {Premiums} {And} {Outpatient} {Visit}
+  {Prices}.
+\newblock {\em Health Affairs\/}~{\em 37\/}(9), 1409--1416.
+\newblock \_eprint: https://doi.org/10.1377/hlthaff.2018.0472.
+
+\end{thebibliography}

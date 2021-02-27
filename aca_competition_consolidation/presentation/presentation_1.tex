@@ -1,0 +1,476 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer Presentation
+% LaTeX Template
+% Version 1.0 (10/11/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass{beamer}
+
+\mode<presentation> {
+
+% The Beamer class comes with a number of default slide themes
+% which change the colors and layouts of slides. Below this is a list
+% of all the themes, uncomment each in turn to see what they look like.
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+%\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+% As well as themes, the Beamer class has a number of color themes
+% for any slide theme. Uncomment each of these in turn to see how it
+% changes the colors of your current slide theme.
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title[BA Thesis]{Insurer Competition in the Age of Provider Consolidation} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Jacob Toner Gosselin} % Your name
+\institute[UChicago] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{
+University of Chicago \\ % Your institution for the title page
+\medskip
+\textit{jacobgosselin@uchicago.edu} % Your email address
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+\begin{frame}
+\frametitle{Overview} % Table of contents slide, comment this block out to remove it
+\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+
+%------------------------------------------------
+\section[Background]{Background} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
+%------------------------------------------------
+
+% A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
+
+\begin{frame}
+\frametitle{Research Questions}
+\begin{itemize}
+\item How is competition between healthcare providers related to competition on ACA exchanges?
+\item Is this relationship consistent across rurality and region?
+\item How does this relationship relate to premium prices?
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{What are ACA Exchanges?}
+\begin{figure}
+\includegraphics[width=0.6\linewidth, trim=4 4 4 4,clip]{enrollmentshit}
+\end{figure}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{What are ACA Exchanges?}
+
+\begin{block}{Buying health insurance pre ACA}
+\begin{itemize}
+\item Medical screened applicants for insurance policies, and often denied coverage
+\item Multiple rates within a policy for similar people (i.e. medical underwriting)
+\item Extreme variation in plan benefits
+\end{itemize}
+\end{block}
+
+\begin{block}{Buying health insurance post ACA}
+\begin{itemize}
+\item Regulated, subsidized "exchanges" for individuals to purchase health insurance from private firms
+\item Segmented by "rating area", a geographic construction that's usually a collection of counties
+\item \textbf{No competing over enrollees}
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{ACA Market Dynamics}
+\textit{Morrisey et. al., 2017}
+\begin{itemize}
+\item ACA exchanges are local, i.e. market performance is mostly determined by local factors
+\item There was early turmoil due to unexpectedly high claims cost in 2014
+\item \textbf{There's been a substantial shift to narrow networks of healthcare providers}
+\item \textbf{Hospital and physician competition is "essential" for a competitive insurance market}
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{ACA Market Dynamics}
+\textit{Griffith et. al., 2018}
+\begin{itemize}
+\item Rurality, demographics, health spending and state policy environment had a significant impact on insurer participation in a given rating area
+\end{itemize}
+\textit{Carpenter and Sloan, 2018}
+\begin{itemize}
+\item By 2018, 74\% of plans on the individual market had "narrow networks", the culmination of a four year process
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}
+\frametitle{ACA Market Dynamics}
+\textit{Scheffler et. al., 2018}
+\begin{itemize}
+\item Constructed an HHI measurement for hospitals and insurers in California's ACA rating areas
+\item Performed a multivariate and bivariate linear regression looking at premium prices, while controlling for county-level characteristics (\textbf{including insurer HHI})
+\item Found that hospital HHI was associated with marketplace premiums at an elasticity of .182, while insurer HHI was associated with marketplace premiums at an elasticity of .04
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}
+\frametitle{Lingering Questions}
+What we know:
+\begin{itemize}
+\item Competition and choice in ACA exchanges is heavily influenced by local factors
+\item Insurers have shifted to narrow networks to cut costs and compete with one another
+\item Qualitatively, this shift has created a dependence on provider competition
+\end{itemize}
+What we don't know:
+\begin{itemize}
+\item Quantitatively, what is the relationship between competition between healthcare providers and competition on ACA exchanges?
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\section[Data]{Data}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Variable Summary}
+\begin{table}
+\begin{tabular}{l l l}
+\toprule
+\textbf{Variables} & \textbf{Geographic Level} & \textbf{Source}\\
+\midrule
+Insurer HHI & Rating Area & CMS \\
+Hospital HHI & Rating Area & AHA \\
+State Policy Environment & State & NBSL \\
+Medicaid Expansion Status & State & KFF \\
+Average MLR Rebate & State & CMS \\
+Population Demographics & County & Census\\
+Rurality & County & DOA\\
+Medicare Spending & County & CMS \\
+\bottomrule
+\end{tabular}
+\textit{Insurer HHI measured in 2015 and 2016; all other variables lagged by one year}
+\end{table}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}
+\frametitle{HHI Construction}
+Insurer HHI:
+\begin{itemize}
+\item Enrollment data given by county and issuer for all 36 states with FFMs
+\item Generalized to rating area based on state listed county subsidiaries in 34 of 36 states (excluding AK and NE)
+\item Each insurance company in a given rating area is considered a single firm; market share is based on enrollment numbers
+\end{itemize}
+Hospital HHI:
+\begin{itemize}
+\item Admissions data is given by hospital by year
+\item Hospitals are grouped by health system (individual hospitals are considered independent firms) and rating area
+\item Market share is based on annual admissions
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}
+\frametitle{HHI Results}
+\begin{figure}
+\includegraphics[width=0.9\linewidth]{hospitalhhimap_2014}
+\end{figure}
+\end{frame}
+%------------------------------------------------
+\begin{frame}
+\frametitle{HHI Results}
+\begin{figure}
+\includegraphics[width=0.9\linewidth]{hospitalhhimap_2015}
+\end{figure}
+\end{frame}
+%------------------------------------------------
+%------------------------------------------------
+\begin{frame}
+\frametitle{HHI Results}
+\begin{figure}
+\includegraphics[width=0.9\linewidth]{insurerhhimap_2015}
+\end{figure}
+\end{frame}
+%------------------------------------------------
+\begin{frame}
+\frametitle{HHI Results}
+\begin{figure}
+\includegraphics[width=0.9\linewidth]{insurerhhimap_2016}
+\end{figure}
+\end{frame}
+%------------------------------------------------
+\begin{frame}
+\frametitle{HHI Results}
+\begin{figure}
+\includegraphics[width=0.9\linewidth]{scatter_hosp_insurer}
+\end{figure}
+\end{frame}
+%------------------------------------------------
+\begin{frame}
+\frametitle{HHI Results}
+\begin{figure}
+\includegraphics[width=0.9\linewidth]{binscatter_hosp_insurer}
+\end{figure}
+\end{frame}
+
+%------------------------------------------------
+\section[Model]{Model}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Model}
+\begin{block}{Multivariate Model}
+$y_t=\beta x_{t-1}+\gamma \chi_{t-1}+\epsilon_{t}$
+\end{block}
+Insurer HHI is my dependent variable ($y_t$), hospital HHI is my independent variable of interest ($x_{t-1}$), and a set of control variables outlined above ($\chi_{t-1}$)
+\end{frame}
+
+%------------------------------------------------
+\section[Results]{Results}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Results by Year}
+\begin{table}
+\begin{tabular}{c l c l c l c}
+\toprule
+\textbf{Variables} & \textbf{2015} & \textbf{2016} & \textbf{Combined}\\
+\midrule
+Hospital HHI & 0.969*** & 0.812*** & 0.955*** \\
+Robust Standard Errors & (0.0160) & (0.0189) & (0.0145) \\
+Observations & 2419 & 2403 & 4822 \\
+R-squared & 0.683 & 0.637 & 0.649 \\
+\bottomrule
+\end{tabular}
+\textit{*** p$<$0.01, ** p$<$0.05, * p$<$0.1}
+\end{table}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Results by Rurality}
+\begin{table}
+\begin{tabular}{c l c l c l c | c}
+\toprule
+\textbf{Variables} & \textbf{RUCC 1} & \textbf{RUCC 3} & \textbf{RUCC 6} & \textbf{RUCC 9}\\
+\midrule
+Hospital HHI & 0.870*** & 0.734*** & 1.011*** & 1.038***\\
+RSEs & (0.0541) & (0.0652) & (0.0246) & (0.0388) \\
+Observations & 617 & 552 & 996 & 579 \\
+R-squared & 0.454 & 0.512 & 0.772 & 0.668 \\
+\bottomrule
+\end{tabular}
+\textit{*** p$<$0.01, ** p$<$0.05, * p$<$0.1}
+\end{table}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Results by Rurality}
+\begin{table}
+\begin{tabular}{c l c l c l c | c}
+\toprule
+\textbf{Variables} & \textbf{West} & \textbf{South} & \textbf{Northeast} & \textbf{Midwest}\\
+\midrule
+Hospital HHI & 0.892*** & 0.999*** & 0.520*** & 0.376***\\
+RSEs & (0.0445) & (0.0146) & (0.0912) & (0.0362) \\
+Observations & 411 & 2450 & 228 & 1733 \\
+R-squared & 0.816 & 0.823 & 0.708 & 0.316 \\
+\bottomrule
+\end{tabular}
+\textit{*** p$<$0.01, ** p$<$0.05, * p$<$0.1}
+\end{table}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}
+\frametitle{Results Summarized}
+\begin{itemize}
+\item By year, my coefficients are .97 and .81 for 2015 and 2016 respectively (the interaction coefficient is insignificant); the decline across the years is likely less a consequence of provider competition becoming less important to insurer competition, and rather the result of other local factors playing increasingly important roles
+\item By rurality, coefficients appear to increase at either end of the spectrum (RUCC 1=most urban measurement, RUCC 9=most rural measurement)
+\item By region, our coefficient is largest in the South, where ACA exchanges have struggled most (this is also where most of our observations are though)
+\item Overall, results are remarkably consistent. Hospital HHI is significant at 1\% in every subset of the data, and the coefficient for the most part revolves around 0.8-1
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+%------------------------------------------------
+\section[Limitations]{Limitations}
+%------------------------------------------------
+\begin{frame}
+\frametitle{Limitation}
+\begin{itemize}
+\item \textbf{Omitted Variable Bias}
+\item Limited sample size
+\item No measure of vertical integration
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\section[Discussion]{Discussion}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Conclusions}
+\begin{itemize}
+\item Hospital HHI is one of the most significant determinants of competition and choice in ACA markets
+\item As a consequence, its impact on premium pricing has been underestimated by past research
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}
+\frametitle{Hypothetical}
+Take the typical consumer in 2015, in a county with the average premium price (\$276) and the average insurer HHI (1356). Suppose a hospital merger occurs in his county, raising hospital HHI by 10\%. 
+\begin{itemize}
+\item 2015-2016:
+\begin{itemize}
+\item Scheffler: The 10\% hospital HHI increase causes monthly premiums to go up by 1.8\%, or \$4.96
+\item My work: The 10\% hospital HHI increase causes insurance HHI to go up by 9.5\%, or 129 points
+\end{itemize}
+\item 2016-2017:
+\begin{itemize}
+\item \textbf{Scheffler: The 9.5\% insurance HHI increase causes premiums to go up by 1.94\%}
+\end{itemize}
+\end{itemize}
+Long term impact of the 10\% increase in hospital HHI is a 3.8\% increase in premiums across two years. That's \$10.41 monthly based on the benchmark premium, or \$124.92 annually.
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Policy Implications: Consolidation}
+\begin{itemize}
+\item Strengthen FTC's ability to enforce anti-trust laws with respect to hospitals (\textit{Gaynor et. al., 2017})
+\item Eliminate certificate of need laws (\textit{Mitchell and Koopman, 2016})
+\item Eliminate any willing provider (AWP) laws (\textit{Gaynor et. al., 2017})
+\end{itemize}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Policy Implications: Scarcity}
+\begin{itemize}
+\item Expand Medicaid in holdout states (\textit{Blavin, 2016})
+\item Rate setting for healthcare providers (MD All-Payer Model?) (\textit{Rajkumar et. al., 2014})
+\end{itemize}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+\section[Future Work]{Directions for Future Work}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Directions for Future Work}
+\begin{itemize}
+\item Fixed effects model to control for time invariant differences between counties
+\item Difference in Differences model with propensity score matching between counties (treatment could be increase in hospital HHI, \textbf{or a hospital merger/hospital closure})
+\item Adopt my model and consider Medicaid Managed Care markets
+\end{itemize}
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+\section[Conclusion]{Conclusion}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Does this matter?}
+\begin{itemize}
+\item My work suggests past research has vastly underestimated the importance of provider competition in ACA markets
+\item This issue is an existential issue, with major implications for the future of ACA exchanges "after the shouting"
+\item What does the future of ACA exchanges say about the possibility of "ethical" markets for health insurance?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\Huge{\centerline{The End}}
+\end{frame}
+
+\end{document} 

@@ -1,0 +1,60 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: Insurance Competition in the Age of Provider Consolidation.aux
+Reallocating 'name_of_file' (item size: 1) to 8 items.
+The style file: chicago.bst
+Reallocating 'name_of_file' (item size: 1) to 8 items.
+Database file #1: aca_bib.bib
+Warning--I didn't find a database entry for "kff1"
+Warning--no journal in cox_analysis_2015
+Warning--no number and no volume in cox_analysis_2015
+Warning--no journal in fang_why_2020
+Warning--no number and no volume in fang_why_2020
+Warning--no number and no volume in fiedler_capping_2020
+Warning--no number and no volume in fox_bootstrapping_2017
+Warning--no number and no volume in gaynor_making_2017
+Warning--page numbers missing in gaynor_making_2017
+Warning--no number and no volume in gresenz_updated_2004
+Warning--no number and no volume in morrisey_five-state_2017
+You've used 17 entries,
+            2861 wiz_defined-function locations,
+            711 strings with 8632 characters,
+and the built_in function-call counts, 13085 in all, are:
+= -- 1045
+> -- 1143
+< -- 2
++ -- 352
+- -- 378
+* -- 1299
+:= -- 2404
+add.period$ -- 54
+call.type$ -- 17
+change.case$ -- 140
+chr.to.int$ -- 17
+cite$ -- 27
+duplicate$ -- 301
+empty$ -- 690
+format.name$ -- 438
+if$ -- 2412
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 16
+newline$ -- 91
+num.names$ -- 170
+pop$ -- 91
+preamble$ -- 1
+purify$ -- 242
+quote$ -- 0
+skip$ -- 324
+stack$ -- 0
+substring$ -- 596
+swap$ -- 100
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 340
+warning$ -- 10
+while$ -- 153
+width$ -- 0
+write$ -- 229
+(There were 11 warnings)
