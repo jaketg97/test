@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 21.1) (preloaded format=pdflatex 2021.1.22)  28 FEB 2021 18:09
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 21.1) (preloaded format=pdflatex 2021.1.22)  28 FEB 2021 18:44
 entering extended mode
 **"./Insurance Competition in the Age of Provider Consolidation.tex"
 ("Insurance Competition in the Age of Provider Consolidation.tex"
@@ -1729,9 +1729,6 @@ Package natbib Warning: There were undefined citations.
  <./graphs//hist_resid_mainmodel.png>] [31 <./graphs//qq_mainmodel.png>]
 [32 <./graphs//bootstrap_coef.png>]
 ("Insurance Competition in the Age of Provider Consolidation.aux")
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `"Insurance Competition in the Age of Provide
 r Consolidation".out' has not changed.
 (rerunfilecheck)             Checksum: 6E06A783F59ABDA9D157D06B0FEE137D;610.
@@ -1757,7 +1754,7 @@ c/kpfonts/jkpmnc.pfb><C:/Users/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/type1/p
 ublic/kpfonts/jkpmne.pfb><C:/Users/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/typ
 e1/public/kpfonts/jkpsy.pfb>
 Output written on "Insurance Competition in the Age of Provider Consolidation.p
-df" (33 pages, 1184202 bytes).
+df" (33 pages, 1184186 bytes).
 PDF statistics:
  434 PDF objects out of 1000 (max. 8388607)
  81 named destinations out of 1000 (max. 500000)
