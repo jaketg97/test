@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 21.1) (preloaded format=pdflatex 2021.1.22)  27 FEB 2021 13:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 21.1) (preloaded format=pdflatex 2021.1.22)  28 FEB 2021 18:09
 entering extended mode
 **"./Insurance Competition in the Age of Provider Consolidation.tex"
 ("Insurance Competition in the Age of Provider Consolidation.tex"
@@ -1594,11 +1594,11 @@ Underfull \hbox (badness 5245) in paragraph at lines 89--94
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
 * h-part:(L,W,R)=(28.45274pt, 557.38951pt, 28.45274pt)
-* v-part:(T,H,B)=(95.39737pt, 556.47656pt, 143.09605pt)
+* v-part:(T,H,B)=(95.39737pt, 645.51256pt, 54.06006pt)
 * \paperwidth=614.295pt
 * \paperheight=794.96999pt
 * \textwidth=557.38951pt
-* \textheight=556.47656pt
+* \textheight=645.51256pt
 * \oddsidemargin=-43.81725pt
 * \evensidemargin=-43.81725pt
 * \topmargin=-13.87262pt
@@ -1619,71 +1619,101 @@ Underfull \hbox (badness 5245) in paragraph at lines 89--94
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-<./maps//insurerHHI_2015.png, id=323, 722.7pt x 361.35pt>
+<./maps//insurerHHI_2015.png, id=322, 722.7pt x 361.35pt>
 File: ./maps//insurerHHI_2015.png Graphic file (type png)
 <use ./maps//insurerHHI_2015.png>
 Package pdftex.def Info: ./maps//insurerHHI_2015.png  used on input line 330.
 (pdftex.def)             Requested size: 505.88655pt x 252.94499pt.
-<./maps//insurerHHi_2016.png, id=324, 722.7pt x 361.35pt>
-File: ./maps//insurerHHi_2016.png Graphic file (type png)
-<use ./maps//insurerHHi_2016.png>
-Package pdftex.def Info: ./maps//insurerHHi_2016.png  used on input line 333.
+<./maps//insurerHHI_2016.png, id=323, 722.7pt x 361.35pt>
+File: ./maps//insurerHHI_2016.png Graphic file (type png)
+<use ./maps//insurerHHI_2016.png>
+Package pdftex.def Info: ./maps//insurerHHI_2016.png  used on input line 333.
 (pdftex.def)             Requested size: 505.88655pt x 252.94499pt.
+ [24
 
-
-LaTeX Warning: Float too large for page by 26.63976pt on input line 336.
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-<./maps//hospitalHHI_2014.png, id=325, 722.7pt x 361.35pt>
+ <./maps//insurerHHI_2015.png (PNG copy)> <./maps//insurerHHI_2016.png (PNG cop
+y)>]
+<./maps//hospitalHHI_2014.png, id=330, 722.7pt x 361.35pt>
 File: ./maps//hospitalHHI_2014.png Graphic file (type png)
 <use ./maps//hospitalHHI_2014.png>
 Package pdftex.def Info: ./maps//hospitalHHI_2014.png  used on input line 341.
 (pdftex.def)             Requested size: 505.88655pt x 252.94499pt.
-<./maps//hospitalHHI_2015.png, id=326, 722.7pt x 361.35pt>
+<./maps//hospitalHHI_2015.png, id=331, 722.7pt x 361.35pt>
 File: ./maps//hospitalHHI_2015.png Graphic file (type png)
 <use ./maps//hospitalHHI_2015.png>
 Package pdftex.def Info: ./maps//hospitalHHI_2015.png  used on input line 344.
 (pdftex.def)             Requested size: 505.88655pt x 252.94499pt.
-
-LaTeX Warning: Float too large for page by 26.63976pt on input line 347.
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[24 <./maps//insurerHHI_2015.png (PNG copy)> <./maps//insurerHHi_2016.png (PNG 
-copy)>] [25 <./maps//hospitalHHI_2014.png (PNG copy)> <./maps//hospitalHHI_2015
-.png (PNG copy)>] (tables/main_results_1.tex)
-Overfull \hbox (22.12444pt too wide) in paragraph at lines 6--354
+ [25 <./maps//hospitalHHI_2014.png (PNG copy)> <./maps//hospitalHHI_2015.png (P
+NG copy)>]
+<./maps//counties.png, id=337, 722.7pt x 361.35pt>
+File: ./maps//counties.png Graphic file (type png)
+<use ./maps//counties.png>
+Package pdftex.def Info: ./maps//counties.png  used on input line 352.
+(pdftex.def)             Requested size: 505.88655pt x 252.94499pt.
+ [26 <./maps//counties.png>]
+(tables/main_results_1.tex)
+Overfull \hbox (22.12444pt too wide) in paragraph at lines 6--363
  [][] 
  []
 
 (tables/main_results_2.tex)
-Overfull \hbox (22.12444pt too wide) in paragraph at lines 6--360
+Overfull \hbox (22.12444pt too wide) in paragraph at lines 6--369
  [][] 
  []
 
-[26] [27]
-<./graphs//hist_resid_mainmodel.png, id=350, 397.485pt x 289.08pt>
+[27] [28]
+*geometry* verbose mode - [ newgeometry ] result:
+* driver: pdftex
+* paper: letterpaper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(28.45274pt, 557.38951pt, 28.45274pt)
+* v-part:(T,H,B)=(95.39737pt, 645.51256pt, 54.06006pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=557.38951pt
+* \textheight=645.51256pt
+* \oddsidemargin=-43.81725pt
+* \evensidemargin=-43.81725pt
+* \topmargin=-13.87262pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=12.0pt
+* \footskip=30.0pt
+* \marginparwidth=44.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+ (tables/region_rurality_results.tex) [29]
+<./graphs//hist_resid_mainmodel.png, id=361, 397.485pt x 289.08pt>
 File: ./graphs//hist_resid_mainmodel.png Graphic file (type png)
 <use ./graphs//hist_resid_mainmodel.png>
 Package pdftex.def Info: ./graphs//hist_resid_mainmodel.png  used on input line
- 369.
+ 386.
 (pdftex.def)             Requested size: 397.50221pt x 289.07999pt.
-<./graphs//qq_mainmodel.png, id=351, 397.485pt x 289.08pt>
+<./graphs//qq_mainmodel.png, id=362, 397.485pt x 289.08pt>
 File: ./graphs//qq_mainmodel.png Graphic file (type png)
 <use ./graphs//qq_mainmodel.png>
-Package pdftex.def Info: ./graphs//qq_mainmodel.png  used on input line 375.
+Package pdftex.def Info: ./graphs//qq_mainmodel.png  used on input line 392.
 (pdftex.def)             Requested size: 397.50221pt x 289.07999pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<./graphs//bootstrap_coef.png, id=352, 397.485pt x 289.08pt>
+<./graphs//bootstrap_coef.png, id=363, 397.485pt x 289.08pt>
 File: ./graphs//bootstrap_coef.png Graphic file (type png)
 <use ./graphs//bootstrap_coef.png>
-Package pdftex.def Info: ./graphs//bootstrap_coef.png  used on input line 381.
+Package pdftex.def Info: ./graphs//bootstrap_coef.png  used on input line 398.
 (pdftex.def)             Requested size: 397.50221pt x 289.07999pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -1691,40 +1721,45 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 Package natbib Warning: There were undefined citations.
 
-[28
+[30
 
 
 
- <./graphs//hist_resid_mainmodel.png>] [29 <./graphs//qq_mainmodel.png>]
-[30 <./graphs//bootstrap_coef.png>]
+
+ <./graphs//hist_resid_mainmodel.png>] [31 <./graphs//qq_mainmodel.png>]
+[32 <./graphs//bootstrap_coef.png>]
 ("Insurance Competition in the Age of Provider Consolidation.aux")
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
 Package rerunfilecheck Info: File `"Insurance Competition in the Age of Provide
 r Consolidation".out' has not changed.
 (rerunfilecheck)             Checksum: 6E06A783F59ABDA9D157D06B0FEE137D;610.
  ) 
 Here is how much of TeX's memory you used:
- 27649 strings out of 479584
- 491201 string characters out of 2871648
+ 27667 strings out of 479584
+ 491632 string characters out of 2871648
  900523 words of memory out of 3000000
- 43723 multiletter control sequences out of 15000+200000
- 514701 words of font info for 474 fonts, out of 3000000 for 9000
+ 43729 multiletter control sequences out of 15000+200000
+ 515049 words of font info for 477 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  102i,15n,102p,1564b,601s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/enc/dvips/kpfonts/kpfonts-
 expert.enc}{C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc}<C:/Users/j
 tg3519/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/kpfonts/jkpbn8a.pfb><C:/Us
-ers/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/kpfonts/jkpmi.pfb><C:
-/Users/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/kpfonts/jkpmit8a.p
-fb><C:/Users/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/kpfonts/jkpm
-ite.pfb><C:/Users/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/kpfonts
-/jkpmn8a.pfb><C:/Users/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/kp
-fonts/jkpmnc.pfb><C:/Users/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/type1/publi
-c/kpfonts/jkpmne.pfb><C:/Users/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/type1/p
-ublic/kpfonts/jkpsy.pfb>
+ers/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/kpfonts/jkpbne.pfb><C
+:/Users/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/kpfonts/jkpmi.pfb
+><C:/Users/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/kpfonts/jkpmit
+8a.pfb><C:/Users/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/kpfonts/
+jkpmite.pfb><C:/Users/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/kpf
+onts/jkpmn8a.pfb><C:/Users/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/type1/publi
+c/kpfonts/jkpmnc.pfb><C:/Users/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/type1/p
+ublic/kpfonts/jkpmne.pfb><C:/Users/jtg3519/AppData/Roaming/MiKTeX/2.9/fonts/typ
+e1/public/kpfonts/jkpsy.pfb>
 Output written on "Insurance Competition in the Age of Provider Consolidation.p
-df" (31 pages, 1128108 bytes).
+df" (33 pages, 1184202 bytes).
 PDF statistics:
- 419 PDF objects out of 1000 (max. 8388607)
- 77 named destinations out of 1000 (max. 500000)
- 125170 words of extra memory for PDF output out of 128383 (max. 10000000)
+ 434 PDF objects out of 1000 (max. 8388607)
+ 81 named destinations out of 1000 (max. 500000)
+ 125175 words of extra memory for PDF output out of 128383 (max. 10000000)
 
