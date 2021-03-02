@@ -78,45 +78,54 @@ ggsave(filename = "../paper/graphs/kd_region_numhospitals.png", height = 4, widt
 #################################################
 # SCATTERPLOTS
 #################################################
+library(binsreg)
+binscat <- binsreg(full_combined$insurer_hhi_logged, full_combined$hospital_hhi_logged, 
+            by = full_combined$year.f, bycolors = c("red", "blue"), bysymbols = c("circle", "circle"), legendTitle = "Year")
+
+binscat$bins_plot + labs(title="Insurer HHI vs. Hospital HHI, by year", x="Hospital HHI (logged)", 
+                         y="Insurer HHI (logged)", color = "Year", symbols = "Year") + 
+  theme_stata(scheme="s2color") + theme(legend.key.size = unit(0.2, "cm"), legend.title = element_text(size=10))
+
+ggsave(filename = "../paper/graphs/binnedscatter_byyear.png", height = 4, width = 5.5, dpi = 600)
 
 ggplot(data = full_combined, aes(x=hospital_hhi_logged, y=insurer_hhi_logged, color=year.f)) + geom_point() + 
-  labs(title="Scatterplot, Insurer HHI vs. Hospital HHI", x="Hospital HHI (logged)", y="Insurer HHI (logged)", color="Year") + 
+  labs(title="Insurer HHI vs. Hospital HHI, by year", x="Hospital HHI (logged)", y="Insurer HHI (logged)", color="Year") + 
   theme_stata(scheme="s2color") + theme(legend.key.size = unit(0.2, "cm"), legend.title = element_text(size=10))
 
 ggsave(filename = "../paper/graphs/scatter_byyear.png", height = 4, width = 5.5, dpi = 600)
 
 ggplot(data = full_combined, aes(x=hospital_hhi_logged, y=insurer_hhi_logged, color=year.f)) + geom_smooth(method="lm") + 
-  labs(title="Smoothed Scatterplot, Insurer HHI vs. Hospital HHI", x="Hospital HHI (logged)", y="Insurer HHI (logged)", color = "Year") + 
+  labs(title="Insurer HHI vs. Hospital HHI, by year", x="Hospital HHI (logged)", y="Insurer HHI (logged)", color = "Year") + 
     theme_stata(scheme="s2color") + theme(legend.key.size = unit(0.2, "cm"), legend.title = element_text(size=10))
 
 ggsave(filename = "../paper/graphs/smoothedscatter_byyear.png", height = 4, width = 5.5, dpi = 600)
 
 ggplot(data = full_combined, aes(x=hospital_hhi_logged, y=insurer_hhi_logged, color=region.f)) + geom_point() + 
-  labs(title="Scatterplot, Insurer HHI vs. Hospital HHI", x="Hospital HHI (logged)", y="Insurer HHI (logged)", color = "Region") + 
+  labs(title="Insurer HHI vs. Hospital HHI, by region", x="Hospital HHI (logged)", y="Insurer HHI (logged)", color = "Region") + 
   theme_stata(scheme="s2color") + theme(legend.key.size = unit(0.2, "cm"), legend.title = element_text(size=10))
 
 ggsave(filename = "../paper/graphs/scatter_byregion.png", height = 4, width = 5.5, dpi = 600)
 
 ggplot(data = full_combined, aes(x=hospital_hhi_logged, y=insurer_hhi_logged, color=region.f)) + geom_smooth(method="lm") + 
-  labs(title="Smoothed Scatterplot, Insurer HHI vs. Hospital HHI", x="Hospital HHI (logged)", y="Insurer HHI (logged)", color="Region") + 
+  labs(title="Insurer HHI vs. Hospital HHI, by region", x="Hospital HHI (logged)", y="Insurer HHI (logged)", color="Region") + 
   theme_stata(scheme="s2color") + theme(legend.key.size = unit(0.2, "cm"), legend.title = element_text(size=10))
 
 ggsave(filename = "../paper/graphs/smoothedscatter_byregion.png", height = 4, width = 5.5, dpi = 600)
 
 ggplot(data = full_combined, aes(x=num_hospitals, y=num_insurers, color=year.f)) + geom_point() + 
-  labs(title="Scatterplot, Number of Insurers vs. Number of Hospitals", x="Number of Hospitals", y="Number of Insurers", color="Year") + 
+  labs(title="Insurer HHI vs. Hospital HHI, by year", x="Number of Hospitals", y="Number of Insurers", color="Year") + 
   theme_stata(scheme="s2color") + theme(legend.key.size = unit(0.2, "cm"), legend.title = element_text(size=10))
 
 ggsave(filename = "../paper/graphs/scatter_byyear_num.png", height = 4, width = 5.5, dpi = 600)
 
 ggplot(data = full_combined, aes(x=num_hospitals, y=num_insurers, color=year.f)) + geom_smooth(method="lm") + 
-  labs(title="Smoothed Scatterplot, Number of Insurers vs. Number of Hospitals", x="Number of Hospitals", y="Number of Insurers", color = "Year") + 
+  labs(title="Number of Insurers vs. Number of Hospitals, by year", x="Number of Hospitals", y="Number of Insurers", color = "Year") + 
   theme_stata(scheme="s2color") + theme(legend.key.size = unit(0.2, "cm"), legend.title = element_text(size=10))
 
 ggsave(filename = "../paper/graphs/smoothedscatter_byyear_num.png", height = 4, width = 5.5, dpi = 600)
 
 ggplot(data = full_combined, aes(x=num_hospitals, y=num_insurers, color=region.f)) + geom_point() + 
-  labs(title="Scatterplot, Number of Insurers vs. Number of Hospitals", x="Number of Hospitals", y="Number of Insurers", color = "Region") + 
+  labs(title="Number of Insurers vs. Number of Hospitals, by region", x="Number of Hospitals", y="Number of Insurers", color = "Region") + 
   theme_stata(scheme="s2color") + theme(legend.key.size = unit(0.2, "cm"), legend.title = element_text(size=10))
 
 ggsave(filename = "../paper/graphs/scatter_byregion_num.png", height = 4, width = 5.5, dpi = 600)

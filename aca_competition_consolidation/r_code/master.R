@@ -199,6 +199,7 @@ write.csv(full_combined, "../clean_data/full_combined.csv", row.names = FALSE)
 #################################################
 # Running linear models
 #################################################
+library(car)
 rm(list=ls())
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 setwd("../raw_data")
@@ -234,9 +235,9 @@ model_noFE_2 <- lm(insurer_hhi_logged~hospital_hhi_logged_2*year_dummy+no_hospit
 model_full_region <- lm(insurer_hhi_logged~hospital_hhi_logged*year_dummy+hospital_hhi_logged:region.f+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+rating_area.f*year_dummy+medicare_pc, data=subset(full_combined, single_county_RA==FALSE))
 model_full_rurality <-lm(insurer_hhi_logged~hospital_hhi_logged*year_dummy+hospital_hhi_logged:rucc.f+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+rating_area.f*year_dummy+medicare_pc, data=subset(full_combined, single_county_RA==FALSE))
 
-model_num_full <- lm(num_insurers~num_hospitals+num_hospitals*year_dummy+num_hospitals*rucc_code_13+num_hospitals*region.f+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+rating_area.f*year_dummy+medicare_pc, data=subset(full_combined, single_county_RA==FALSE))
-model_num_stateFE <- lm(num_insurers~num_hospitals+num_hospitals*year_dummy+num_hospitals*rucc_code_13+num_hospitals*region.f+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+state_abb*year_dummy+medicare_pc, data=full_combined)
-model_num_noFE <- lm(num_insurers~num_hospitals+num_hospitals*year_dummy+num_hospitals*rucc_code_13+num_hospitals*region.f+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+medicare_pc+mlr+state_govt+medicaid_expansion, data = full_combined)
+model_num_full <- lm(num_insurers~num_hospitals+num_hospitals*year_dummy+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+rating_area.f*year_dummy+medicare_pc, data=subset(full_combined, single_county_RA==FALSE))
+model_num_stateFE <- lm(num_insurers~num_hospitals+num_hospitals*year_dummy+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+state_abb*year_dummy+medicare_pc, data=full_combined)
+model_num_noFE <- lm(num_insurers~num_hospitals+num_hospitals*year_dummy+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+medicare_pc+mlr+state_govt+medicaid_expansion, data = full_combined)
 
 #Making diagnostic plots real quick
 library(ggplot2)
@@ -271,6 +272,15 @@ stargazer(model_full, model_stateFE, model_noFE, se = list(clust(model_full), cl
           notes = c("Also controlling for rating area/year fixed effects, and county/state covariates where appropriate."), float = FALSE,
           title = "Main results", out = "../paper/tables/main_results.tex")
 
+stargazer(model_num_full, model_num_stateFE, model_num_noFE, se = list(clust(model_num_full), clust(model_num_stateFE), clust(model_num_noFE)), 
+          type = "latex", column.labels = c("Main model", "Boozary et al. (2019)", "Griffith et al. (2018)"), font.size = "scriptsize", 
+          dep.var.labels = "Number of insurers", 
+          covariate.labels = c("Number of hospitals", "Year", "No hospitals in market", "Rurality (RUCC code)", "Hospital HHI (logged) * Year"), 
+          omit = c("white_popn_percent", "black_popn_percent", "native_popn_percent", "rating_area.f", 
+                   "rating_area.f*year_dummy", "state_abb*year_dummy", "state_abb", "poverty_rate", "median_age", "medicare_pc", "state_govt", "mlr", "medicaid_expansion"), 
+          notes = c("Also controlling for rating area/year fixed effects, and county/state covariates where appropriate."), float = FALSE,
+          title = "Main results", out = "../paper/tables/main_num_results.tex")
+
 stargazer(model_full_13, model_full_46, model_full_79, se = list(clust(model_full_13), clust(model_full_46), clust(model_full_79)), 
           type = "latex", column.labels = c("RUCC 1-3", "RUCC 4-6", "RUCC 7-9"), font.size = "scriptsize", dep.var.labels = "Insurer HHI (logged)", 
           covariate.labels = c("Hospital HHI (logged)", "Year", "No hospitals in market", "Rurality (RUCC code)", "Hospital HHI (logged) * Year"), 
@@ -293,7 +303,7 @@ stargazer(model_full_south, model_full_west, model_full_northcentral, model_full
 
 stargazer(model_full_1, model_stateFE_1, model_noFE_1, se = list(clust(model_full_1), clust(model_stateFE_1), clust(model_noFE_1)), 
           type = "latex", column.labels = c("Main model", "Boozary et al. (2019)", "Griffith et al. (2018)"), font.size = "scriptsize", dep.var.labels = "Insurer HHI (logged)", 
-          covariate.labels = c("Hospital HHI (logged)", "No hospitals in market", "Rurality (RUCC code)"), 
+          covariate.labels = c("Hospital HHI (logged)", "Year", "No hospitals in market", "Rurality (RUCC code)", "Hospital HHI (logged) * Year"), 
           omit = c("white_popn_percent", "black_popn_percent", "native_popn_percent", "rating_area.f", 
                    "rating_area.f*year_dummy", "state_abb*year_dummy", "state_abb", "poverty_rate", "median_age", "medicare_pc", "state_govt", "mlr", "medicaid_expansion"), 
           notes = c("Also controlling for rating area/year fixed effects, and county/state covariates where appropriate."), float = FALSE,
@@ -301,7 +311,7 @@ stargazer(model_full_1, model_stateFE_1, model_noFE_1, se = list(clust(model_ful
 
 stargazer(model_full_2, model_stateFE_2, model_noFE_2, se = list(clust(model_full_2), clust(model_stateFE_2), clust(model_noFE_2)), 
           type = "latex", column.labels = c("Main model", "Boozary et al. (2019)", "Griffith et al. (2018)"), font.size = "scriptsize", dep.var.labels = "Insurer HHI (logged)", 
-          covariate.labels = c("Hospital HHI (logged)", "No hospitals in market", "Rurality (RUCC code)"), 
+          covariate.labels = c("Hospital HHI (logged)", "Year", "No hospitals in market", "Rurality (RUCC code)", "Hospital HHI (logged) * Year"), 
           omit = c("white_popn_percent", "black_popn_percent", "native_popn_percent", "rating_area.f", 
                    "rating_area.f*year_dummy", "state_abb*year_dummy", "state_abb", "poverty_rate", "median_age", "medicare_pc", "state_govt", "mlr", "medicaid_expansion"),
           notes = c("Also controlling for rating area/year fixed effects, and county/state covariates where appropriate."), float = FALSE,

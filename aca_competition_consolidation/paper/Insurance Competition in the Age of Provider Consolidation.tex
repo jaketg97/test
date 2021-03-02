@@ -315,48 +315,53 @@ That said, some of the out-sized importance attached to ACA exchanges is deserve
 \counterwithin{table}{section}
 \section{Appendix}
 \subsection{Herfindahl-Hirschman index (HHI) calculations}
-Insurer HHI was calculated using the issuer-level enrollment data publicly available from the Center for Medicare and Medicaid Services. I calculated market share for each issuer in each county, and then squared and summed the result.
+Insurer HHI was calculated using the issuer-level enrollment data publicly available from the Center for Medicare and Medicaid Services. The data included enrollment counts by county and issuer. I calculated market share for each issuer in each county, and then squared and summed the result.
 
-I used a similar process for hospital HHI, using data on short-term general hospital admissions from the American Hospital Association (AHA). Instead of using county boundaries to determine market boundaries, I constructed radii around each of my hospitals in line with the findings of \citet{gresenz_updated_2004}. Their work measured the "90\% boundary" for a large sample of rural and urban hospitals, i.e. the boundary within which 90\% of a hospitals admitted patients lived (rural vs. urban distinction is based on whether the county is in a Metropolitan Statistical Area, i.e. a MSA). They find the mean value of this statistic is 10.4 miles for urban hospitals, with a standard deviation of 8.5 miles, versus 14.2 for rural hospitals, with a standard deviation of 14.6. 
+I used a similar process for hospital HHI, using data on short-term general hospital admissions from the American Hospital Association (AHA). Instead of using county boundaries to determine market boundaries, I constructed radii around each of my hospitals in line with the findings of \citet{gresenz_updated_2004}. Their work measured the "75\% boundary" for a large sample of rural and urban hospitals, i.e. the boundary within which 75\% of a hospitals admitted patients lived (rural vs. urban distinction is based on whether the county is in a Metropolitan Statistical Area, i.e. a MSA). They find the mean value of this statistic is 10.4 miles for urban hospitals, with a standard deviation of 8.5 miles, versus 14.2 for rural hospitals, with a standard deviation of 14.6. 
 
 The AHA data allows me to determine whether or not a hospital is in a MSA, and therefore I am able to match it to the corresponding mean and standard deviation from \citet{gresenz_updated_2004}. I use $\bar{x} + 2s_x$ for the radii of the hospital HHI used in the paper (i.e. 27.4 miles for urban hospitals, 43.4 miles for rural hospitals), and count a hospital as part of a county's market if its circle overlaps the centroid of the county. I counted hospitals under the same health system as one firm. I geocoded the AHA data using \citet{kahle_ggmap_2013}, and found the centroid of the counties in my data using \citet{bivand_rgeos_2020}. 
 
-Heat maps with my calculations for insurer and hospital HHI can be seen on the following pages, as can a color-coded map outlining our regions. Grayed out sections reflect counties with withheld data. I also re-fit my model using hospital HHI's calculated with radii one standard deviation lower and higher than my chosen value, as a robustness check, and with interaction terms for region and rurality; tables with those results can also be seen below. 
+Heat maps with my calculations for insurer and hospital HHI can be seen on the following pages, as can a color-coded map outlining our regions. Grayed out sections reflect counties with withheld data. 
 
 \pagebreak
 \newgeometry{left=1cm, right=1cm, bottom=1.9cm}
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[height=3.5in,angle=0]{insurerHHI_2015.png}
 \caption{Insurer HHI Heat Map, 2015}\label{Figure 5}
+\includegraphics[height=3.5in,angle=0]{insurerHHI_2015.png}
 \vspace{5mm}
-\includegraphics[height=3.5in,angle=0]{insurerHHI_2016.png}
 \caption{Insurer HHI Heat Map, 2016}\label{Figure 6}
+\includegraphics[height=3.5in,angle=0]{insurerHHI_2016.png}
 \end{center}
 \end{figure}
 
 \pagebreak
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[height=3.5in,angle=0]{hospitalHHI_2014.png}
 \caption{Hospital HHI Heat Map, 2014}\label{Figure 7}
+\includegraphics[height=3.5in,angle=0]{hospitalHHI_2014.png}
 \vspace{5mm}
-\includegraphics[height=3.5in,angle=0]{hospitalHHI_2015.png}
 \caption{Hospital HHI Heat Map, 2015}\label{Figure 8}
+\includegraphics[height=3.5in,angle=0]{hospitalHHI_2015.png}
 \end{center}
 \end{figure}
 
 \pagebreak
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[height=3.5in,angle=0]{counties.png}
 \caption{Regions Map}
+\includegraphics[height=3.5in,angle=0]{counties.png}
 \end{center}
 \end{figure}
 
 \restoregeometry
 
-\begin{table}
+\subsection{Alternative specifications}
+As a robustness check, I fit several alternative specifications of my main model. I refit my main model using radii one standard deviation higher and lower than the values used in the paper (see Tables A.1 and A.2). I added interaction terms for rurality and region to my main model (see Table A.3). And I modified my main model to use number of firms instead of logged HHI (see Table A.4; as in my HHI calculations, hospitals under the same health system are considered one firm). Tables summarizing these results, along with figures representing the bivariate relationship between logged insurer HHI and logged hospital HHI can be found below.   
+
+\vspace{2cm}
+
+\begin{table}[!hb]
 \centering
 \caption{Main results (hospital market radius one SD lower)}
 \input{./tables/main_results_1}
@@ -375,6 +380,28 @@ Heat maps with my calculations for insurer and hospital HHI can be seen on the f
 \input{./tables/region_rurality_results}
 \end{table}
 \restoregeometry
+
+\begin{table}
+\centering
+\caption{Main results (number of firms)}
+\input{./tables/main_num_results}
+\end{table}
+
+\clearpage
+
+\begin{figure}[!h]
+\begin{center}
+\caption{Logged insurer HHI vs. hospital HHI, scatterplot}
+\includegraphics[height=3.5in,angle=0]{scatter_byyear.png}
+\end{center}
+\end{figure}
+
+\begin{figure}[!h]
+\begin{center}
+\caption{Logged insurer HHI vs. hospital HHI, binned scatterplot}
+\includegraphics[height=3.5in,angle=0]{binnedscatter_byyear.png}
+\end{center}
+\end{figure}
 
 \clearpage
 
