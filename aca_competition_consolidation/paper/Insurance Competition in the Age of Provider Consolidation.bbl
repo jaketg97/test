@@ -1,5 +1,12 @@
 \begin{thebibliography}{}
 
+\bibitem[\protect\citeauthoryear{Abadie, Athey, Imbens, and Wooldridge}{Abadie
+  et~al.}{2017}]{abadie_when_2017}
+Abadie, A., S.~Athey, G.~Imbens, and J.~Wooldridge (2017, November).
+\newblock When {Should} {You} {Adjust} {Standard} {Errors} for {Clustering}?
+\newblock Technical Report w24003, National Bureau of Economic Research,
+  Cambridge, MA.
+
 \bibitem[\protect\citeauthoryear{Berenson}{Berenson}{2015}]{berenson_addressing_2015}
 Berenson, R. (2015, January).
 \newblock Addressing {Pricing} {Power} in {Integrated} {Delivery}: {The}
