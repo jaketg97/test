@@ -171,7 +171,7 @@ Medicare Spending & County & CMS \\
 
 \section{Model}
 
-Though I have data on counties over time, because I am limited to two years of data I do not do a straightforward panel regression. Instead, my approach is better described as a cross-sectional analysis, pooling two years of data to enlarge sample size, while controlling for time (i.e. year) and the fixed effects of each rating area/year combination. I see this analysis as a "first-go" at assessing the relationship between hospital and insurer competition on ACA exchanges, laying the groundwork for an eventual panel regression once there are enough years of data.
+Though I have data on counties over time, because I am limited to two years of data I do not do a straightforward panel regression. Instead, my approach is better described as a cross-sectional analysis, pooling two years of data to enlarge sample size, while controlling for the fixed effects of each rating area/year combination. I see this analysis as a "first-go" at assessing the relationship between hospital and insurer competition on ACA exchanges, laying the groundwork for an eventual panel regression once there are enough years of data.
 
 I estimate the following linear model using ordinary least squares, with one observation per county-year combination (i.e. Cook County in 2015).
 \\
@@ -182,13 +182,13 @@ I estimate the following linear model using ordinary least squares, with one obs
 \makebox[\textwidth]{%
 $\begin{aligned}
 Y_{i,t} = \beta_0 + \beta_1HospHHI_{i,t-1} +
-\lambda\textbf{X}_{i,t-1} + RA_i + \tau_t + (RA_i * \tau_t) + \epsilon_{i,t} \notag \end{aligned}$}
+\lambda\textbf{X}_{i,t-1} + \gamma_{ra_i, t} + \epsilon_{i,t} \notag \end{aligned}$}
 \end{equation} 
 \endgroup
 
-$Y_{i,t}$ is insurer HHI (logged) in county $i$ in year $t$. $HospHHI_{i, t-1}$ is hospital HHI (logged) in county $i$ in year $t-1$ (as mentioned before, I lag my variable of interest and county controls by one year). $\textbf{X}_{i, t-1}$ is a vector of controls for county $i$ at time $t-1$ (this vector includes a binary for if the county has no hospitals in its market, which, as mentioned above, only occurs in 4.7\% of counties). $\tau_t$ and $RA_i$ represent time and place fixed effects, i.e. controls for year (in this case a binary variable that is 0 in 2015 and 1 in 2016) and rating area. I also include interaction terms between $RA_i$ and $\tau_t$. Thus, $\beta_1$ represents the percent increase in insurer HHI associated with a 1 percent increase in hospital HHI, controlling for county level covariates, empty hospital markets, year, and fixed effects for each rating area-year combination (i.e. rating area fixed effects and rating area * year interaction terms).
+$Y_{i,t}$ is insurer HHI (logged) in county $i$ in year $t$. $HospHHI_{i, t-1}$ is hospital HHI (logged) in county $i$ in year $t-1$ (as mentioned before, I lag my variable of interest and county controls by one year). $\textbf{X}_{i, t-1}$ is a vector of controls for county $i$ at time $t-1$ (this vector includes a binary for if the county has no hospitals in its market, which, as mentioned above, only occurs in 4.7\% of counties). $\gamma_{ra_i, t}$ represent rating area-year fixed effects, i.e. controls for each rating area year combination. Thus, $\beta_1$ represents the percent increase in insurer HHI associated with a 1 percent increase in hospital HHI, controlling for county level covariates, empty hospital markets, and rating area-year fixed effects.
 
-I also specify two variations of my main model: one in line with the findings of \citet{boozary_association_2019}, and one in line with the findings of \citet{griffith_diminishing_2018}. In the former, I replace my rating area level fixed effects ($RA_i$) with state level fixed effects ($ST_i$). This is identical to the model used in \citet{boozary_association_2019}, the difference being how I define my dependent variable (insurer HHI) and my variable of interest (hospital HHI).   
+I also specify two variations of my main model: one in line with the findings of \citet{boozary_association_2019}, and one in line with the findings of \citet{griffith_diminishing_2018}. In the former, I replace my rating area-year fixed effects ($\gamma_{ra_i, t}$) with state-year fixed effects ($\gamma_{st_i, t}$). This is similar to the model used in \citet{boozary_association_2019}, the difference being how I define my dependent variable (insurer HHI) and my variable of interest (hospital HHI).   
 \\
 \begingroup
 \captionof{Equation}{\citet{boozary_association_2019}}
@@ -197,11 +197,11 @@ I also specify two variations of my main model: one in line with the findings of
 \makebox[\textwidth]{%
 $\begin{aligned}
 Y_{i,t} = \beta_0 + \beta_1HospHHI_{i,t-1} +
-\lambda\textbf{X}_{i,t-1} + ST_i + \tau_t + (ST_i * \tau_t) + \epsilon_{i,t} \notag \end{aligned}$}
+\lambda\textbf{X}_{i,t-1} + \gamma_{st_i, t} + \epsilon_{i,t}  \notag \end{aligned}$}
 \end{equation} 
 \endgroup
 
-In the latter, I drop my place-based fixed effects altogether and instead add a vector of state level covariates in line with \citet{griffith_diminishing_2018} ($\textbf{Z}_{i, t-1}$). 
+In the latter, I drop my place-based fixed effects altogether and instead add a vector of state level covariates in line with \citet{griffith_diminishing_2018} ($\textbf{Z}_{i, t-1}$). I also add time fixed effects ($\tau_t$), i.e. a control for year (this effect is absorbed by our rating area-year/state-year fixed effects in the other two models).  
 \\
 \begingroup
 \captionof{Equation}{\citet{griffith_diminishing_2018}}
