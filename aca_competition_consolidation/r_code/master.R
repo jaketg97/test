@@ -274,7 +274,8 @@ stargazer(model_full, model_stateFE, model_noFE, se = list(clust(model_full), cl
           covariate.labels = c("Hospital HHI (logged)", "No hospitals in market", "Rurality (RUCC code)", "Year"), 
           omit = c("white_popn_percent", "black_popn_percent", "native_popn_percent", "rating_area.f", 
                    "ra_year.f", "st_year.f", "state_abb", "poverty_rate", "median_age", "medicare_pc", "state_govt", "mlr", "medicaid_expansion"), 
-          notes = c("Also controlling for rating area/year fixed effects, and county/state covariates where appropriate."), float = FALSE,
+          notes = c("Controlling for rating area-year fixed effects in (1) and state-year fixed effects in (2).",
+                    "Controlling for county/state covariates where appropriate."), float = FALSE,
           title = "Main results", out = "../paper/tables/main_results.tex")
 
 stargazer(model_num_full, model_num_stateFE, model_num_noFE, se = list(clust(model_num_full), clust(model_num_stateFE), clust(model_num_noFE)), 
@@ -283,27 +284,27 @@ stargazer(model_num_full, model_num_stateFE, model_num_noFE, se = list(clust(mod
           covariate.labels = c("Number of hospitals", "No hospitals in market", "Rurality (RUCC code)", "Year"), 
           omit = c("white_popn_percent", "black_popn_percent", "native_popn_percent", "rating_area.f", 
                    "ra_year.f", "st_year.f", "state_abb", "poverty_rate", "median_age", "medicare_pc", "state_govt", "mlr", "medicaid_expansion"), 
-          notes = c("Also controlling for rating area/year fixed effects, and county/state covariates where appropriate."), float = FALSE,
+          notes = c("Also controlling for rating area-year fixed effects and county covariates."), float = FALSE,
           title = "Main results", out = "../paper/tables/main_num_results.tex")
 
 stargazer(model_full_13, model_full_46, model_full_79, se = list(clust(model_full_13), clust(model_full_46), clust(model_full_79)), 
           type = "latex", column.labels = c("RUCC 1-3", "RUCC 4-6", "RUCC 7-9"), font.size = "scriptsize", dep.var.labels = "Insurer HHI (logged)", 
-          covariate.labels = c("Hospital HHI (logged)", "No hospitals in market", "Rurality (RUCC code)", "Year"), 
+          covariate.labels = c("Hospital HHI (logged)", "No hospitals in market", "Rurality (RUCC code)"), 
           omit = c("white_popn_percent", "black_popn_percent", "native_popn_percent", "rating_area.f", 
                    "ra_year.f", "st_year.f", "state_abb", "poverty_rate", "median_age", "medicare_pc", 
                    "state_govt", "mlr", "medicaid_expansion"), 
-          notes = c("Also controlling for rating area/year fixed effects, and county/state covariates where appropriate."), float = FALSE,
+          notes = c("Also controlling for rating area-year fixed effects and county covariates."), float = FALSE,
           title = "Results by rurality (main model)", out = "../paper/tables/main_results_rucc.tex")
 
 stargazer(model_full_south, model_full_west, model_full_northcentral, model_full_northeast, 
           se = list(clust(model_full_south), clust(model_full_west), clust(model_full_northcentral), clust(model_full_northeast)), 
           type = "latex", column.labels = c("South", "West", "North Central", "Northeast"), font.size = "scriptsize", 
           dep.var.labels = "Insurer HHI (logged)", 
-          covariate.labels = c("Hospital HHI (logged)", "No hospitals in market", "Rurality (RUCC code)", "Year"), 
+          covariate.labels = c("Hospital HHI (logged)", "No hospitals in market", "Rurality (RUCC code)"), 
           omit = c("white_popn_percent", "black_popn_percent", "native_popn_percent", "rating_area.f", 
                    "ra_year.f", "st_year.f", "state_abb", "poverty_rate", "median_age", "medicare_pc",
                    "state_govt", "mlr", "medicaid_expansion"), 
-          notes = c("Also controlling for rating area/year fixed effects, and county/state covariates where appropriate."), float = FALSE,
+          notes = c("Also controlling for rating area-year fixed effects, and county covariates."), float = FALSE,
           title = "Results by region (main model)", out = "../paper/tables/main_results_region.tex")
 
 stargazer(model_full_1, model_stateFE_1, model_noFE_1, se = list(clust(model_full_1), clust(model_stateFE_1), clust(model_noFE_1)), 
@@ -311,7 +312,8 @@ stargazer(model_full_1, model_stateFE_1, model_noFE_1, se = list(clust(model_ful
           covariate.labels = c("Hospital HHI (logged)", "No hospitals in market", "Rurality (RUCC code)", "Year"), 
           omit = c("white_popn_percent", "black_popn_percent", "native_popn_percent", "rating_area.f", 
                    "ra_year.f", "st_year.f", "state_abb", "poverty_rate", "median_age", "medicare_pc", "state_govt", "mlr", "medicaid_expansion"), 
-          notes = c("Also controlling for rating area/year fixed effects, and county/state covariates where appropriate."), float = FALSE,
+          notes = c("Controlling for rating area-year fixed effects in (1) and state-year fixed effects in (2).",
+                    "Controlling for county/state covariates where appropriate."), float = FALSE,
           title = "Main results (hospital market radius one SD lower)", out = "../paper/tables/main_results_1.tex")
 
 stargazer(model_full_2, model_stateFE_2, model_noFE_2, se = list(clust(model_full_2), clust(model_stateFE_2), clust(model_noFE_2)), 
@@ -319,16 +321,17 @@ stargazer(model_full_2, model_stateFE_2, model_noFE_2, se = list(clust(model_ful
           covariate.labels = c("Hospital HHI (logged)", "No hospitals in market", "Rurality (RUCC code)", "Year"), 
           omit = c("white_popn_percent", "black_popn_percent", "native_popn_percent", "rating_area.f", 
                    "ra_year.f", "st_year.f", "state_abb", "poverty_rate", "median_age", "medicare_pc", "state_govt", "mlr", "medicaid_expansion"),
-          notes = c("Also controlling for rating area/year fixed effects, and county/state covariates where appropriate."), float = FALSE,
+          notes = c("Controlling for rating area-year fixed effects in (1) and state-year fixed effects in (2).",
+                    "Controlling for county/state covariates where appropriate."), float = FALSE,
           title = "Main results (hospital market radius one SD higher)", out = "../paper/tables/main_results_2.tex")
 
 stargazer(model_full_rurality, model_full_region, se=list(clust(model_full_rurality), clust(model_full_region)), type = "latex", 
           column.labels = c("Rurality (RUCC code) interaction", "Region interaction"), font.size = "scriptsize", dep.var.labels = "Insurer HHI (logged)", 
-          covariate.labels = c("Hospital HHI (logged)", "No hospitals in market", "Year", "Hospital HHI (logged) * RUCC code 4-6", 
+          covariate.labels = c("Hospital HHI (logged)", "No hospitals in market", "Hospital HHI (logged) * RUCC code 4-6", 
                                "Hospital HHI (logged) * RUCC code 7-9", "Hospital HHI (logged) * South", "Hospital HHI (logged) * North Central",
                                "Hospital HHI (logged) * West"), float = FALSE,
           omit = c("white_popn_percent", "black_popn_percent", "rucc_code_13", "native_popn_percent", "ra_year.f", "year_dummy", "poverty_rate", "median_age", "medicare_pc"), 
-          notes = c("Also controlling for rating area/year fixed effects, and county covariates.", "Coefficient for Hospital HHI (logged) centered at RUCC codes 1-3 in (1), and Northeast region in (2)"),
+          notes = c("Also controlling for rating area-year fixed effects, and county covariates.", "Coefficient for Hospital HHI (logged) centered at RUCC codes 1-3 in (1), and Northeast region in (2)"),
           out = "../paper/tables/region_rurality_results.tex", title = "Results by rurality and region (main model)")
 
 #################################################
