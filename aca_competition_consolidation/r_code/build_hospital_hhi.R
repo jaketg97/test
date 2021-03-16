@@ -69,6 +69,9 @@ non_metro_1 <- 14.2 + 1*14.6
 metro_2 <- 10.4 + 3*8.5
 non_metro_2 <- 14.2 + 3*14.6
 
+metro_3 <- 12.2 + 2*6.5
+non_metro_3 <- 12.2 + 2*6.5
+
 calc_hhi_helper <- function(x){
   if (dim(x)[1] == 0) {
     return(-99) 
@@ -176,18 +179,22 @@ lon_2014 <- full_14_15$lon
 hhi_2014 <- mapply(calc_hhi_2014, lat_2014, lon_2014, m = metro, n = non_metro)
 hhi_2014_1 <- mapply(calc_hhi_2014, lat_2014, lon_2014, m = metro_1, n = non_metro_1)
 hhi_2014_2 <- mapply(calc_hhi_2014, lat_2014, lon_2014, m = metro_2, n = non_metro_2)
+hhi_2014_3 <- mapply(calc_hhi_2014, lat_2014, lon_2014, m = metro_3, n = non_metro_3)
 full_14_15$hospital_hhi_14 <- do.call(rbind, Map(data.frame, hospital_hhi = hhi_2014))
 full_14_15$hospital_hhi_14_1 <- do.call(rbind, Map(data.frame, hospital_hhi = hhi_2014_1))
 full_14_15$hospital_hhi_14_2 <- do.call(rbind, Map(data.frame, hospital_hhi = hhi_2014_2))
+full_14_15$hospital_hhi_14_3 <- do.call(rbind, Map(data.frame, hospital_hhi = hhi_2014_3))
 
 lat_2015 <- full_15_16$lat
 lon_2015 <- full_15_16$lon
 hhi_2015 <- mapply(calc_hhi_2015, lat_2015, lon_2015, m = metro, n = non_metro)
 hhi_2015_1 <- mapply(calc_hhi_2015, lat_2015, lon_2015, m = metro_1, n = non_metro_1)
 hhi_2015_2 <- mapply(calc_hhi_2015, lat_2015, lon_2015, m = metro_2, n = non_metro_2)
+hhi_2015_3 <- mapply(calc_hhi_2015, lat_2015, lon_2015, m = metro_3, n = non_metro_3)
 full_15_16$hospital_hhi_15 <- do.call(rbind, Map(data.frame, hospital_hhi = hhi_2015))
 full_15_16$hospital_hhi_15_1 <- do.call(rbind, Map(data.frame, hospital_hhi = hhi_2015_1))
 full_15_16$hospital_hhi_15_2 <- do.call(rbind, Map(data.frame, hospital_hhi = hhi_2015_2))
+full_15_16$hospital_hhi_15_3 <- do.call(rbind, Map(data.frame, hospital_hhi = hhi_2015_3))
 
 num_2014 <- mapply(calc_num_hospitals_2014, lat_2014, lon_2014)
 full_14_15$num_hospitals_14 <- do.call(rbind, Map(data.frame, num_hospitals = num_2014))

@@ -10,9 +10,11 @@ full_combined <- read.csv("../clean_data/full_combined.csv")
 full_combined$year_dummy <- ifelse(full_combined$year == 2016, 1, 0)
 full_combined$rucc.f <- Recode(full_combined$rucc_code_13, "1:3 = '1-3'; 4:6 = '4-6'; 7:9 = '7-9'")
 full_combined$no_hospitals <- as.integer(full_combined$no_hospitals)
-full_combined <- na.omit(full_combined)
+full_combined$county_code.f <- factor(full_combined$county_code)
+full_combined$ra_year.f <- as.factor(paste(full_combined$rating_area_state, full_combined$year, sep = " "))
+full_combined$st_year.f <- as.factor(paste(full_combined$state_abb, full_combined$year, sep =" "))
 full_combined <- subset(full_combined, single_county_RA==FALSE) #subsetting outside of model, or Boot gets upset
-model_full <- lm(insurer_hhi_logged~hospital_hhi_logged*year_dummy+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+rating_area.f*year_dummy+medicare_pc, data=full_combined)
+model_full <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+ra_year.f+medicare_pc, data=subset(full_combined, single_county_RA==FALSE))
 
 bs <- function(formula, data, indices) {
   d <- data[indices,] # allows boot to select sample 
@@ -20,7 +22,7 @@ bs <- function(formula, data, indices) {
   return(summary(fit)$coefficients[2]) 
 } 
 set.seed(2232021)
-boot_coef <- boot(data=full_combined, statistic=bs, R=5000, formula = insurer_hhi_logged~hospital_hhi_logged*year_dummy+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+rating_area.f*year_dummy+medicare_pc)
+boot_coef <- boot(data=full_combined, statistic=bs, R=5000, formula = insurer_hhi_logged ~ hospital_hhi_logged+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+ra_year.f+medicare_pc)
 boot.ci(boot_coef, type="perc", conf=.99)
 summary(boot_coef)
 coef <- data.frame(boot_coef$t)

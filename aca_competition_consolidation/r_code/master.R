@@ -64,31 +64,37 @@ full_14_15$hospital_hhi_14_1 <- unlist(full_14_15$hospital_hhi_14_1)
 full_15_16$hospital_hhi_15_1 <- unlist(full_15_16$hospital_hhi_15_1)
 full_14_15$hospital_hhi_14_2 <- unlist(full_14_15$hospital_hhi_14_2)
 full_15_16$hospital_hhi_15_2 <- unlist(full_15_16$hospital_hhi_15_2)
+full_14_15$hospital_hhi_14_3 <- unlist(full_14_15$hospital_hhi_14_3)
+full_15_16$hospital_hhi_15_3 <- unlist(full_15_16$hospital_hhi_15_3)
 full_14_15$num_hospitals_14 <- unlist(full_14_15$num_hospitals_14)
 full_15_16$num_hospitals_15 <- unlist(full_15_16$num_hospitals_15)
 full_14_15$unum_hospitals_14 <- unlist(full_14_15$unum_hospitals_14)
 full_15_16$unum_hospitals_15 <- unlist(full_15_16$unum_hospitals_15)
 
-colnames(full_14_15) = c("county_code", "county_lon", "county_lat", "state_abb", "state_name", "county_name", "insurer_hhi_2015", "num_insurers", "rucc_code_13", "hospital_hhi_2014", "hospital_hhi_2014_1", "hospital_hhi_2014_2", "num_hospitals", "unum_hospitals")
-colnames(full_15_16) = c("county_code", "county_lon", "county_lat", "state_abb", "state_name", "county_name", "insurer_hhi_2016", "num_insurers", "rucc_code_13", "hospital_hhi_2015", "hospital_hhi_2015_1", "hospital_hhi_2015_2", "num_hospitals", "unum_hospitals")
+colnames(full_14_15) = c("county_code", "county_lon", "county_lat", "state_abb", "state_name", "county_name", "insurer_hhi_2015", "num_insurers", "rucc_code_13", "hospital_hhi_2014", "hospital_hhi_2014_1", "hospital_hhi_2014_2", "hospital_hhi_2014_3", "num_hospitals", "unum_hospitals")
+colnames(full_15_16) = c("county_code", "county_lon", "county_lat", "state_abb", "state_name", "county_name", "insurer_hhi_2016", "num_insurers", "rucc_code_13", "hospital_hhi_2015", "hospital_hhi_2015_1", "hospital_hhi_2015_2", "hospital_hhi_2015_3", "num_hospitals", "unum_hospitals")
 
 
 full_14_15$no_hospitals <- ifelse(full_14_15$hospital_hhi_2014 == -99, TRUE, FALSE)
 full_14_15$no_hospitals_1 <- ifelse(full_14_15$hospital_hhi_2014_1 == -99, TRUE, FALSE)
 full_14_15$no_hospitals_2 <- ifelse(full_14_15$hospital_hhi_2014_2 == -99, TRUE, FALSE)
+full_14_15$no_hospitals_3 <- ifelse(full_14_15$hospital_hhi_2014_3 == -99, TRUE, FALSE)
 full_14_15$num_hospitals[full_14_15$hospital_hhi_2014==-99] <- 0
 full_14_15$unum_hospitals[full_14_15$hospital_hhi_2014==-99] <- 0
 full_14_15$hospital_hhi_2014[full_14_15$hospital_hhi_2014==-99] <- 10000
 full_14_15$hospital_hhi_2014_1[full_14_15$hospital_hhi_2014_1==-99] <- 10000
 full_14_15$hospital_hhi_2014_2[full_14_15$hospital_hhi_2014_2==-99] <- 10000
+full_14_15$hospital_hhi_2014_3[full_14_15$hospital_hhi_2014_3==-99] <- 10000
 full_15_16$no_hospitals <- ifelse(full_15_16$hospital_hhi_2015 == -99, TRUE, FALSE)
 full_15_16$no_hospitals_1 <- ifelse(full_15_16$hospital_hhi_2015_1 == -99, TRUE, FALSE)
 full_15_16$no_hospitals_2 <- ifelse(full_15_16$hospital_hhi_2015_2 == -99, TRUE, FALSE)
+full_15_16$no_hospitals_3 <- ifelse(full_15_16$hospital_hhi_2015_3 == -99, TRUE, FALSE)
 full_15_16$num_hospitals[full_15_16$hospital_hhi_2015==-99] <- 0
 full_15_16$unum_hospitals[full_15_16$hospital_hhi_2015==-99] <- 0
 full_15_16$hospital_hhi_2015[full_15_16$hospital_hhi_2015==-99] <- 10000
 full_15_16$hospital_hhi_2015_1[full_15_16$hospital_hhi_2015_1==-99] <- 10000
 full_15_16$hospital_hhi_2015_2[full_15_16$hospital_hhi_2015_2==-99] <- 10000
+full_15_16$hospital_hhi_2015_3[full_15_16$hospital_hhi_2015_3==-99] <- 10000
 
 #factoring RUCC and rating areas
 full_14_15$rucc_code_13.f <- factor(full_14_15$rucc_code_13)
@@ -104,10 +110,12 @@ full_14_15$insurer_hhi_logged <- log(full_14_15$insurer_hhi_2015)
 full_14_15$hospital_hhi_logged <- log(full_14_15$hospital_hhi_2014)
 full_14_15$hospital_hhi_logged_1 <- log(full_14_15$hospital_hhi_2014_1)
 full_14_15$hospital_hhi_logged_2 <- log(full_14_15$hospital_hhi_2014_2)
+full_14_15$hospital_hhi_logged_3 <- log(full_14_15$hospital_hhi_2014_3)
 full_15_16$insurer_hhi_logged <- log(full_15_16$insurer_hhi_2016)
 full_15_16$hospital_hhi_logged <- log(full_15_16$hospital_hhi_2015)
 full_15_16$hospital_hhi_logged_1 <- log(full_15_16$hospital_hhi_2015_1)
 full_15_16$hospital_hhi_logged_2 <- log(full_15_16$hospital_hhi_2015_2)
+full_15_16$hospital_hhi_logged_3 <- log(full_15_16$hospital_hhi_2015_3)
 
 #adding census data
 source("../r_code/add_census.R")
@@ -153,7 +161,10 @@ full_15_16 <- merge(full_15_16, medicare_costs_2015, by = "county_code")
 #putting it all together and removing shit
 full_14_15$year <- 2015
 full_15_16$year <- 2016
-full_combined <- rbind(subset(full_14_15, select = -c(insurer_hhi_2015, hospital_hhi_2014, hospital_hhi_2014_1, hospital_hhi_2014_2)), subset(full_15_16, select = -c(insurer_hhi_2016, hospital_hhi_2015, hospital_hhi_2015_1, hospital_hhi_2015_2)))
+full_combined <- rbind(subset(full_14_15, select = -c(insurer_hhi_2015, hospital_hhi_2014, hospital_hhi_2014_1, hospital_hhi_2014_2, 
+                  hospital_hhi_2014_3)), subset(full_15_16, select = -c(insurer_hhi_2016, hospital_hhi_2015, 
+                    hospital_hhi_2015_1, hospital_hhi_2015_2, hospital_hhi_2015_3)))
+
 full_combined$year.f <- factor(full_combined$year)
 
 #adding binary
@@ -219,6 +230,7 @@ full_combined$st_year.f <- as.factor(paste(full_combined$state_abb, full_combine
 model_full <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+ra_year.f+medicare_pc, data=subset(full_combined, single_county_RA==FALSE))
 model_full_1 <- lm(insurer_hhi_logged~hospital_hhi_logged_1+no_hospitals_1+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+ra_year.f+medicare_pc, data=subset(full_combined, single_county_RA==FALSE))
 model_full_2 <- lm(insurer_hhi_logged~hospital_hhi_logged_2+no_hospitals_2+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+ra_year.f+medicare_pc, data=subset(full_combined, single_county_RA==FALSE))
+model_full_3 <- lm(insurer_hhi_logged~hospital_hhi_logged_3+no_hospitals_3+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+ra_year.f+medicare_pc, data=subset(full_combined, single_county_RA==FALSE))
 
 model_full_south <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+ra_year.f+medicare_pc, data=subset(full_combined, single_county_RA==FALSE & region.f=="South"))
 model_full_northcentral <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+ra_year.f+medicare_pc, data=subset(full_combined, single_county_RA==FALSE & region.f=="North Central"))
@@ -232,10 +244,12 @@ model_full_79 <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_po
 model_stateFE <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+st_year.f+year_dummy+medicare_pc, data=full_combined)
 model_stateFE_1 <- lm(insurer_hhi_logged~hospital_hhi_logged_1+no_hospitals_1+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+st_year.f+year_dummy+medicare_pc, data=full_combined)
 model_stateFE_2 <- lm(insurer_hhi_logged~hospital_hhi_logged_2+no_hospitals_2+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+st_year.f+year_dummy+medicare_pc, data=full_combined)
+model_stateFE_3 <- lm(insurer_hhi_logged~hospital_hhi_logged_3+no_hospitals_3+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+st_year.f+year_dummy+medicare_pc, data=full_combined)
 
 model_noFE <- lm(insurer_hhi_logged~hospital_hhi_logged+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+medicare_pc+mlr+state_govt+medicaid_expansion+year_dummy, data = full_combined)
 model_noFE_1 <- lm(insurer_hhi_logged~hospital_hhi_logged_1+no_hospitals_1+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+medicare_pc+mlr+state_govt+medicaid_expansion+year_dummy, data = full_combined)
 model_noFE_2 <- lm(insurer_hhi_logged~hospital_hhi_logged_2+no_hospitals_2+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+medicare_pc+mlr+state_govt+medicaid_expansion+year_dummy, data = full_combined)
+model_noFE_3 <- lm(insurer_hhi_logged~hospital_hhi_logged_3+no_hospitals_3+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+medicare_pc+mlr+state_govt+medicaid_expansion+year_dummy, data = full_combined)
 
 model_full_region <- lm(insurer_hhi_logged~hospital_hhi_logged+hospital_hhi_logged:region.f+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+ra_year.f+medicare_pc, data=subset(full_combined, single_county_RA==FALSE))
 model_full_rurality <-lm(insurer_hhi_logged~hospital_hhi_logged+hospital_hhi_logged:rucc.f+no_hospitals+white_popn_percent+black_popn_percent+native_popn_percent+poverty_rate+median_age+rucc_code_13+ra_year.f+medicare_pc, data=subset(full_combined, single_county_RA==FALSE))
@@ -324,6 +338,15 @@ stargazer(model_full_2, model_stateFE_2, model_noFE_2, se = list(clust(model_ful
           notes = c("Controlling for rating area-year fixed effects in (1) and state-year fixed effects in (2).",
                     "Controlling for county/state covariates where appropriate."), float = FALSE,
           title = "Main results (hospital market radius one SD higher)", out = "../paper/tables/main_results_2.tex")
+
+stargazer(model_full_3, model_stateFE_3, model_noFE_3, se = list(clust(model_full_3), clust(model_stateFE_3), clust(model_noFE_3)), 
+          type = "latex", column.labels = c("Main model", "Boozary et al. (2019)", "Griffith et al. (2018)"), font.size = "scriptsize", dep.var.labels = "Insurer HHI (logged)", 
+          covariate.labels = c("Hospital HHI (logged)", "No hospitals in market", "Rurality (RUCC code)", "Year"), 
+          omit = c("white_popn_percent", "Constant", "black_popn_percent", "native_popn_percent", "rating_area.f", 
+                   "ra_year.f", "st_year.f", "state_abb", "poverty_rate", "median_age", "medicare_pc", "state_govt", "mlr", "medicaid_expansion"),
+          notes = c("Controlling for rating area-year fixed effects in (1) and state-year fixed effects in (2).",
+                    "Controlling for county/state covariates where appropriate."), float = FALSE,
+          title = "Main results (short-term general hospital market radius)", out = "../paper/tables/main_results_3.tex")
 
 stargazer(model_full_rurality, model_full_region, se=list(clust(model_full_rurality), clust(model_full_region)), type = "latex", 
           column.labels = c("Rurality (RUCC code) interaction", "Region interaction"), font.size = "scriptsize", dep.var.labels = "Insurer HHI (logged)", 

@@ -250,7 +250,7 @@ Exponentiating my coefficients, we see that a 1-point increase in the 9-point RU
 
 \restoregeometry
 
-To see if the association between insurer and hospital HHI varies by region or rurality, I fit my main model on subsets of the data by both categories (see Table 4 and Table 5). My OLS estimates of my coefficient of interest lose significance in many cases, which is to be expected given the limited sample size of the subsetted data. But all estimates are tightly clustered around [.015, .04] (the exception being the Northeast region, which is our smallest sample). While my standard errors are too wide to draw any hard conclusions, it doesn't seem that my main effect is being driven by any subset of counties by region or rurality (further confirmation of this can be found in Appendix Table A.3, where interaction terms are added for each of the subsetted categories; all coefficient estimates lack significance).   
+To see if the association between insurer and hospital HHI varies by region or rurality, I fit my main model on subsets of the data by both categories (see Table 4 and Table 5). My OLS estimates of my coefficient of interest lose significance in many cases, which is to be expected given the limited sample size of the subsetted data. But all estimates are tightly clustered around [.015, .04] (the exception being the Northeast region, which is our smallest sample). While my standard errors are too wide to draw any hard conclusions, it doesn't seem that my main effect is being driven by any subset of counties by region or rurality (further confirmation of this can be found in Appendix Table A.4, where interaction terms are added for each of the subsetted categories; all coefficient estimates lack significance).   
 
 \section{Limitations}
 
@@ -260,13 +260,13 @@ Moreover, my hospital HHI measurement doesn't account for vertical consolidation
 
 Beyond setting issues, the limitations of my work are those typical of OLS estimates. My main model's residuals fail the Shapiro-Wilk's test of normality, which, though it doesn't undermine the estimate itself, calls into question my standard errors. To remedy this concern I "bootstrap" my model, re-fitting it over 5000 samples with replaces, to construct an empirical distribution of my coefficient of interest (this approach is taken from \citet{fox_bootstrapping_2017}). The resulting 99\% confidence interval for $\beta_1$ is (.013, .071); in other words I still reject the null hypothesis at $p<.01$. 
 
-Finally, there is the possibility of endogeneity due to either omitted variable bias or simultaneity. In regards to omitted variable bias, this concern is lessened by my identification strategy (exploiting intra-rating area variation within a year, i.e. controlling for differences between these collections of counties). That said, while within-rating area comparisons are safer than between-rating area comparisons, there is still the risk of endogeneity. In regards to simultaneity, the relationship between marketplace insurers and hospitals implies this shouldn't be a major concern: as mentioned above, marketplace insurers only make up 4\% of insured individuals nationwide, and enrollees produce a minuscule amount of hospital revenue (especially compared to the high-cost patients usually covered by Medicare). However, some marketplace insurers also participate in the employer sponsored market, and enrollees in this market do make up a significant amount of hospital revenue. Thus, there could be simultaneity if insurers which offer plans on ACA exchanges also offer plans in the employer sponsored market, and make decisions about regional market entry jointly. 
+Finally, there is the possibility of endogeneity due to either omitted variable bias or simultaneity. In regards to omitted variable bias, this concern is lessened by my identification strategy (exploiting variation within rating area-year, i.e. controlling for the fixed effects of these collections of counties in a given year). That said, while within-rating area comparisons are safer than between-rating area comparisons, there is still the risk of endogeneity. In regards to simultaneity, the relationship between marketplace insurers and hospitals implies this shouldn't be a major concern: as mentioned above, marketplace insurers only make up 4\% of insured individuals nationwide, and enrollees produce a minuscule amount of hospital revenue (especially compared to the high-cost patients usually covered by Medicare). However, some marketplace insurers also participate in the employer sponsored market, and enrollees in this market do make up a significant amount of hospital revenue. Thus, there could be simultaneity if insurers which offer plans on ACA exchanges also offer plans in the employer sponsored market, and make decisions about regional market entry jointly. 
 
 Besides these aforementioned concerns, my model is fairly rigorous. Cluster-robust standard errors prevent heteroskedasticity/serial correlation concerns (I cluster at the rating-area level). My variance inflation factors are non-concerning for my main effect ($\beta_1$), ruling out multicollinearity. While my residuals fail normality tests, bootstrapping my coefficient of interest confirms my analytic p-values. And the nature of the relationship between hospitals and insurers implies that the effect we see in the data is causal: our hospital HHI is lagged by one year, and since ACA exchanges make up only a small share of the overall population, it is extremely unlikely hospital competition is influenced by competition on the ACA exchange. The reverse however has already been confirmed in aforementioned qualitative work \citep{morrisey_five-state_2017}.  
 
 \section{Discussion}
 
-The results of my regressions, in combination with the findings of \citet{morrisey_five-state_2017}, seemingly confirm that hospital and physician competition are essential to a robust and competitive insurer market under the ACA. The immediate implications of this are two-fold: first, decreasing hospital competition threatens consumer choice in ACA markets, and second, its impact on ACA premiums has likely been underestimated. 
+The results of my regressions, in combination with the findings of \citet{morrisey_five-state_2017}, are early indications that hospital and physician competition are essential to a robust and competitive insurer market under the ACA. The immediate implications of this are two-fold: first, decreasing hospital competition may threaten consumer choice in ACA markets, and second, its impact on ACA premiums has likely been underestimated. 
 
 While the first point is self-evident (rising hospital HHI results in higher insurer HHI, which corresponds to less competitive markets and therefore less firms for consumers to choose from), the second is more complicated. Returning to \citet{scheffler_consolidation_2018}, we see that their work concluded that hospital HHI was related to premium price with an elasticity of .182, i.e. a 10\% increase in hospital HHI resulted in a 1.82\% increase in premium price the following year. Scheffler also included insurer HHI in his regressions; he found that insurer HHI was related to premium price with an elasticity of .204. 
 
@@ -274,7 +274,7 @@ While \citet{scheffler_consolidation_2018} work captures the impact hospital con
 
 To demonstrate, let us consider a hypothetical (AHA data guidelines prevent me from using a specific county). The average monthly benchmark premium in 2015 was \$276 \citep{cox_analysis_2015}, and the average insurer HHI was 6184. Suppose in a given county with this average premium price and average insurer HHI, a hospital merger occurred, which raised hospital HHI by 10\%. By Scheffler's results, this merger would raise monthly premiums by 1.8\%, or \$4.96. By my results, this merger would raise insurer HHI by .33\%, or 26 points. This increase in insurer HHI, by Scheffler's results, would correspond to another rise in premiums the following year (i.e. 2017), of .076\%, 21 cents monthly or \$2.53 annually.
 
-Obviously these numbers aren't precise, and shouldn't be taken as such. \citet{scheffler_consolidation_2018} focused solely on California's state run exchanges, while my work encompasses 34 primarily rural and southern states with federally facilitated marketplaces; moreover their work used rating area-year combinations as their observation unit, while I use county-year combinations. The purpose of this exercise though, is to demonstrate that by not accounting for the relationship between competition on ACA exchanges and competition between healthcare providers, researchers underestimate the impact of declining provider competition on premiums.
+Obviously these numbers aren't precise, and shouldn't be taken as such. \citet{scheffler_consolidation_2018} focused solely on California's state run exchanges, while my work encompasses 34 primarily rural and southern states with federally facilitated marketplaces; moreover their work used rating area-year combinations as their observation unit, while I use county-year combinations. The purpose of this exercise though, is to demonstrate that by not accounting for the relationship between competition on ACA exchanges and competition between healthcare providers, researchers may underestimate the impact of declining provider competition on premiums.
 
 Moreover, as alluded to in Section 1, it is not clear that premium prices ought to be the focus of research related to the ACA exchanges. Despite some notable exceptions (i.e. the "subsidy cliff"), government subsidies largely shield individuals in the ACA market from premium price hikes. What they do not protect against is the lack of choice most consumers face in their county's exchange. As such, even if premiums aren't greatly impacted by the relationship between hospital and insurer competition, that relationship is important in its own right, as it has a more direct impact on the experience of most consumers on ACA exchanges than premiums themselves. 
 
@@ -296,9 +296,9 @@ While direct government entry to ACA exchanges may seem like an extreme step, it
 
 \section{Directions for Future Work}
 
-The most immediate extension of this work is to retest my main model with a more general measure of healthcare competition (one that would have to account for horizontal and vertical consolidation, as in \citet{scheffler_consolidation_2018}). Another obvious extension would be altering my main model to control for all time invariant differences between counties, i.e. a standard fixed effects regression on panel data. Unfortunately, this extension is impossible for the next few years: there are currently not enough years of marketplace data to be used in such an analysis. 
+The most obvious extension of this work, alluded to in previous sections, is a panel regression controlling for all time-invariant differences between counties, i.e. a standard fixed effects regression on panel data. Unfortunately it will take several more years before there is enough data for this approach to be viable.  
 
-Another extension, which researchers wouldn't have to wait a decade for, would be to consider the relationship between provider competition and competition in the Medicaid Managed Care market. Managed Care Organizations (MCOs) are private companies which contract with states to deliver Medicaid benefits. Currently 39 states (and DC) use MCOs to administer Medicaid benefits. Only 30 states publicly share enrollment data, but in those 30 alone there are 48 million enrollees, three times as many as are in the entire individual market. Thus, investigating whether falling competition amongst healthcare providers poses the same risk to the Medicaid MCO market as it does to ACA exchanges would be an extremely worthwhile endeavor. 
+Two other extensions, which researchers wouldn't have to wait a decade for, would be (1) to retest my main model with a more general measure of healthcare competition (one that would have to account for horizontal and vertical consolidation, as in \citet{scheffler_consolidation_2018}), and (2) to consider the relationship between provider competition and competition in the Medicaid Managed Care market. Managed Care Organizations (MCOs) are private companies which contract with states to deliver Medicaid benefits. Currently 39 states (and DC) use MCOs to administer Medicaid benefits. Only 30 states publicly share enrollment data, but in those 30 alone there are 48 million enrollees, three times as many as are in the entire individual market. Thus, investigating whether falling competition amongst healthcare providers poses the same risk to the Medicaid MCO market as it does to ACA exchanges would be an extremely worthwhile endeavor. 
 
 \section*{Conclusion}
 As outlined in the introduction, the motivation for this paper was to confirm the conclusions drawn by earlier field research \citep{morrisey_five-state_2017}, that competition among healthcare providers is essential for robust and competitive ACA exchanges. In doing so, I contribute to the existing literature with my findings and by (1) illustrating how rating areas offer researchers a powerful tool for model specification when studying ACA exchanges, and (2) outlining a novel approach to hospital market HHI construction using hospital "radii", instead of generalizing results across counties using rating area boundaries as past work has done. 
@@ -321,13 +321,10 @@ That said, some of the out-sized importance attached to ACA exchanges is deserve
 \subsection{Herfindahl-Hirschman index (HHI) calculations}
 Insurer HHI was calculated using the issuer-level enrollment data publicly available from the Center for Medicare and Medicaid Services. The data included enrollment counts by county and issuer. I calculated market share for each issuer in each county, and then squared and summed the result.
 
-I used a similar process for hospital HHI, using data on short-term general hospital admissions from the American Hospital Association (AHA). Instead of using county boundaries to determine market boundaries, I constructed radii around each of my hospitals in line with the findings of \citet{gresenz_updated_2004}. Their work measured the "75 percent boundary" for a large sample of rural and urban hospitals, i.e. the boundary within which 75 percent of a hospitals admitted patients lived (rural vs. urban distinction is based on whether the county is in a Metropolitan Statistical Area, i.e. a MSA). They find the mean value of this statistic is 10.4 miles for urban hospitals, with a standard deviation of 8.5 miles, versus 14.2 for rural hospitals, with a standard deviation of 14.6. 
+I used a similar process for hospital HHI, using data on short-term general hospital admissions from the American Hospital Association (AHA). Instead of using county boundaries to determine market boundaries, I constructed radii around each of my hospitals in line with the findings of \citet{gresenz_updated_2004}. Their work measured the "75 percent boundary" for a large sample of rural and urban hospitals, i.e. the boundary within which 75 percent of a hospitals admitted patients lived (rural vs. urban distinction is based on whether the county is in a Metropolitan Statistical Area, i.e. a MSA). They find the mean value of this statistic is 10.4 miles for urban hospitals, with a standard deviation of 8.5 miles, versus 14.2 for rural hospitals, with a standard deviation of 14.6. These estimates are made using a sample that includes non-short term general hospitals (i.e. teaching hospitals etc...). \citet{gresenz_updated_2004} additionally estimate radii for short-term general hospitals only, but don't differentiate between urban and rural, presumably due to limited sample size. As such, I prefer their overall estimates in my main results. Results using their universal radii for short term general hospitals can be found in Table A.3; the coefficient estimate is virtually identical (.035 vs .033 in my main results).   
 
 The AHA data allows me to determine whether or not a hospital is in a MSA, and therefore I am able to match it to the corresponding mean and standard deviation from \citet{gresenz_updated_2004}. I use $\bar{x} + 2s_x$ for the radii of the hospital HHI used in the paper (i.e. 27.4 miles for urban hospitals, 43.4 miles for rural hospitals), and count a hospital as part of a county's market if its circle overlaps the centroid of the county. I counted hospitals under the same health system as one firm. I geocoded the AHA data using \citet{kahle_ggmap_2013}, and found the centroid of the counties in my data using \citet{bivand_rgeos_2020}. 
 
-Heat maps with my calculations for insurer and hospital HHI can be seen on the following pages, as can a color-coded map outlining our regions. Grayed out sections reflect counties with withheld data. 
-
-\pagebreak
 \newgeometry{left=1cm, right=1cm, bottom=1.9cm}
 \begin{figure}[!h]
 \begin{center}
@@ -339,7 +336,6 @@ Heat maps with my calculations for insurer and hospital HHI can be seen on the f
 \end{center}
 \end{figure}
 
-\pagebreak
 \begin{figure}[!h]
 \begin{center}
 \caption{Hospital HHI Heat Map, 2014}\label{Figure 7}
@@ -350,7 +346,6 @@ Heat maps with my calculations for insurer and hospital HHI can be seen on the f
 \end{center}
 \end{figure}
 
-\pagebreak
 \begin{figure}[!h]
 \begin{center}
 \caption{Regions Map}
@@ -361,7 +356,7 @@ Heat maps with my calculations for insurer and hospital HHI can be seen on the f
 \restoregeometry
 
 \subsection{Alternative specifications}
-As a robustness check, I fit several alternative specifications of my main model. I refit my main model using radii one standard deviation higher and lower than the values used in the paper (see Tables A.1 and A.2). I add interaction terms for rurality and region to my main model (see Table A.3). And I modify my main model to use number of firms instead of logged HHI (see Table A.4; as in my HHI calculations, hospitals under the same health system are considered one firm). Tables summarizing these results, along with figures representing the bivariate relationship between logged insurer HHI and logged hospital HHI, can be found below.   
+As a robustness check, I fit several alternative specifications of my main model. I refit my main model using radii one standard deviation higher and lower than the values used in the paper (see Tables A.1 and A.2), and using radii estimated using only short-term general hospitals (see Table A.3). I add interaction terms for rurality and region to my main model (see Table A.4). And I modify my main model to use number of firms instead of logged HHI (see Table A.5; as in my HHI calculations, hospitals under the same health system are considered one firm). Tables summarizing these results, along with figures representing the bivariate relationship between logged insurer HHI and logged hospital HHI, can be found below.   
 
 \vspace{2cm}
 
@@ -375,6 +370,12 @@ As a robustness check, I fit several alternative specifications of my main model
 \centering
 \caption{Main results (hospital market radius one SD higher)}
 \input{./tables/main_results_2}
+\end{table}
+
+\begin{table}
+\centering
+\caption{Main results (short-term general hospital market radius)}
+\input{./tables/main_results_3}
 \end{table}
 
 \newgeometry{left=1cm, right=1cm, bottom=1.9cm}
