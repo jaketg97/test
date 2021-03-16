@@ -63,7 +63,7 @@
 
 \begin{document}
 \title{\vspace{-.8cm}Insurer competition in the age of provider consolidation:
-The relationship between hospital and insurance competition in the ACA individual market\thanks{I thank Professors Colleen M. Grogan, Kotaro Yoshida and Victor O. Lima for all their guidance over the course of this project. I thank the Dean's Fund and the Becker Friedman Institute for sponsoring this project.}}
+The relationship between hospital and insurance competition in the ACA individual market\thanks{I thank Professors Colleen M. Grogan, Kotaro Yoshida and Victor O. Lima for all their guidance over the course of this project. I thank Professor Seema Jayachandran for her helpful commments. I thank the Dean's Fund and the Becker Friedman Institute for sponsoring this project.}}
 \date{\vspace{.3cm}\today}
 \author{\begin{tabular}{c}
  Jacob Toner Gosselin\end{tabular}}
@@ -234,21 +234,23 @@ While my coefficients are small, the narrow distribution of insurer HHI (see Fig
 
 Exponentiating my coefficients, we see that a 1-point increase in the 9-point RUCC scale is associated with only a 1.3\% increase in logged insurer HHI; thus, according to our model, a 1 point increase in RUCC and a 39.4\% increase in hospital HHI are associated with the same (OLS estimated) level of impact on insurer HHI. While such extreme increases in HHI might seem unrealistic in most market settings, my constructed county hospital markets are so sparse that these sorts of increases are pretty conceivable. 55.9\% of counties across my two years of data have five or fewer hospitals in their market, and between 2014 and 2015, 31 counties saw an 39.4\% or greater increase in hospital HHI.
 
-To see if the association between insurer and hospital HHI varies by region or rurality, I fit my main model on subsets of the data by both categories (see Table 4 and Table 5). My OLS estimates of my coefficient of interest lose significance in many cases, which is to be expected given the limited sample size of the subsetted data. But all estimates are tightly clustered around [.015, .04] (the exception being the Northeast region, which is our smallest sample). While my standard errors are too wide to draw any hard conclusions, it doesn't seem that my main effect is being driven by any subset of counties by region or rurality (further confirmation of this can be found in Appendix Table A.3, where interaction terms are added for each of the subsetted categories; all coefficient estimates lack significance).   
-\vspace{1cm}
-\begin{table}[!h]
+\newgeometry{left=1cm, right=1cm, bottom=1.9cm, top=1.9cm}
+
+\begin{table}
 \centering
 \caption{Results by rurality (main model)}
 \input{./tables/main_results_rucc.tex}
 \end{table}
 
-\newgeometry{left=1cm, right=1cm, bottom=1.9cm, top=1.9cm}
 \begin{table}
 \centering
 \caption{Results by region (main model)}
 \input{./tables/main_results_region.tex}
 \end{table}
+
 \restoregeometry
+
+To see if the association between insurer and hospital HHI varies by region or rurality, I fit my main model on subsets of the data by both categories (see Table 4 and Table 5). My OLS estimates of my coefficient of interest lose significance in many cases, which is to be expected given the limited sample size of the subsetted data. But all estimates are tightly clustered around [.015, .04] (the exception being the Northeast region, which is our smallest sample). While my standard errors are too wide to draw any hard conclusions, it doesn't seem that my main effect is being driven by any subset of counties by region or rurality (further confirmation of this can be found in Appendix Table A.3, where interaction terms are added for each of the subsetted categories; all coefficient estimates lack significance).   
 
 \section{Limitations}
 
