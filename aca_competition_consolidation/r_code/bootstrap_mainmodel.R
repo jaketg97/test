@@ -31,7 +31,7 @@ colnames(coef) <- c("coef")
 ggplot(data = coef, aes(x=coef)) +
   geom_histogram(aes(y=..count../sum(..count..)), alpha=.4, position = "identity", fill="red", bins = 50) + 
   labs(title="Bootstrapped distribution of coefficient of interest (main model)", y="Percent", x="Coefficient of Hospital HHI (logged)", 
-       caption = "Bootstrapped 99% confidence interval: (.013, .071)") +
+       caption = "Bootstrapped 99% confidence interval: (.01, .06)") +
   theme_stata(scheme="s2color") + theme(plot.title=element_text(size=10)) 
   
 
