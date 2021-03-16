@@ -304,7 +304,7 @@ stargazer(model_full_south, model_full_west, model_full_northcentral, model_full
           omit = c("white_popn_percent", "Constant", "black_popn_percent", "native_popn_percent", "rating_area.f", 
                    "ra_year.f", "st_year.f", "state_abb", "poverty_rate", "median_age", "medicare_pc",
                    "state_govt", "mlr", "medicaid_expansion"), 
-          notes = c("Also controlling for rating area-year fixed effects, and county covariates."), float = FALSE,
+          notes = c("Also controlling for rating area-year fixed effects and county covariates."), float = FALSE,
           title = "Results by region (main model)", out = "../paper/tables/main_results_region.tex")
 
 stargazer(model_full_1, model_stateFE_1, model_noFE_1, se = list(clust(model_full_1), clust(model_stateFE_1), clust(model_noFE_1)), 
