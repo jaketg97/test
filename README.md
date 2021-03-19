@@ -11,7 +11,7 @@ county-level, and by illustrating how rating areas, a unique feature of ACA mark
 
 **NON-ECON STUFF**
  - **[Chicago’s harshest judge seeks retention](https://www.injusticewatch.org/news/2018/chicago-harshest-judge-seeks-retention/):** Piece I co-wrote (with help from a great team) on Judge Maura Slattery Boyle, as part of their coverage for the judicial retention races. [Injustice Watch](https://www.injusticewatch.org) continues to do some of the best reporting in Chicago; if you haven't yet, check out their [Judicial Election Guide](https://www.injusticewatch.org/interactives/judicial-election-guide/2020-general/en/)
- - **[Fighting Royalty: The Daniel Biss Campaign for Governor](http://uchicagogate.com/articles/2018/7/4/fighting-royalty-daniel-biss-campaign-governor/):** probably the piece I'm proudest of from my day's at UChicago's undergraduate political review. Incredibly interesting campaign with a lot of great characters. Also includes a map I spent hours building in Tableau because I didn't know how to use R yet, so that's a nice memory.
+ - **[Fighting Royalty: The Daniel Biss Campaign for Governor](http://uchicagogate.com/articles/2018/7/4/fighting-royalty-daniel-biss-campaign-governor/):** probably the piece I'm proudest of from my days at UChicago's undergraduate political review. Incredibly interesting campaign with a lot of great characters. Also includes a map I spent hours building in Tableau because I didn't know how to use R yet, so that's a nice memory.
 
 ## Now, for the good stuff 
 - **[01/25/2021: Covid cases and deaths in Chicago, by zip code](covid_chicago_impact/covid_chicago_impact.html)**
