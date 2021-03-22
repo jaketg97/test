@@ -1,0 +1,218 @@
+\documentclass[letterpaper,10pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=cyan}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{multicol}
+%\input{glyphtounicode}
+\usepackage [autostyle, english = american]{csquotes}
+\MakeOuterQuote{"}
+
+%\usepackage[default]{sourcesanspro}
+%\usepackage[T1]{fontenc}
+
+\pagestyle{fancy}
+\fancyhf{} 
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+\titleformat{\section}{
+  \vspace{-4pt}\centering
+}{}{0em}{}[\color{black}\titlerule\vspace{-5pt}]
+
+
+\pdfgentounicode=1
+
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+\begin{document}
+
+
+
+\begin{center}
+    {\LARGE Jacob Toner Gosselin} \\ \vspace{2pt}
+    \begin{multicols}{2}
+    \begin{flushleft}
+    \href{{https://github.com/jaketg97/Jacob-Toner-Gosselin}}{Github}\\
+    \href{{https://www.linkedin.com/in/jacobgosselin/}}{Linkedin}
+    \end{flushleft}
+    
+    \begin{flushright}
+    \href{{https://jaketg97.github.io/Jacob-Toner-Gosselin/}}{Personal site}\\
+    \href{mailto:{jaketg97@gmail.com}}{Email}
+    \end{flushright}
+    \end{multicols}
+\end{center}
+
+
+%-----------EDUCATION-----------
+\vspace{-2pt}
+\section{Education}
+  \resumeSubHeadingListStart
+      \resumeSubheading
+      {The University of Chicago}{Chicago, IL}
+      {BA with Honors in Economics, BS in Mathematics, minor in Creative Writing}{June 2019}
+      \resumeItemListStart
+        \resumeItem{Graduated with general honors and departmental honors in economics; Dean’s List 2015-2019}
+        \resumeItem{Honors Thesis: Insurer Competition in the Age of Provider Consolidation}
+        \resumeItem{Relevant Coursework: Honors Econometrics, Probability Theory, Analysis in R$^n$ I-III, Stat. Methods and Models}
+   	  \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {Northwestern University}{Chicago, IL}
+      {Research Analyst, Professor Seema Jayachandran}{July 2020-Present}
+      \resumeItemListStart
+        \resumeItem{Research Analyst for Professor Seema Jayachandran, working on research in applied microeconomics.}
+        \resumeItem{Cleaned survey/administrative datasets and prepared them for analysis, conducted analysis using different statistical
+and econometric tools (mostly using Stata and \textbf{\textsf{R}}), and prepared tables and figures with empirical results for publications and presentations (using \LaTeX).}
+    \resumeItemListEnd
+
+    \resumeSubheading
+      {AmeriCorps}{Indianapolis, IN}
+      {VISTA, IndyEast Promise Zone}{June 2019-July 2020}
+      \resumeItemListStart
+      	\resumeItem{"Volunteer in Service to America" (VISTA) with IndyEast Promise Zone, a federally designated "Promise Zone" on the east side of Indianapolis.}
+        \resumeItem{Worked with Indiana University Public Policy Institute and state offices to generate accurate community data.}
+        \resumeItem{Built capacity with community partners for afterschool programming, technical certification programming, etc...}
+    \resumeItemListEnd
+    
+    \resumeSubheading
+      {The University of Chicago}{Chicago, IL}
+      {Research Assistant, Professor Neale Mahoney}{December 2017-August 2018}
+      \resumeItemListStart
+        \resumeItem{Research Assistant for Professor Neale Mahoney, working on research in health economics.}
+        \resumeItem{Cleaned and analyzed data from the Healthcare Cost Report Information System in Stata for an ongoing research
+project looking at the impact of monopsony in hospitals on lower wage workers.}
+	\resumeItem{Performed literature reviews for presentation on the Affordable Care Act (ACA) at the Booth Business School.} 
+    \resumeItemListEnd
+    
+     \resumeSubheading
+      {Injustice Watch}{Chicago, IL}
+      {Data Reporting Intern}{June 2018-June 2019}
+      \resumeItemListStart
+        \resumeItem{Published investigation of judicial misconduct and harsh sentencing in \href{https://chicago.suntimes.com/2018/8/17/18433578/cook-county-judge-seeking-retention-had-34-decisions-struck-down-in-6-years}{The Chicago Sun-Times}.}
+        \resumeItem{Analyzed sentencing patterns of judges seeking re-election in \textbf{\textsf{R}} for voting guide published in \href{https://www.injusticewatch.org/interactives/judicial-guide/index.html}{The Chicago Sun-Times}.}
+	\resumeItem{Mapped police stops using R and Tableau to analyze the effect of race and income on who “stop and frisk” impacts.} 
+    \resumeItemListEnd
+    
+      \resumeSubheading
+      {The Brookings Institution}{Washington, DC}
+      {Economic Studies Intern}{June 2017-August 2017}
+      \resumeItemListStart
+        \resumeItem{Served as research assistant on three studies of rural healthcare under supervision of Dr. Alice Rivlin.}
+        \resumeItem{Conducted statistical analysis on NSDUH data to determine impact of Medicaid enrollment on opioid users.}
+	\resumeItem{Performed literature reviews to provide preliminary research for ongoing projects.} 
+    \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+  
+  %-----------EXPERIENCE-----------
+\section{Leadership and Activities}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {The Institute of Politics}{The University of Chicago}
+      {Civic Engagement Chair, Student Advisory Board}{June 2018-June 2019}
+      \resumeItemListStart
+        \resumeItem{Managed the interests of all student run organizations within the IOP, serving as a liaison between staff and students.}
+        \resumeItem{Reviewed applications for new IOP student organizations, and helped coordinate funding.}
+        \resumeItem{Represented students in weekly meetings with IOP staff, and quarterly meetings with IOP Director David Axelrod.}
+    \resumeItemListEnd
+
+    \resumeSubheading
+      {Varsity XC and Track and Field}{The University of Chicago}
+      {Athlete, Captain}{August 2016-June 2019}
+      \resumeItemListStart
+      	\resumeItem{Managed a 20+ hour weekly commitment with a full course load year-round.}
+        \resumeItem{USTFCCCA Academic All-American Selection (2017), UAA Conference All-Academic Selection ('15, '16, '17, '18).}
+    \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+%-----------PUBLICATIONS-----------
+\section{Publications}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+    \textbf{Insurer Competition in the Age of Provider
+Consolidation: The relationship between hospital
+and insurance competition in the ACA individual
+market} - Honors Thesis, and updated as working paper on personal site {\\Jacob Toner Gosselin}\\
+}}
+ \end{itemize}
+
+%-----------PROGRAMMING SKILLS-----------
+\section{Technical Skills, Language Skills, and Interests}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Programming Languages}{: Experienced in Stata, \textbf{\textsf{R}}, \LaTeX, Python, Excel and Git for version control.} \\
+     \textbf{Languages}{: Spanish (conversational)} \\
+     \textbf{Volunteering}{: Former AmeriCorps VISTA; volunteer tutor with Chicago Peace Corps throughout college.} \\
+     \textbf{Interests}{: Running (doing it and watching it); Basketball(just watching it, mostly NBA but some college); Writing.}
+     
+    }}
+ \end{itemize}
+
+\end{document}
