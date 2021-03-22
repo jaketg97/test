@@ -2,7 +2,7 @@
 
 My name's Jake, and I'm an aspiring applied microeconomist hoping to specialize in health/public economics. Right now I'm working as a research analyst at Northwestern University in the Global Poverty Research Lab; I plan on applying to Econ PhD programs next fall (Autumn 2021). I use this site as a sounding board for my half baked ideas. **To be clear, all work shared here is preliminary and personal** (don't blame my employer for any of my shoddy work). Critiques are welcome at [jaketg97@gmail.com](mailto:jaketg97@gmail.com). Before we get to the undeveloped ideas though, here are some shameless plugs...
 
-[Here's my CV](main_files/Gosselin, Jacob - CV.pdf) &nbsp; &nbsp; [And my twitter](https://twitter.com/jaketg97) &nbsp; &nbsp; [And my LinkedIn](https://www.linkedin.com/in/jacobgosselin/) 
+[Here's my CV](main_files/CV_Update.pdf) &nbsp; &nbsp; [And my twitter](https://twitter.com/jaketg97) &nbsp; &nbsp; [And my LinkedIn](https://www.linkedin.com/in/jacobgosselin/) 
 
 ### And here are a few ideas that turned into things I'm proud of 
 **ECON STUFF**
