@@ -1,0 +1,17 @@
+base
+pacman
+tidyverse
+ggplot2
+tibble
+tidyr
+readr
+purrr
+dplyr
+stringr
+forcats
+DBI
+duckdb
+bigrquery
+hrbrthemes
+nycflights13
+glue

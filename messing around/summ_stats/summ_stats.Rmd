@@ -1,0 +1,118 @@
+---
+title: "Descriptive facts for work culture GitHub project"
+author:
+  name: Jacob Toner Gosselin
+date: "`r format(Sys.time(), '%d %B %Y')`"
+
+output: 
+  html_document:
+    theme: flatly
+    highlight: haddock
+    # code_folding: show
+    toc: yes
+    toc_depth: 4
+    toc_float: yes
+    keep_md: false
+    keep_tex: false ## Change to true if want keep intermediate .tex file
+    css: css/preamble.css ## For multi-col environments
+  pdf_document:
+    latex_engine: xelatex
+    toc: true
+    dev: cairo_pdf
+    # fig_width: 7 ## Optional: Set default PDF figure width
+    # fig_height: 6 ## Optional: Set default PDF figure height
+    includes:
+      in_header: tex/preamble.tex ## For multi-col environments
+      extra_dependencies: ["float", "booktabs", "longtable"]
+    pandoc_args:
+        --template=tex/mytemplate.tex ## For affiliation field. See: https://bit.ly/2T191uZ
+always_allow_html: true
+urlcolor: blue
+mainfont: cochineal
+sansfont: Fira Sans
+monofont: Fira Code ## Although, see: https://tex.stackexchange.com/q/294362
+## Automatically knit to both formats:
+knit: (function(inputFile, encoding) {
+ rmarkdown::render(inputFile, encoding = encoding, 
+ output_format = 'all') 
+ })
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE, cache = TRUE, dpi=300)
+## Next hook based on this SO answer: https://stackoverflow.com/a/39025054
+knitr::knit_hooks$set(
+  prompt = function(before, options, envir) {
+    options(
+      prompt = if (options$engine %in% c('sh','bash')) '$ ' else 'R> ',
+      continue = if (options$engine %in% c('sh','bash')) '$ ' else '+ '
+      )
+    })
+
+```
+
+# Intro
+This doc has the code and results for each variable outlined [here](https://docs.google.com/spreadsheets/d/1c49ib2oDodITWm66JfoQ4nshZbZ-YrHiZI8S4D1esHE/edit#gid=0). Results are being stored as CSVs for now (presumably we'll have a different file management system in place; this is just a placeholder). In addition, graphs/summary statistics are included for each variable. 
+
+Each section is dedicated to a specific variable. I include the SQL query used, so it's easy to see if/where I'm making mistakes. *All queries are currently limited to January, 2015* (this is easily expandable, just limiting them for now). Details regarding my connection to Google BigQuery can be seen below.
+
+```{r}
+#adding libraries
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, DBI, duckdb, bigrquery, hrbrthemes, nycflights13, glue)
+## My preferred ggplot2 theme (optional)
+theme_set(hrbrthemes::theme_ipsum())
+
+#setting up BQ connection
+billing_id = Sys.getenv("GCE_DEFAULT_PROJECT_ID")
+
+bq_con =
+  dbConnect(
+    bigrquery::bigquery(),
+    project = "ghtorrent-bq",
+    dataset = "ght",
+    billing = billing_id
+  )
+
+bq_con
+```
+
+# Variable 1: Number of distinct teams working on
+Our first variable is the "number of distinct teams working on", observed at the person-week level, to measure being on multiple teams simultaneously. The query itself can be seen below.
+```{r}
+var1_query =
+  glue_sql(
+    "
+    SELECT author_id, EXTRACT(WEEK FROM date(created_at)) as week, COUNT(DISTINCT project_id) as num_projects  
+    FROM `ghtorrent-bq.ght.commits`
+    WHERE EXTRACT(YEAR FROM date(created_at)) = 2015 AND EXTRACT(MONTH FROM date(created_at)) = 1
+    group by author_id, EXTRACT(WEEK FROM date(created_at))
+
+    
+    "
+  )
+print(var1_query)
+```
+
+Distribution statistics and histograms for "num_projects" (i.e. the number of distinct projects a user worked on in a given week; unit of observation is person-week) can be seen below.
+```{r, include=FALSE}
+#pulling down the data (commented out since once I store it as a CSV I pull from that to avoid recharging Google BigQuery)
+#var1_data = dbGetQuery(bq_con, var1_query)
+#write.csv(var1_data, "./data/var1_data.csv")
+```
+```{r}
+var1_data = read.csv("./data/var1_data.csv")
+summary(var1_data$num_projects)
+var1_data$week.f = factor(var1_data$week)
+var1_data %>% 
+  ggplot(aes(x = num_projects, color = week.f)) +
+  geom_histogram(position = "identity", alpha = 0.5, fill = "white") + 
+  xlim(0, 5) + labs(title = "Distribution of distinct projects worked on (1-5)", x = "Number of distinct projects worked on (by person-week)")
+
+var1_data %>% 
+  ggplot(aes(x = num_projects, color = week.f)) +
+  geom_histogram(position = "identity", alpha = 0.5, fill = "white") + 
+  xlim(10, 100) + labs(title = "Distribution of distinct projects worked on (10-100)", x = "Number of distinct projects worked on (by person-week)")
+```
+
