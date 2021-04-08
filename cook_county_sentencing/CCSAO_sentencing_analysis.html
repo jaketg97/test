@@ -1317,6 +1317,96 @@ document.addEventListener('DOMContentLoaded', function() {
     </style>
 
 
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; } /* Alert */
+code span.an { color: #008000; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #0000ff; } /* ControlFlow */
+code span.ch { color: #008080; } /* Char */
+code span.cn { } /* Constant */
+code span.co { color: #008000; } /* Comment */
+code span.cv { color: #008000; } /* CommentVar */
+code span.do { color: #008000; } /* Documentation */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.im { } /* Import */
+code span.in { color: #008000; } /* Information */
+code span.kw { color: #0000ff; } /* Keyword */
+code span.op { } /* Operator */
+code span.ot { color: #ff4000; } /* Other */
+code span.pp { color: #ff4000; } /* Preprocessor */
+code span.sc { color: #008080; } /* SpecialChar */
+code span.ss { color: #008080; } /* SpecialString */
+code span.st { color: #008080; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #008080; } /* VerbatimString */
+code span.wa { color: #008000; font-weight: bold; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -1512,40 +1602,40 @@ div.tocify {
 <div id="reading-in-dataconverting-sentence-term" class="section level1">
 <h1>Reading in Data/Converting Sentence Term</h1>
 <p>We’ll start by reading in our sentencing <a href="https://datacatalog.cookcountyil.gov/Courts/Sentencing/tg8v-tm6u">data</a>. We’ll then create a conversion table to standardize our units (i.e. years=1, months=1/12, weeks=1/52, days=1/365, all other units are left undefined but the rows are kept). We’ll then convert our sentence (i.e. 6 months=.5), and store it under a new variable, “converted_sentence”.</p>
-<pre><code>## 
-## -- Column specification --------------------------------------------------------
-## cols(
-##   .default = col_character(),
-##   CASE_ID = col_double(),
-##   CASE_PARTICIPANT_ID = col_double(),
-##   PRIMARY_CHARGE_FLAG = col_logical(),
-##   CHARGE_ID = col_double(),
-##   CHARGE_VERSION_ID = col_double(),
-##   CHARGE_COUNT = col_double(),
-##   CURRENT_SENTENCE_FLAG = col_logical(),
-##   LENGTH_OF_CASE_in_Days = col_double(),
-##   AGE_AT_INCIDENT = col_double(),
-##   INCIDENT_CITY = col_logical(),
-##   LAW_ENFORCEMENT_UNIT = col_logical()
-## )
-## i Use `spec()` for the full column specifications.</code></pre>
-<pre><code>## Warning: 305153 parsing failures.
-##  row           col           expected       actual                                                                                    file
-## 2075 INCIDENT_CITY 1/0/T/F/TRUE/FALSE Oak Park     &#39;https://datacatalog.cookcountyil.gov/api/views/tg8v-tm6u/rows.csv?accessType=DOWNLOAD&#39;
-## 2131 INCIDENT_CITY 1/0/T/F/TRUE/FALSE Harvey       &#39;https://datacatalog.cookcountyil.gov/api/views/tg8v-tm6u/rows.csv?accessType=DOWNLOAD&#39;
-## 2186 INCIDENT_CITY 1/0/T/F/TRUE/FALSE Morton Grove &#39;https://datacatalog.cookcountyil.gov/api/views/tg8v-tm6u/rows.csv?accessType=DOWNLOAD&#39;
-## 2201 INCIDENT_CITY 1/0/T/F/TRUE/FALSE Chicago      &#39;https://datacatalog.cookcountyil.gov/api/views/tg8v-tm6u/rows.csv?accessType=DOWNLOAD&#39;
-## 2220 INCIDENT_CITY 1/0/T/F/TRUE/FALSE Chicago      &#39;https://datacatalog.cookcountyil.gov/api/views/tg8v-tm6u/rows.csv?accessType=DOWNLOAD&#39;
-## .... ............. .................. ............ .......................................................................................
-## See problems(...) for more details.</code></pre>
-<pre><code>## Warning: NAs introduced by coercion</code></pre>
-<pre><code>## Warning in ifelse(original$COMMITMENT_UNIT == &quot;Natural Life&quot;, 100,
-## conversion_table * : NAs introduced by coercion</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>original &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://datacatalog.cookcountyil.gov/api/views/tg8v-tm6u/rows.csv?accessType=DOWNLOAD&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>conversion_table &lt;-<span class="st"> </span><span class="kw">revalue</span>(original<span class="op">$</span>COMMITMENT_UNIT, <span class="kw">c</span>(<span class="st">`</span><span class="dt">Year(s)</span><span class="st">`</span> =<span class="st"> </span><span class="dv">1</span>, <span class="dt">Months =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">12</span>, </span>
+<span id="cb1-3"><a href="#cb1-3"></a>    <span class="dt">Weeks =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">52</span>, <span class="dt">Days =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">365</span>, <span class="dt">Pounds =</span> <span class="ot">NA</span>, <span class="dt">Dollars =</span> <span class="ot">NA</span>, <span class="dt">Term =</span> <span class="ot">NA</span>))</span>
+<span id="cb1-4"><a href="#cb1-4"></a>conversion_table &lt;-<span class="st"> </span><span class="kw">as.double</span>(conversion_table)</span>
+<span id="cb1-5"><a href="#cb1-5"></a>original[<span class="st">&quot;converted_sentence&quot;</span>] &lt;-<span class="st"> </span><span class="kw">ifelse</span>(original<span class="op">$</span>COMMITMENT_UNIT <span class="op">==</span><span class="st"> &quot;Natural Life&quot;</span>, </span>
+<span id="cb1-6"><a href="#cb1-6"></a>    <span class="dv">100</span>, conversion_table <span class="op">*</span><span class="st"> </span><span class="kw">as.double</span>(original<span class="op">$</span>COMMITMENT_TERM))</span>
+<span id="cb1-7"><a href="#cb1-7"></a>original[<span class="st">&quot;sentence_date&quot;</span>] &lt;-<span class="st"> </span><span class="kw">as.Date</span>(original<span class="op">$</span>SENTENCE_DATE, <span class="st">&quot;%m/%d/%Y&quot;</span>)</span>
+<span id="cb1-8"><a href="#cb1-8"></a>original[<span class="st">&quot;sentence_year&quot;</span>] &lt;-<span class="st"> </span><span class="kw">year</span>(original<span class="op">$</span>sentence_date)</span></code></pre></div>
 </div>
 <div id="finding-median-sentences-by-felony-class" class="section level1">
 <h1>Finding median sentences by felony class</h1>
 <p>We’ll now create a series of subsets, to find median sentences. We’re going to create a subset for class 1, 2, 3, 4, and X felonies. This will exclude 2792 cases, which are filed under class A, B, C, M, O, P, U, or Z felonies. A lot of these are mistaken filings, but we don’t want to assign them. Since the sample size is large, we’re better of ignoring them (they only make up &lt;2% of cases).</p>
 <p>We’re also going to create further subsets (PJ) for sentences to Prison or Jail. We’ll use these to find median sentences; while it eliminates a good chunk of our cases (~41%), you have to do this to get an accurate read on median sentence time. Otherwise, a two year probation will skew our median, since that will be considered harsher than a one year prison sentence.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>CLASS_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">subset</span>(original, DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> &quot;1&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>CLASS_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">subset</span>(original, DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> &quot;2&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a>CLASS_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">subset</span>(original, DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> &quot;3&quot;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4"></a>CLASS_<span class="dv">4</span> &lt;-<span class="st"> </span><span class="kw">subset</span>(original, DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> &quot;4&quot;</span>)</span>
+<span id="cb2-5"><a href="#cb2-5"></a>CLASS_X &lt;-<span class="st"> </span><span class="kw">subset</span>(original, DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> &quot;X&quot;</span>)</span>
+<span id="cb2-6"><a href="#cb2-6"></a>CLASS_<span class="dv">1</span>_PJ &lt;-<span class="st"> </span><span class="kw">subset</span>(original, DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> &quot;1&quot;</span> <span class="op">&amp;</span><span class="st"> </span>(SENTENCE_TYPE <span class="op">==</span><span class="st"> </span></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="st">    &quot;Prison&quot;</span> <span class="op">|</span><span class="st"> </span>SENTENCE_TYPE <span class="op">==</span><span class="st"> &quot;Jail&quot;</span>))</span>
+<span id="cb2-8"><a href="#cb2-8"></a>CLASS_<span class="dv">2</span>_PJ &lt;-<span class="st"> </span><span class="kw">subset</span>(original, DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> &quot;2&quot;</span> <span class="op">&amp;</span><span class="st"> </span>(SENTENCE_TYPE <span class="op">==</span><span class="st"> </span></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="st">    &quot;Prison&quot;</span> <span class="op">|</span><span class="st"> </span>SENTENCE_TYPE <span class="op">==</span><span class="st"> &quot;Jail&quot;</span>))</span>
+<span id="cb2-10"><a href="#cb2-10"></a>CLASS_<span class="dv">3</span>_PJ &lt;-<span class="st"> </span><span class="kw">subset</span>(original, DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> &quot;3&quot;</span> <span class="op">&amp;</span><span class="st"> </span>(SENTENCE_TYPE <span class="op">==</span><span class="st"> </span></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="st">    &quot;Prison&quot;</span> <span class="op">|</span><span class="st"> </span>SENTENCE_TYPE <span class="op">==</span><span class="st"> &quot;Jail&quot;</span>))</span>
+<span id="cb2-12"><a href="#cb2-12"></a>CLASS_<span class="dv">4</span>_PJ &lt;-<span class="st"> </span><span class="kw">subset</span>(original, DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> &quot;4&quot;</span> <span class="op">&amp;</span><span class="st"> </span>(SENTENCE_TYPE <span class="op">==</span><span class="st"> </span></span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="st">    &quot;Prison&quot;</span> <span class="op">|</span><span class="st"> </span>SENTENCE_TYPE <span class="op">==</span><span class="st"> &quot;Jail&quot;</span>))</span>
+<span id="cb2-14"><a href="#cb2-14"></a>CLASS_X_PJ &lt;-<span class="st"> </span><span class="kw">subset</span>(original, DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> &quot;X&quot;</span> <span class="op">&amp;</span><span class="st"> </span>(SENTENCE_TYPE <span class="op">==</span><span class="st"> </span></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="st">    &quot;Prison&quot;</span> <span class="op">|</span><span class="st"> </span>SENTENCE_TYPE <span class="op">==</span><span class="st"> &quot;Jail&quot;</span>))</span>
+<span id="cb2-16"><a href="#cb2-16"></a>original_PJ &lt;-<span class="st"> </span><span class="kw">subset</span>(original, SENTENCE_TYPE <span class="op">==</span><span class="st"> &quot;Prison&quot;</span> <span class="op">|</span><span class="st"> </span>SENTENCE_TYPE <span class="op">==</span><span class="st"> &quot;Jail&quot;</span>)</span>
+<span id="cb2-17"><a href="#cb2-17"></a>median_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">median</span>(CLASS_<span class="dv">1</span>_PJ<span class="op">$</span>converted_sentence, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb2-18"><a href="#cb2-18"></a>median_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">median</span>(CLASS_<span class="dv">2</span>_PJ<span class="op">$</span>converted_sentence, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb2-19"><a href="#cb2-19"></a>median_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">median</span>(CLASS_<span class="dv">3</span>_PJ<span class="op">$</span>converted_sentence, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb2-20"><a href="#cb2-20"></a>median_<span class="dv">4</span> &lt;-<span class="st"> </span><span class="kw">median</span>(CLASS_<span class="dv">4</span>_PJ<span class="op">$</span>converted_sentence, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb2-21"><a href="#cb2-21"></a>median_X &lt;-<span class="st"> </span><span class="kw">median</span>(CLASS_X_PJ<span class="op">$</span>converted_sentence, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## [1] 6</code></pre>
 <pre><code>## [1] 4</code></pre>
 <pre><code>## [1] 2.25</code></pre>
@@ -1556,6 +1646,18 @@ div.tocify {
 <div id="creating-severity-ranking" class="section level1">
 <h1>Creating Severity Ranking</h1>
 <p>Now we construct our ranking of Criminal Division judges by sentence severity. First we’re going to create a subset of our original which solely includes felonies of class 1, 2, 3, 4, and X (which is the vast majority of entries). Then we’re going to create a boolean for whether the charge resulted in prison time, and if so, whether that prison sentence was above the median.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>original_subset &lt;-<span class="st"> </span><span class="kw">subset</span>(original, DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> &quot;1&quot;</span> <span class="op">|</span><span class="st"> </span>DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> </span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="st">    &quot;2&quot;</span> <span class="op">|</span><span class="st"> </span>DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> &quot;3&quot;</span> <span class="op">|</span><span class="st"> </span>DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> &quot;4&quot;</span> <span class="op">|</span><span class="st"> </span>DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> </span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="st">    &quot;X&quot;</span>)</span>
+<span id="cb8-4"><a href="#cb8-4"></a>conversion_table2 &lt;-<span class="st"> </span><span class="kw">revalue</span>(original_subset<span class="op">$</span>SENTENCE_TYPE, <span class="kw">c</span>(<span class="dt">Prison =</span> <span class="ot">TRUE</span>, <span class="dt">Jail =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb8-5"><a href="#cb8-5"></a>original_subset[<span class="st">&quot;PJ&quot;</span>] =<span class="st"> </span>conversion_table2</span>
+<span id="cb8-6"><a href="#cb8-6"></a>above_median &lt;-<span class="st"> </span>(original_subset<span class="op">$</span>PJ <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span> <span class="op">&amp;</span><span class="st"> </span>((original_subset<span class="op">$</span>DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> </span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="st">    &quot;1&quot;</span> <span class="op">&amp;</span><span class="st"> </span>original_subset<span class="op">$</span>converted_sentence <span class="op">&gt;</span><span class="st"> </span>median_<span class="dv">1</span>) <span class="op">|</span><span class="st"> </span>(original_subset<span class="op">$</span>DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> </span></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="st">    &quot;2&quot;</span> <span class="op">&amp;</span><span class="st"> </span>original_subset<span class="op">$</span>converted_sentence <span class="op">&gt;</span><span class="st"> </span>median_<span class="dv">2</span>) <span class="op">|</span><span class="st"> </span>(original_subset<span class="op">$</span>DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> </span></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="st">    &quot;3&quot;</span> <span class="op">&amp;</span><span class="st"> </span>original_subset<span class="op">$</span>converted_sentence <span class="op">&gt;</span><span class="st"> </span>median_<span class="dv">3</span>) <span class="op">|</span><span class="st"> </span>(original_subset<span class="op">$</span>DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> </span></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="st">    &quot;4&quot;</span> <span class="op">&amp;</span><span class="st"> </span>original_subset<span class="op">$</span>converted_sentence <span class="op">&gt;</span><span class="st"> </span>median_<span class="dv">4</span>) <span class="op">|</span><span class="st"> </span>(original_subset<span class="op">$</span>DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> </span></span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="st">    &quot;X&quot;</span> <span class="op">&amp;</span><span class="st"> </span>original_subset<span class="op">$</span>converted_sentence <span class="op">&gt;</span><span class="st"> </span>median_X)))</span>
+<span id="cb8-12"><a href="#cb8-12"></a>original_subset[<span class="st">&quot;above_median&quot;</span>] &lt;-<span class="st"> </span>above_median</span></code></pre></div>
 <p>Now we are ready to make our ranking. We’ll create a counter (a simple boolean, 1 if true, 0 if false) for:</p>
 <ol style="list-style-type: decimal">
 <li>Each sentence (i.e. 1 always)</li>
@@ -1569,6 +1671,40 @@ div.tocify {
 <li>Whether the sentence was on a class 4 felony and resulted in prison time.</li>
 </ol>
 <p>Then we’ll aggregate our counters by judge (i.e. sum each counter, grouped by the sentencing judge), and calculate the percent of prison sentences above the median/the percent of class 4 felony sentences resulting in prison time. We’ll average it to create our severity metric. I drop all judges who have served on less than 500 case (I like to deal in large sample sizes; the outcomes for judges who haven’t served on many cases could be misleading). From there I just abbreviated the list and ordered it to make it tidy. I export the full list of 90 judges, ranked, to judge_rankings.csv. I also display the judges included in the list who are on the ballot for retention November 3rd, with their relative rank within the list of 90 judges by my “severity metric”.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>original_subset &lt;-<span class="st"> </span><span class="kw">subset</span>(original_subset, original_subset<span class="op">$</span>SENTENCE_TYPE <span class="op">==</span><span class="st"> &quot;Prison&quot;</span> <span class="op">|</span><span class="st"> </span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="st">    </span>original_subset<span class="op">$</span>SENTENCE_TYPE <span class="op">==</span><span class="st"> &quot;Jail&quot;</span> <span class="op">|</span><span class="st"> </span>original_subset<span class="op">$</span>SENTENCE_TYPE <span class="op">==</span><span class="st"> &quot;Probation&quot;</span>)</span>
+<span id="cb9-3"><a href="#cb9-3"></a>original_subset<span class="op">$</span>counter &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a>original_subset<span class="op">$</span>counter_PJ &lt;-<span class="st"> </span><span class="kw">ifelse</span>(original_subset<span class="op">$</span>SENTENCE_TYPE <span class="op">==</span><span class="st"> &quot;Prison&quot;</span> <span class="op">|</span><span class="st"> </span></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="st">    </span>original_subset<span class="op">$</span>SENTENCE_TYPE <span class="op">==</span><span class="st"> &quot;Jail&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb9-6"><a href="#cb9-6"></a>original_subset<span class="op">$</span>counter_abovemedian &lt;-<span class="st"> </span><span class="kw">ifelse</span>(original_subset<span class="op">$</span>above_median <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span> <span class="op">&amp;</span><span class="st"> </span></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="st">    </span>original_subset<span class="op">$</span>counter_PJ <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb9-8"><a href="#cb9-8"></a>original_subset<span class="op">$</span>counter_F1 &lt;-<span class="st"> </span><span class="kw">ifelse</span>(original_subset<span class="op">$</span>DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> </span></span>
+<span id="cb9-9"><a href="#cb9-9"></a><span class="st">    </span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb9-10"><a href="#cb9-10"></a>original_subset<span class="op">$</span>counter_F2 &lt;-<span class="st"> </span><span class="kw">ifelse</span>(original_subset<span class="op">$</span>DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> </span></span>
+<span id="cb9-11"><a href="#cb9-11"></a><span class="st">    </span><span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb9-12"><a href="#cb9-12"></a>original_subset<span class="op">$</span>counter_F3 &lt;-<span class="st"> </span><span class="kw">ifelse</span>(original_subset<span class="op">$</span>DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> </span></span>
+<span id="cb9-13"><a href="#cb9-13"></a><span class="st">    </span><span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb9-14"><a href="#cb9-14"></a>original_subset<span class="op">$</span>counter_F4 &lt;-<span class="st"> </span><span class="kw">ifelse</span>(original_subset<span class="op">$</span>DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> </span></span>
+<span id="cb9-15"><a href="#cb9-15"></a><span class="st">    </span><span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb9-16"><a href="#cb9-16"></a>original_subset<span class="op">$</span>counter_F4_pj &lt;-<span class="st"> </span><span class="kw">ifelse</span>(original_subset<span class="op">$</span>DISPOSITION_CHARGED_CLASS <span class="op">==</span><span class="st"> </span></span>
+<span id="cb9-17"><a href="#cb9-17"></a><span class="st">    </span><span class="dv">4</span> <span class="op">&amp;</span><span class="st"> </span>original_subset<span class="op">$</span>SENTENCE_TYPE <span class="op">!=</span><span class="st"> &quot;Probation&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb9-18"><a href="#cb9-18"></a>judge_rankings &lt;-<span class="st"> </span><span class="kw">aggregate</span>(original_subset[<span class="dv">47</span><span class="op">:</span><span class="dv">54</span>], <span class="dt">by =</span> <span class="kw">list</span>(<span class="dt">judges =</span> original_subset<span class="op">$</span>SENTENCE_JUDGE), </span>
+<span id="cb9-19"><a href="#cb9-19"></a>    <span class="dt">FUN =</span> sum, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb9-20"><a href="#cb9-20"></a>judge_rankings &lt;-<span class="st"> </span><span class="kw">subset</span>(judge_rankings, judge_rankings<span class="op">$</span>counter <span class="op">&gt;=</span><span class="st"> </span><span class="dv">500</span>)</span>
+<span id="cb9-21"><a href="#cb9-21"></a>judge_rankings<span class="op">$</span>percentabove &lt;-<span class="st"> </span>judge_rankings<span class="op">$</span>counter_abovemedian<span class="op">/</span>judge_rankings<span class="op">$</span>counter_PJ</span>
+<span id="cb9-22"><a href="#cb9-22"></a>judge_rankings<span class="op">$</span>class4prisonpercent &lt;-<span class="st"> </span>judge_rankings<span class="op">$</span>counter_F4_pj<span class="op">/</span>judge_rankings<span class="op">$</span>counter_F4</span>
+<span id="cb9-23"><a href="#cb9-23"></a>judge_rankings<span class="op">$</span>severity_metric &lt;-<span class="st"> </span>(judge_rankings<span class="op">$</span>percentabove <span class="op">+</span><span class="st"> </span>judge_rankings<span class="op">$</span>class4prisonpercent)<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb9-24"><a href="#cb9-24"></a>judge_rankings_abb &lt;-<span class="st"> </span><span class="kw">data.frame</span>(judge_rankings<span class="op">$</span>judges, judge_rankings<span class="op">$</span>percentabove, </span>
+<span id="cb9-25"><a href="#cb9-25"></a>    judge_rankings<span class="op">$</span>class4prisonpercent, judge_rankings<span class="op">$</span>severity_metric)</span>
+<span id="cb9-26"><a href="#cb9-26"></a><span class="kw">colnames</span>(judge_rankings_abb) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Judges&quot;</span>, <span class="st">&quot;% prison/jail sentences above median&quot;</span>, </span>
+<span id="cb9-27"><a href="#cb9-27"></a>    <span class="st">&quot;% Class 4 felonies sentenced to prison/jail&quot;</span>, <span class="st">&quot;Severity metric&quot;</span>)</span>
+<span id="cb9-28"><a href="#cb9-28"></a>judge_rankings_abb &lt;-<span class="st"> </span><span class="kw">arrange</span>(judge_rankings_abb, <span class="kw">desc</span>(judge_rankings_abb<span class="op">$</span><span class="st">`</span><span class="dt">Severity metric</span><span class="st">`</span>))</span>
+<span id="cb9-29"><a href="#cb9-29"></a><span class="kw">write.csv</span>(judge_rankings_abb, <span class="st">&quot;judge_rankings.csv&quot;</span>)</span>
+<span id="cb9-30"><a href="#cb9-30"></a>retention_judges &lt;-<span class="st"> </span><span class="kw">subset</span>(judge_rankings_abb, Judges <span class="op">==</span><span class="st"> &quot;Shelley  Sutker-Dermer&quot;</span> <span class="op">|</span><span class="st"> </span></span>
+<span id="cb9-31"><a href="#cb9-31"></a><span class="st">    </span>Judges <span class="op">==</span><span class="st"> &quot;Kenneth J Wadas&quot;</span> <span class="op">|</span><span class="st"> </span>Judges <span class="op">==</span><span class="st"> &quot;Kerry M Kennedy&quot;</span> <span class="op">|</span><span class="st"> </span>Judges <span class="op">==</span><span class="st"> &quot;Araujo, Mauricio&quot;</span> <span class="op">|</span><span class="st"> </span></span>
+<span id="cb9-32"><a href="#cb9-32"></a><span class="st">    </span>Judges <span class="op">==</span><span class="st"> &quot;Byrne, Thomas&quot;</span> <span class="op">|</span><span class="st"> </span>Judges <span class="op">==</span><span class="st"> &quot;Anna Helen Demacopoulos&quot;</span> <span class="op">|</span><span class="st"> </span>Judges <span class="op">==</span><span class="st"> &quot;URSULA  WALOWSKI&quot;</span> <span class="op">|</span><span class="st"> </span></span>
+<span id="cb9-33"><a href="#cb9-33"></a><span class="st">    </span>Judges <span class="op">==</span><span class="st"> &quot;Steven G Watkins&quot;</span> <span class="op">|</span><span class="st"> </span>Judges <span class="op">==</span><span class="st"> &quot;William  Raines&quot;</span>)</span>
+<span id="cb9-34"><a href="#cb9-34"></a><span class="kw">stargazer</span>(retention_judges, <span class="dt">summary =</span> <span class="ot">FALSE</span>, <span class="dt">type =</span> <span class="st">&quot;html&quot;</span>, <span class="dt">out =</span> <span class="st">&quot;retention_judge_rankings.html&quot;</span>)</span></code></pre></div>
 <table style="text-align:center">
 <tr>
 <td colspan="5" style="border-bottom: 1px solid black">
@@ -1767,8 +1903,66 @@ Steven G Watkins
 </ol>
 <div id="regression-tables" class="section level2">
 <h2>Regression tables</h2>
-<p>png 2</p>
+<p>Code for regression tables is below.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>original_subset<span class="op">$</span>sentence_year.f &lt;-<span class="st"> </span><span class="kw">factor</span>(original_subset<span class="op">$</span>sentence_year)</span>
+<span id="cb10-2"><a href="#cb10-2"></a>original_subset<span class="op">$</span>boyle_dummy &lt;-<span class="st"> </span>original_subset<span class="op">$</span>SENTENCE_JUDGE <span class="op">==</span><span class="st"> &quot;Maura  Slattery Boyle&quot;</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a>original_subset<span class="op">$</span>walowski_dummy &lt;-<span class="st"> </span>original_subset<span class="op">$</span>SENTENCE_JUDGE <span class="op">==</span><span class="st"> &quot;URSULA  WALOWSKI&quot;</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a>original_subset<span class="op">$</span>araujo_dummy &lt;-<span class="st"> </span>original_subset<span class="op">$</span>SENTENCE_JUDGE <span class="op">==</span><span class="st"> &quot;Araujo, Mauricio&quot;</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a>original_subset<span class="op">$</span>byrne_dummy &lt;-<span class="st"> </span>original_subset<span class="op">$</span>SENTENCE_JUDGE <span class="op">==</span><span class="st"> &quot;Byrne, Thomas&quot;</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a>original_subset<span class="op">$</span>raines_dummy &lt;-<span class="st"> </span>original_subset<span class="op">$</span>SENTENCE_JUDGE <span class="op">==</span><span class="st"> &quot;William  Raines&quot;</span></span>
+<span id="cb10-7"><a href="#cb10-7"></a>original_subset<span class="op">$</span>severe_sentence &lt;-<span class="st"> </span>original_subset<span class="op">$</span>counter_abovemedian <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>original_subset<span class="op">$</span>counter_F4_pj <span class="op">==</span><span class="st"> </span></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="st">    </span><span class="dv">1</span></span>
+<span id="cb10-9"><a href="#cb10-9"></a></span>
+<span id="cb10-10"><a href="#cb10-10"></a>model_<span class="dv">1</span>_data &lt;-<span class="st"> </span><span class="kw">subset</span>(original_subset, counter_PJ <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</span>
+<span id="cb10-11"><a href="#cb10-11"></a>model_<span class="dv">2</span>_data &lt;-<span class="st"> </span><span class="kw">subset</span>(original_subset, counter_F4 <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</span>
+<span id="cb10-12"><a href="#cb10-12"></a>model_<span class="dv">3</span>_data &lt;-<span class="st"> </span>original_subset</span>
+<span id="cb10-13"><a href="#cb10-13"></a></span>
+<span id="cb10-14"><a href="#cb10-14"></a>boyle_reg_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(severe_sentence <span class="op">~</span><span class="st"> </span>boyle_dummy <span class="op">+</span><span class="st"> </span>sentence_date <span class="op">+</span><span class="st"> </span>sentence_year.f, </span>
+<span id="cb10-15"><a href="#cb10-15"></a>    <span class="dt">data =</span> model_<span class="dv">3</span>_data)</span>
+<span id="cb10-16"><a href="#cb10-16"></a></span>
+<span id="cb10-17"><a href="#cb10-17"></a><span class="kw">png</span>(<span class="dt">filename =</span> <span class="st">&quot;boyle_3_qq.png&quot;</span>, <span class="dt">width =</span> <span class="dv">1000</span>, <span class="dt">height =</span> <span class="dv">600</span>)</span>
+<span id="cb10-18"><a href="#cb10-18"></a><span class="kw">qqnorm</span>(<span class="kw">rstandard</span>(boyle_reg_<span class="dv">3</span>), <span class="dt">main =</span> <span class="st">&quot;QQPlot of regression residuals, Judge Boyle model 3&quot;</span>)</span>
+<span id="cb10-19"><a href="#cb10-19"></a><span class="kw">dev.off</span>()</span>
+<span id="cb10-20"><a href="#cb10-20"></a></span>
+<span id="cb10-21"><a href="#cb10-21"></a>reg_tables &lt;-<span class="st"> </span><span class="cf">function</span>(judge_dummy, ols_reg_table, logit_reg_table) {</span>
+<span id="cb10-22"><a href="#cb10-22"></a>    </span>
+<span id="cb10-23"><a href="#cb10-23"></a>    ols_reg_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">paste</span>(<span class="st">&quot;above_median ~ &quot;</span>, judge_dummy, <span class="st">&quot; + sentence_date + sentence_year.f&quot;</span>), </span>
+<span id="cb10-24"><a href="#cb10-24"></a>        <span class="dt">data =</span> model_<span class="dv">1</span>_data)</span>
+<span id="cb10-25"><a href="#cb10-25"></a>    cov &lt;-<span class="st"> </span><span class="kw">vcovHC</span>(ols_reg_<span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;HC&quot;</span>)</span>
+<span id="cb10-26"><a href="#cb10-26"></a>    ols_reg_<span class="dv">1</span>_robust.se &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">diag</span>(cov))</span>
+<span id="cb10-27"><a href="#cb10-27"></a>    ols_reg_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">paste</span>(<span class="st">&quot;counter_F4_pj ~ &quot;</span>, judge_dummy, <span class="st">&quot; + sentence_date + sentence_year.f&quot;</span>), </span>
+<span id="cb10-28"><a href="#cb10-28"></a>        <span class="dt">data =</span> model_<span class="dv">2</span>_data)</span>
+<span id="cb10-29"><a href="#cb10-29"></a>    cov &lt;-<span class="st"> </span><span class="kw">vcovHC</span>(ols_reg_<span class="dv">2</span>, <span class="dt">type =</span> <span class="st">&quot;HC&quot;</span>)</span>
+<span id="cb10-30"><a href="#cb10-30"></a>    ols_reg_<span class="dv">2</span>_robust.se &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">diag</span>(cov))</span>
+<span id="cb10-31"><a href="#cb10-31"></a>    ols_reg_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">paste</span>(<span class="st">&quot;severe_sentence ~ &quot;</span>, judge_dummy, <span class="st">&quot; + sentence_date + sentence_year.f&quot;</span>), </span>
+<span id="cb10-32"><a href="#cb10-32"></a>        <span class="dt">data =</span> model_<span class="dv">3</span>_data)</span>
+<span id="cb10-33"><a href="#cb10-33"></a>    cov &lt;-<span class="st"> </span><span class="kw">vcovHC</span>(ols_reg_<span class="dv">3</span>, <span class="dt">type =</span> <span class="st">&quot;HC&quot;</span>)</span>
+<span id="cb10-34"><a href="#cb10-34"></a>    ols_reg_<span class="dv">3</span>_robust.se &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">diag</span>(cov))</span>
+<span id="cb10-35"><a href="#cb10-35"></a>    </span>
+<span id="cb10-36"><a href="#cb10-36"></a>    <span class="kw">stargazer</span>(ols_reg_<span class="dv">1</span>, ols_reg_<span class="dv">2</span>, ols_reg_<span class="dv">3</span>, <span class="dt">dep.var.labels =</span> <span class="kw">c</span>(<span class="st">&quot;Above median sentence&quot;</span>, </span>
+<span id="cb10-37"><a href="#cb10-37"></a>        <span class="st">&quot;Class 4 prison sentence&quot;</span>, <span class="st">&quot;Severe sentence&quot;</span>), <span class="dt">se =</span> <span class="kw">list</span>(ols_reg_<span class="dv">1</span>_robust.se, </span>
+<span id="cb10-38"><a href="#cb10-38"></a>        ols_reg_<span class="dv">2</span>_robust.se, ols_reg_<span class="dv">3</span>_robust.se), <span class="dt">align =</span> <span class="ot">TRUE</span>, <span class="dt">type =</span> <span class="st">&quot;html&quot;</span>, <span class="dt">omit =</span> <span class="st">&quot;sentence_year.f&quot;</span>, </span>
+<span id="cb10-39"><a href="#cb10-39"></a>        <span class="dt">notes =</span> <span class="kw">c</span>(<span class="st">&quot;Also controlling for sentence year fixed effects&quot;</span>, <span class="st">&quot;Huber-White robust standard errors&quot;</span>), </span>
+<span id="cb10-40"><a href="#cb10-40"></a>        <span class="dt">omit.stat =</span> <span class="kw">c</span>(<span class="st">&quot;rsq&quot;</span>, <span class="st">&quot;f&quot;</span>, <span class="st">&quot;ser&quot;</span>), <span class="dt">title =</span> ols_reg_table, <span class="dt">out =</span> ols_reg_table)</span>
+<span id="cb10-41"><a href="#cb10-41"></a>    </span>
+<span id="cb10-42"><a href="#cb10-42"></a>    logit_reg_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">glm</span>(<span class="kw">paste</span>(<span class="st">&quot;above_median ~ &quot;</span>, judge_dummy, <span class="st">&quot; + sentence_date + sentence_year.f&quot;</span>), </span>
+<span id="cb10-43"><a href="#cb10-43"></a>        <span class="dt">data =</span> model_<span class="dv">1</span>_data)</span>
+<span id="cb10-44"><a href="#cb10-44"></a>    logit_reg_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">glm</span>(<span class="kw">paste</span>(<span class="st">&quot;counter_F4_pj ~ &quot;</span>, judge_dummy, <span class="st">&quot; + sentence_date + sentence_year.f&quot;</span>), </span>
+<span id="cb10-45"><a href="#cb10-45"></a>        <span class="dt">data =</span> model_<span class="dv">2</span>_data)</span>
+<span id="cb10-46"><a href="#cb10-46"></a>    logit_reg_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">glm</span>(<span class="kw">paste</span>(<span class="st">&quot;severe_sentence ~ &quot;</span>, judge_dummy, <span class="st">&quot; + sentence_date + sentence_year.f&quot;</span>), </span>
+<span id="cb10-47"><a href="#cb10-47"></a>        <span class="dt">data =</span> model_<span class="dv">3</span>_data)</span>
+<span id="cb10-48"><a href="#cb10-48"></a>    </span>
+<span id="cb10-49"><a href="#cb10-49"></a>    <span class="kw">stargazer</span>(logit_reg_<span class="dv">1</span>, logit_reg_<span class="dv">2</span>, logit_reg_<span class="dv">3</span>, <span class="dt">dep.var.labels =</span> <span class="kw">c</span>(<span class="st">&quot;Above median sentence&quot;</span>, </span>
+<span id="cb10-50"><a href="#cb10-50"></a>        <span class="st">&quot;Class 4 prison sentence&quot;</span>, <span class="st">&quot;Severe sentence&quot;</span>), <span class="dt">align =</span> <span class="ot">TRUE</span>, <span class="dt">type =</span> <span class="st">&quot;html&quot;</span>, </span>
+<span id="cb10-51"><a href="#cb10-51"></a>        <span class="dt">omit =</span> <span class="st">&quot;sentence_year.f&quot;</span>, <span class="dt">notes =</span> <span class="kw">c</span>(<span class="st">&quot;Also controlling for sentence year fixed effects&quot;</span>, </span>
+<span id="cb10-52"><a href="#cb10-52"></a>            <span class="st">&quot;Huber-White robust standard errors&quot;</span>), <span class="dt">omit.stat =</span> <span class="kw">c</span>(<span class="st">&quot;rsq&quot;</span>, <span class="st">&quot;f&quot;</span>, <span class="st">&quot;ser&quot;</span>), </span>
+<span id="cb10-53"><a href="#cb10-53"></a>        <span class="dt">title =</span> logit_reg_table, <span class="dt">out =</span> logit_reg_table)</span>
+<span id="cb10-54"><a href="#cb10-54"></a>}</span></code></pre></div>
+<p>Regression tables themselves are below.</p>
 <table style="text-align:center">
+<caption>
+<strong>boyle</strong>
+</caption>
 <tr>
 <td colspan="4" style="border-bottom: 1px solid black">
 </td>
@@ -1987,6 +2181,9 @@ Huber-White robust standard errors
 </tr>
 </table>
 <table style="text-align:center">
+<caption>
+<strong>boyle</strong>
+</caption>
 <tr>
 <td colspan="4" style="border-bottom: 1px solid black">
 </td>
@@ -2219,6 +2416,9 @@ Huber-White robust standard errors
 </tr>
 </table>
 <table style="text-align:center">
+<caption>
+<strong>walowski</strong>
+</caption>
 <tr>
 <td colspan="4" style="border-bottom: 1px solid black">
 </td>
@@ -2437,6 +2637,9 @@ Huber-White robust standard errors
 </tr>
 </table>
 <table style="text-align:center">
+<caption>
+<strong>walowski</strong>
+</caption>
 <tr>
 <td colspan="4" style="border-bottom: 1px solid black">
 </td>
@@ -2669,6 +2872,9 @@ Huber-White robust standard errors
 </tr>
 </table>
 <table style="text-align:center">
+<caption>
+<strong>araujo</strong>
+</caption>
 <tr>
 <td colspan="4" style="border-bottom: 1px solid black">
 </td>
@@ -2887,6 +3093,9 @@ Huber-White robust standard errors
 </tr>
 </table>
 <table style="text-align:center">
+<caption>
+<strong>araujo</strong>
+</caption>
 <tr>
 <td colspan="4" style="border-bottom: 1px solid black">
 </td>
@@ -3119,6 +3328,9 @@ Huber-White robust standard errors
 </tr>
 </table>
 <table style="text-align:center">
+<caption>
+<strong>byrne</strong>
+</caption>
 <tr>
 <td colspan="4" style="border-bottom: 1px solid black">
 </td>
@@ -3337,6 +3549,9 @@ Huber-White robust standard errors
 </tr>
 </table>
 <table style="text-align:center">
+<caption>
+<strong>byrne</strong>
+</caption>
 <tr>
 <td colspan="4" style="border-bottom: 1px solid black">
 </td>
@@ -3569,6 +3784,9 @@ Huber-White robust standard errors
 </tr>
 </table>
 <table style="text-align:center">
+<caption>
+<strong>raines</strong>
+</caption>
 <tr>
 <td colspan="4" style="border-bottom: 1px solid black">
 </td>
@@ -3787,6 +4005,9 @@ Huber-White robust standard errors
 </tr>
 </table>
 <table style="text-align:center">
+<caption>
+<strong>raines</strong>
+</caption>
 <tr>
 <td colspan="4" style="border-bottom: 1px solid black">
 </td>
@@ -4022,65 +4243,17 @@ Huber-White robust standard errors
 <div id="bootstrapping-regression" class="section level2">
 <h2>Bootstrapping regression</h2>
 <p>Now, I bootstrap one of my models (I’m not doing all of them because that would take ages, and I see this as more of a sanity check to see if the coefficients/standard errors are wildly different). I’m choosing the third column of Judge Maura Slattery Boyle’s regression table, and draw 5000 bootstrapped samples. The outputs are a summary of the coefficient, a plot of its distribution, and a confidence interval around it.</p>
-<p>png 2 BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS Based on 5000 bootstrap replicates</p>
-<p>CALL : boot.ci(boot.out = boyle_reg_3_boot, conf = 0.99, type = “perc”)</p>
-<p>Intervals : Level Percentile<br />
-99% ( 0.0679, 0.1157 )<br />
-Calculations and Intervals on Original Scale</p>
-<table style="text-align:center">
-<tr>
-<td colspan="6" style="border-bottom: 1px solid black">
-</td>
-</tr>
-<tr>
-<td style="text-align:left">
-</td>
-<td>
-R
-</td>
-<td>
-original
-</td>
-<td>
-bootBias
-</td>
-<td>
-bootSE
-</td>
-<td>
-bootMed
-</td>
-</tr>
-<tr>
-<td colspan="6" style="border-bottom: 1px solid black">
-</td>
-</tr>
-<tr>
-<td style="text-align:left">
-1
-</td>
-<td>
-5,000
-</td>
-<td>
-0.092
-</td>
-<td>
-0.0001
-</td>
-<td>
-0.009
-</td>
-<td>
-0.092
-</td>
-</tr>
-<tr>
-<td colspan="6" style="border-bottom: 1px solid black">
-</td>
-</tr>
-</table>
-<p>  I won’t replicate this bootstrap experiment with all the judges (I’ve put my laptop through enough) but I take this as a good sign that the sample size is mitigating the impacts of our wonky residuals, and therefore our coefficients for all models are pretty robust.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># set.seed(123) boot_data &lt;- model.matrix( ~ severe_sentence + boyle_dummy +</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="co"># sentence_year.f, data = model_3_data) boot_data &lt;- as.data.frame(boot_data)</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="co"># rm(list=setdiff(ls(), &#39;boot_data&#39;)) #clearing workspace bs &lt;- function(formula,</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="co"># data, indices) { d &lt;- data[indices,] # allows boot to select sample fit &lt;-</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="co"># lm(formula, data=d) return(summary(fit)$coefficients[2]) } boyle_reg_3_boot &lt;-</span></span>
+<span id="cb11-6"><a href="#cb11-6"></a><span class="co"># boot(data = boot_data, statistic = bs, R = 5000, formula=severe_sentenceTRUE ~</span></span>
+<span id="cb11-7"><a href="#cb11-7"></a><span class="co"># boyle_dummyTRUE + .)  png(file = &#39;bootstrap_graphs.png&#39;, width = 1200, height =</span></span>
+<span id="cb11-8"><a href="#cb11-8"></a><span class="co"># 700) plot(boyle_reg_3_boot) dev.off() boot.ci(boyle_reg_3_boot, type=&#39;perc&#39;,</span></span>
+<span id="cb11-9"><a href="#cb11-9"></a><span class="co"># conf=.99) stargazer(summary(boyle_reg_3_boot), summary = FALSE, type = &#39;html&#39;,</span></span>
+<span id="cb11-10"><a href="#cb11-10"></a><span class="co"># out = &#39;slattery_boyle_boot.html&#39;)</span></span></code></pre></div>
+<p>I won’t replicate this bootstrap experiment with all the judges (I’ve put my laptop through enough) but I take this as a good sign that the sample size is mitigating the impacts of our wonky residuals, and therefore our coefficients for all models are pretty robust.</p>
 </div>
 </div>
 <div id="conclusion" class="section level1">

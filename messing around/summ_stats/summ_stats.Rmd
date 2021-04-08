@@ -15,17 +15,6 @@ output:
     keep_md: false
     keep_tex: false ## Change to true if want keep intermediate .tex file
     css: css/preamble.css ## For multi-col environments
-  pdf_document:
-    latex_engine: xelatex
-    toc: true
-    dev: cairo_pdf
-    # fig_width: 7 ## Optional: Set default PDF figure width
-    # fig_height: 6 ## Optional: Set default PDF figure height
-    includes:
-      in_header: tex/preamble.tex ## For multi-col environments
-      extra_dependencies: ["float", "booktabs", "longtable"]
-    pandoc_args:
-        --template=tex/mytemplate.tex ## For affiliation field. See: https://bit.ly/2T191uZ
 always_allow_html: true
 urlcolor: blue
 mainfont: cochineal
@@ -101,7 +90,7 @@ Distribution statistics and histograms for "num_projects" (i.e. the number of di
 #var1_data = dbGetQuery(bq_con, var1_query)
 #write.csv(var1_data, "./data/var1_data.csv")
 ```
-```{r}
+```{r, warning=FALSE, message=FALSE}
 var1_data = read.csv("./data/var1_data.csv")
 summary(var1_data$num_projects)
 var1_data$week.f = factor(var1_data$week)

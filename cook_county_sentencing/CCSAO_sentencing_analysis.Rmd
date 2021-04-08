@@ -15,17 +15,6 @@ output:
     keep_md: false
     keep_tex: false ## Change to true if want keep intermediate .tex file
     css: css/preamble.css ## For multi-col environments
-  pdf_document:
-    latex_engine: xelatex
-    toc: true
-    dev: cairo_pdf
-    # fig_width: 7 ## Optional: Set default PDF figure width
-    # fig_height: 6 ## Optional: Set default PDF figure height
-    includes:
-      in_header: tex/preamble.tex ## For multi-col environments
-      extra_dependencies: ["float", "booktabs", "longtable"]
-    pandoc_args:
-        --template=tex/mytemplate.tex ## For affiliation field. See: https://bit.ly/2T191uZ
 always_allow_html: true
 urlcolor: blue
 mainfont: cochineal
@@ -39,7 +28,7 @@ knit: (function(inputFile, encoding) {
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
 library(mosaic)
 library(readr)
 library(formatR)
@@ -59,7 +48,7 @@ What follows is the methodology for my sentencing analysis on Cook County Crimin
 # Reading in Data/Converting Sentence Term
 
 We'll start by reading in our sentencing [data](https://datacatalog.cookcountyil.gov/Courts/Sentencing/tg8v-tm6u). We'll then create a conversion table to standardize our units (i.e. years=1, months=1/12, weeks=1/52, days=1/365, all other units are left undefined but the rows are kept). We'll then convert our sentence (i.e. 6 months=.5), and store it under a new variable, "converted_sentence".
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+```{r, tidy=TRUE, results=FALSE, warning=FALSE, message=FALSE}
 original <- read_csv("https://datacatalog.cookcountyil.gov/api/views/tg8v-tm6u/rows.csv?accessType=DOWNLOAD")
 conversion_table <- revalue(original$COMMITMENT_UNIT, c("Year(s)"=1, "Months"=1/12, "Weeks"=1/52, "Days"=1/365, "Pounds"=NA, "Dollars"=NA, "Term"=NA))
 conversion_table <- as.double(conversion_table)
@@ -74,7 +63,7 @@ We'll now create a series of subsets, to find median sentences. We're going to c
 
 We're also going to create further subsets (PJ) for sentences to Prison or Jail. We'll use these to find median sentences; while it eliminates a good chunk of our cases (~41%), you have to do this to get an accurate read on median sentence time. Otherwise, a two year probation will skew our median, since that will be considered harsher than a one year prison sentence. 
 
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+```{r, tidy=TRUE}
 CLASS_1 <- subset(original, DISPOSITION_CHARGED_CLASS=="1")
 CLASS_2 <- subset(original, DISPOSITION_CHARGED_CLASS=="2")
 CLASS_3 <- subset(original, DISPOSITION_CHARGED_CLASS=="3")
@@ -91,6 +80,8 @@ median_2 <- median(CLASS_2_PJ$converted_sentence, na.rm=TRUE)
 median_3 <- median(CLASS_3_PJ$converted_sentence, na.rm=TRUE)
 median_4 <- median(CLASS_4_PJ$converted_sentence, na.rm=TRUE)
 median_X <- median(CLASS_X_PJ$converted_sentence, na.rm=TRUE)
+```
+```{r, echo=FALSE}
 median_1 
 median_2 
 median_3 
@@ -103,7 +94,7 @@ The outputs are our median prison sentences by felony class.
 
 Now we construct our ranking of Criminal Division judges by sentence severity. First we're going to create a subset of our original which solely includes felonies of class 1, 2, 3, 4, and X (which is the vast majority of entries). Then we're going to create a boolean for whether the charge resulted in prison time, and if so, whether that prison sentence was above the median.
 
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+```{r, tidy=TRUE}
 original_subset <- subset(original, DISPOSITION_CHARGED_CLASS=="1" | DISPOSITION_CHARGED_CLASS=="2" | DISPOSITION_CHARGED_CLASS=="3" | DISPOSITION_CHARGED_CLASS=="4" | DISPOSITION_CHARGED_CLASS=="X")
 conversion_table2 <- revalue(original_subset$SENTENCE_TYPE, c("Prison"=TRUE, "Jail"=TRUE))
 original_subset["PJ"]=conversion_table2
@@ -124,7 +115,7 @@ Now we are ready to make our ranking. We'll create a counter (a simple boolean, 
 
 Then we'll aggregate our counters by judge (i.e. sum each counter, grouped by the sentencing judge), and calculate the percent of prison sentences above the median/the percent of class 4 felony sentences resulting in prison time. We'll average it to create our severity metric. I drop all judges who have served on less than 500 case (I like to deal in large sample sizes; the outcomes for judges who haven't served on many cases could be misleading). From there I just abbreviated the list and ordered it to make it tidy. I export the full list of 90 judges, ranked, to judge_rankings.csv. I also display the judges included in the list who are on the ballot for retention November 3rd, with their relative rank within the list of 90 judges by my "severity metric".  
 
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60), results = "asis"}
+```{r, tidy=TRUE, results = "asis"}
 original_subset<-subset(original_subset, original_subset$SENTENCE_TYPE=="Prison"|original_subset$SENTENCE_TYPE=="Jail"|original_subset$SENTENCE_TYPE=="Probation")
 original_subset$counter<-1
 original_subset$counter_PJ<-ifelse(original_subset$SENTENCE_TYPE=="Prison" | original_subset$SENTENCE_TYPE=="Jail", 1, 0)
@@ -165,7 +156,8 @@ So, below I have five OLS regression tables and five logit regression tables for
 
 ## Regression tables
 
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60), results="asis"}
+Code for regression tables is below. 
+```{r, tidy=TRUE, results=FALSE}
 original_subset$sentence_year.f <- factor(original_subset$sentence_year)
 original_subset$boyle_dummy <- original_subset$SENTENCE_JUDGE == "Maura  Slattery Boyle"
 original_subset$walowski_dummy <- original_subset$SENTENCE_JUDGE == "URSULA  WALOWSKI"
@@ -196,19 +188,28 @@ reg_tables <- function(judge_dummy, ols_reg_table, logit_reg_table) {
   cov <- vcovHC(ols_reg_3, type = "HC") 
   ols_reg_3_robust.se <- sqrt(diag(cov)) 
   
-  stargazer(ols_reg_1, ols_reg_2, ols_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), se = list(ols_reg_1_robust.se, ols_reg_2_robust.se, ols_reg_3_robust.se), align=TRUE, type = "html", omit = "sentence_year.f", notes = c("Also controlling for sentence year fixed effects", "Huber-White robust standard errors"), omit.stat = c("rsq", "f", "ser"), out = ols_reg_table)
+  stargazer(ols_reg_1, ols_reg_2, ols_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), se = list(ols_reg_1_robust.se, ols_reg_2_robust.se, ols_reg_3_robust.se), align=TRUE, type = "html", omit = "sentence_year.f", notes = c("Also controlling for sentence year fixed effects", "Huber-White robust standard errors"), omit.stat = c("rsq", "f", "ser"), 
+            title = ols_reg_table , out = ols_reg_table)
   
   logit_reg_1 <- glm(paste("above_median ~ ", judge_dummy, " + sentence_date + sentence_year.f"), data = model_1_data)
   logit_reg_2 <- glm(paste("counter_F4_pj ~ ", judge_dummy, " + sentence_date + sentence_year.f"), data = model_2_data)
   logit_reg_3 <- glm(paste("severe_sentence ~ ", judge_dummy, " + sentence_date + sentence_year.f"), data = model_3_data)
   
-  stargazer(logit_reg_1, logit_reg_2, logit_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), align=TRUE, type = "html", omit = "sentence_year.f", notes = c("Also controlling for sentence year fixed effects", "Huber-White robust standard errors"), omit.stat = c("rsq", "f", "ser"), out = logit_reg_table)
+  stargazer(logit_reg_1, logit_reg_2, logit_reg_3, dep.var.labels=c("Above median sentence","Class 4 prison sentence", "Severe sentence"), align=TRUE, type = "html", omit = "sentence_year.f", notes = c("Also controlling for sentence year fixed effects", "Huber-White robust standard errors"), omit.stat = c("rsq", "f", "ser"), 
+            title = logit_reg_table, out = logit_reg_table)
 } 
+```
 
+Regression tables themselves are below.
+```{r, echo = FALSE, results="asis"}
 reg_tables("boyle_dummy", "boyle_ols.html", "boyle_logit.html")
+
 reg_tables("walowski_dummy", "walowski_ols.html", "walowski_logit.html")
+
 reg_tables("araujo_dummy", "araujo_ols.html", "araujo_logit.html")
+
 reg_tables("byrne_dummy", "byrne_ols.html", "byrne_logit.html")
+
 reg_tables("raines_dummy", "raines_ols.html", "raines_logit.html")
 ```
 
@@ -217,30 +218,30 @@ reg_tables("raines_dummy", "raines_ols.html", "raines_logit.html")
 Now, I bootstrap one of my models (I'm not doing all of them because that would take ages, and I see this as more of a sanity check to see if the coefficients/standard errors are wildly different). I'm choosing the third column of Judge Maura Slattery Boyle's regression table, and draw 5000 bootstrapped samples. The outputs are a summary of the coefficient, a plot of its distribution, and a confidence interval around it. 
 
 
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60), results="asis"}
+```{r, tidy=TRUE, results="asis"}
 
-set.seed(123)
-
-boot_data <- model.matrix( ~ severe_sentence + boyle_dummy + sentence_year.f, data = model_3_data)
-boot_data <- as.data.frame(boot_data)
-rm(list=setdiff(ls(), "boot_data")) #clearing workspace
-
-bs <- function(formula, data, indices) {
-  d <- data[indices,] # allows boot to select sample 
-  fit <- lm(formula, data=d)
-  return(summary(fit)$coefficients[2]) 
-} 
-
-boyle_reg_3_boot <- boot(data = boot_data, statistic = bs, R = 5000, formula=severe_sentenceTRUE ~ boyle_dummyTRUE + .)
-
-png(file = "bootstrap_graphs.png", width = 1200, height = 700)
-plot(boyle_reg_3_boot)
-dev.off()
-
-boot.ci(boyle_reg_3_boot, type="perc", conf=.99)
-stargazer(summary(boyle_reg_3_boot), summary = FALSE, type = "html", out = "slattery_boyle_boot.html")
+# set.seed(123)
+# 
+# boot_data <- model.matrix( ~ severe_sentence + boyle_dummy + sentence_year.f, data = model_3_data)
+# boot_data <- as.data.frame(boot_data)
+# rm(list=setdiff(ls(), "boot_data")) #clearing workspace
+# 
+# bs <- function(formula, data, indices) {
+#   d <- data[indices,] # allows boot to select sample 
+#   fit <- lm(formula, data=d)
+#   return(summary(fit)$coefficients[2]) 
+# } 
+# 
+# boyle_reg_3_boot <- boot(data = boot_data, statistic = bs, R = 5000, formula=severe_sentenceTRUE ~ boyle_dummyTRUE + .)
+# 
+# png(file = "bootstrap_graphs.png", width = 1200, height = 700)
+# plot(boyle_reg_3_boot)
+# dev.off()
+# 
+# boot.ci(boyle_reg_3_boot, type="perc", conf=.99)
+# stargazer(summary(boyle_reg_3_boot), summary = FALSE, type = "html", out = "slattery_boyle_boot.html")
 ```
-\  
+
 I won't replicate this bootstrap experiment with all the judges (I've put my laptop through enough) but I take this as a good sign that the sample size is mitigating the impacts of our wonky residuals, and therefore our coefficients for all models are pretty robust. 
 
 # Conclusion 
