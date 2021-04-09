@@ -148,3 +148,38 @@ get_mult_team = function(x, y, z){
 test = var2_data_sub[c(1:10),]
 test2 = mapply(get_mult_team, x = test$author_id, y = test$week, z = test$project_id)
 ```
+
+# Variable 3: Number of new teams joined
+Our third variable is number of new teams joined (unit of observation is person-year). This is a measure of being on multiple teams serially. The query itself can be seen below. **NOTE: I don't limit my pull this time, because our unit of observation makes the data manageable**. 
+```{r}
+var3_query =
+  glue_sql(
+    "
+    SELECT follower_id, EXTRACT(YEAR FROM date(created_at)) as year, COUNT(DISTINCT user_id) as num_projects   
+    FROM `ghtorrent-bq.ght.followers` 
+    group by follower_id, EXTRACT(YEAR FROM date(created_at))
+
+    "
+  )
+print(var3_query)
+```
+I pull and store this data as a CSV. Distribution statistics and histograms for "num_projects" (i.e. the number of new projects a user worked on in a given year; unit of observation is person-year) can be seen below.
+```{r, include = FALSE}
+#pulling down the data (commented out since once I store it as a CSV I pull from that to avoid recharging Google BigQuery)
+# var3_data = dbGetQuery(bq_con, var3_query)
+# write.csv(var3_data, "./data/var3_data.csv")
+```
+```{r, warning=FALSE, message=FALSE}
+var3_data = read.csv("./data/var3_data.csv")
+summary(var3_data$num_projects)
+var3_data$year.f = factor(var3_data$year)
+var3_data %>% 
+  ggplot(aes(x = num_projects, color = year.f)) +
+  geom_histogram(position = "identity", alpha = 0.5, fill = "white") + 
+  xlim(0, 5) + labs(title = "Distribution of new projects worked on (1-5)", x = "Number of distinct projects worked on (by person-year)")
+
+var3_data %>% 
+  ggplot(aes(x = num_projects, color = year.f)) +
+  geom_histogram(position = "identity", alpha = 0.5, fill = "white") + 
+  xlim(10, 250) + labs(title = "Distribution of new projects worked on (10-1000)", x = "Number of distinct projects worked on (by person-year)")
+```
