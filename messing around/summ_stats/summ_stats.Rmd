@@ -44,7 +44,7 @@ knitr::knit_hooks$set(
 # Intro
 This doc has the code and results for each variable outlined [here](https://docs.google.com/spreadsheets/d/1c49ib2oDodITWm66JfoQ4nshZbZ-YrHiZI8S4D1esHE/edit#gid=0). Results are being stored as CSVs for now (presumably we'll have a different file management system in place; this is just a placeholder). In addition, graphs/summary statistics are included for each variable. 
 
-Each section is dedicated to a specific variable. I include the SQL query used, so it's easy to see if/where I'm making mistakes. *All queries are currently limited to January, 2015* (this is easily expandable, just limiting them for now). Details regarding my connection to Google BigQuery can be seen below.
+Each section is dedicated to a specific variable. I include the SQL query used, so it's easy to see if/where I'm making mistakes. **All queries are currently limited to January, 2015** (this is easily expandable, just limiting them for now). Details regarding my connection to Google BigQuery can be seen below.
 
 ```{r}
 #adding libraries
@@ -67,8 +67,8 @@ bq_con =
 bq_con
 ```
 
-# Variable 1: Number of distinct teams working on
-Our first variable is the "number of distinct teams working on", observed at the person-week level, to measure being on multiple teams simultaneously. The query itself can be seen below.
+# Variable 1: Number of distinct projects working on
+Our first variable is the "number of distinct projects working on", observed at the person-week level, to measure being on multiple projects simultaneously. The query itself can be seen below.
 ```{r}
 var1_query =
   glue_sql(
@@ -84,11 +84,11 @@ var1_query =
 print(var1_query)
 ```
 
-Distribution statistics and histograms for "num_projects" (i.e. the number of distinct projects a user worked on in a given week; unit of observation is person-week) can be seen below.
+I pull and store this data as a CSV. Distribution statistics and histograms for "num_projects" (i.e. the number of distinct projects a user worked on in a given week; unit of observation is person-week) can be seen below.
 ```{r, include=FALSE}
 #pulling down the data (commented out since once I store it as a CSV I pull from that to avoid recharging Google BigQuery)
-#var1_data = dbGetQuery(bq_con, var1_query)
-#write.csv(var1_data, "./data/var1_data.csv")
+var1_data = dbGetQuery(bq_con, var1_query)
+write.csv(var1_data, "./data/var1_data.csv")
 ```
 ```{r, warning=FALSE, message=FALSE}
 var1_data = read.csv("./data/var1_data.csv")
@@ -105,3 +105,46 @@ var1_data %>%
   xlim(10, 100) + labs(title = "Distribution of distinct projects worked on (10-100)", x = "Number of distinct projects worked on (by person-week)")
 ```
 
+# Variable 2: percent of team members for which this is only team we share
+Our second variable is the percent of project members for which this is the only project they share (unit of observation is person-project-week). This is a measure of how disconnected the projects are. I first query person-project-week combinations, with counts of the number of distinct projects they worked on that week. The query can be seen below. 
+
+```{r}
+var2_query =
+  glue_sql(
+    "
+      SELECT DISTINCT author_id, project_id, EXTRACT(WEEK FROM date(created_at)) as week
+      FROM `ghtorrent-bq.ght.commits`
+      WHERE EXTRACT(YEAR FROM date(created_at)) = 2015 AND EXTRACT(MONTH FROM date(created_at)) = 1 
+      GROUP BY author_id, project_id, EXTRACT(WEEK FROM date(created_at)) 
+
+
+    "
+  )
+print(var2_query)
+```
+
+I pull and store this data as a CSV. I then subset the data to only include observations with num_projects >= 2, then lapply a function to create dummy variables for whether the observation (person-project-week) represents the only project shared by co-editors. **Flagging because I need some help here; I believe I've written a function that satisfies what we want, but it would take forever to run (I run it over only ten observations now and it takes a second; given that it increases linearly, it's unfeasible to run this over the 1.1 million observations we have from January 2015)**. 
+
+```{r}
+#pulling down the data (commented out since once I store it as a CSV I pull from that to avoid recharging Google BigQuery)
+# var2_data = dbGetQuery(bq_con, var2_query)
+# write.csv(var2_data, "./data/var2_data.csv")
+```
+```{r, echo = TRUE}
+var2_data = read.csv("./data/var2_data.csv")
+var2_data = merge(var1_data, var2_data, by = c("author_id", "week"))
+var2_data_sub = subset(var2_data, num_projects > 1)
+
+get_mult_team = function(x, y, z){
+  author_list1 = subset(var2_data_sub, week == y & project_id == z)
+  author_list1 = subset(author_list1, author_list1 != x)
+  proj_list = subset(var2_data_sub, author_id == x & week == y)$project_id
+  proj_list = subset(proj_list, proj_list != z)
+  author_list2 = subset(var2_data_sub, project_id %in% proj_list & week == y)$author_id
+  author_list2 = subset(author_list2, author_list2 != x)
+  return(ifelse(sum(author_list1 %in% author_list2) > 0, 1, 0))
+}
+
+test = var2_data_sub[c(1:10),]
+test2 = mapply(get_mult_team, x = test$author_id, y = test$week, z = test$project_id)
+```
