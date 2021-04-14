@@ -181,5 +181,46 @@ var3_data %>%
 var3_data %>% 
   ggplot(aes(x = num_projects, color = year.f)) +
   geom_histogram(position = "identity", alpha = 0.5, fill = "white") + 
-  xlim(10, 250) + labs(title = "Distribution of new projects worked on (10-1000)", x = "Number of distinct projects worked on (by person-year)")
+  xlim(10, 250) + labs(title = "Distribution of new projects worked on (10-250)", x = "Number of distinct projects worked on (by person-year)")
+```
+
+# Variable 4: Number of distinct authors working on project in given hour
+Our fourth variable is number of distinct authors working on project in given hour (unit of observation is project-hour). This is a measure of how much work is synchronous. The query itself can be seen below.  
+```{r}
+var4_query =
+  glue_sql(
+    "
+    SELECT project_id, EXTRACT(WEEK from created_at) as week, EXTRACT(DAY from created_at) as day, EXTRACT(HOUR from created_at) as hour, COUNT(DISTINCT author_id) as num_authors  
+    FROM `ghtorrent-bq.ght.commits`
+    WHERE EXTRACT(YEAR FROM date(created_at)) = 2015 AND EXTRACT(MONTH FROM date(created_at)) = 1
+    group by project_id, EXTRACT(WEEK from created_at), EXTRACT(DAY FROM created_at), EXTRACT(HOUR FROM created_at)
+
+    "
+  )
+print(var4_query)
+```
+I pull and store this data as a CSV. Distribution statistics and histograms for "num_projects" (i.e. the number of new projects a user worked on in a given year; unit of observation is person-year) can be seen below.
+```{r, include = FALSE}
+#pulling down the data (commented out since once I store it as a CSV I pull from that to avoid recharging Google BigQuery)
+# var4_data = dbGetQuery(bq_con, var4_query)
+# write.csv(var4_data, "./data/var4_data.csv")
+var4_data = dbGetQuery(bq_con, var4_query)
+```
+```{r, warning=FALSE, message=FALSE}
+summary(var4_data$num_authors)
+number = sum(var4_data$num_authors > 1)
+percent = sum(var4_data$num_authors > 1)/nrow(var4_data)
+print(paste("Number of synchronous project hours:", number, sep = " "))
+print(paste("Percent of project hours synchronous:", percent, sep = " "))
+
+var4_data$week.f = factor(var4_data$week)
+var4_data %>% 
+  ggplot(aes(x = num_authors, color = week.f)) +
+  geom_histogram(position = "identity", alpha = 0.5, fill = "white") + 
+  xlim(0, 5) + labs(title = "Distribution of syhcronous work (by project-hour)", x = "Number of distinct authors working on project in an hour (0-5)")
+
+var4_data %>% 
+  ggplot(aes(x = num_authors, color = week.f)) +
+  geom_histogram(position = "identity", alpha = 0.5, fill = "white") + 
+  xlim(10, 100) + labs(title = "Distribution of syhcronous work (by project-hour)", x = "Number of distinct authors working on project in an hour (10-100)")
 ```
