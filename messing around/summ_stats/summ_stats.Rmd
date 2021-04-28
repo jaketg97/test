@@ -49,7 +49,7 @@ Each section is dedicated to a specific variable. I include the SQL query used, 
 ```{r}
 #adding libraries
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse, DBI, duckdb, bigrquery, hrbrthemes, nycflights13, glue)
+pacman::p_load(tidyverse, DBI, duckdb, bigrquery, hrbrthemes, nycflights13, glue, Hmisc)
 ## My preferred ggplot2 theme (optional)
 theme_set(hrbrthemes::theme_ipsum())
 
@@ -92,7 +92,7 @@ write.csv(var1_data, "./data/var1_data.csv")
 ```
 ```{r, warning=FALSE, message=FALSE}
 var1_data = read.csv("./data/var1_data.csv")
-summary(var1_data$num_projects)
+describe(var1_data$num_projects)
 var1_data$week.f = factor(var1_data$week)
 var1_data %>% 
   ggplot(aes(x = num_projects, color = week.f)) +
@@ -171,7 +171,7 @@ I pull and store this data as a CSV. Distribution statistics and histograms for 
 ```
 ```{r, warning=FALSE, message=FALSE}
 var3_data = read.csv("./data/var3_data.csv")
-summary(var3_data$num_projects)
+describe(var3_data$num_projects)
 var3_data$year.f = factor(var3_data$year)
 var3_data %>% 
   ggplot(aes(x = num_projects, color = year.f)) +
@@ -207,7 +207,7 @@ I pull and store this data as a CSV. Distribution statistics and histograms for 
 var4_data = dbGetQuery(bq_con, var4_query)
 ```
 ```{r, warning=FALSE, message=FALSE}
-summary(var4_data$num_authors)
+describe(var4_data$num_authors)
 number = sum(var4_data$num_authors > 1)
 percent = sum(var4_data$num_authors > 1)/nrow(var4_data)
 print(paste("Number of synchronous project hours:", number, sep = " "))
@@ -223,4 +223,36 @@ var4_data %>%
   ggplot(aes(x = num_authors, color = week.f)) +
   geom_histogram(position = "identity", alpha = 0.5, fill = "white") + 
   xlim(10, 100) + labs(title = "Distribution of syhcronous work (by project-hour)", x = "Number of distinct authors working on project in an hour (10-100)")
+```
+
+# Variable 5: Share of team members who joined partway through
+Our fifth variable is number of distinct authors working on project who joined after the project was originally created. This is a measure of variation in team composition within its lifetime.  
+```{r}
+var5_query =
+  glue_sql(
+    "
+    SELECT repo_id, COUNT(DISTINCT user_id) as project_members, COUNT(DISTINCT date(created_at)) as late_additions 
+    FROM `ghtorrent-bq.ght.project_members` 
+    WHERE EXTRACT(YEAR FROM date(created_at)) = 2015
+    group by repo_id
+
+    "
+  )
+print(var5_query)
+```
+I pull and store this data as a CSV. Distribution statistics and histograms for "num_projects" (i.e. the number of new projects a user worked on in a given year; unit of observation is person-year) can be seen below.
+```{r, include = FALSE}
+#pulling down the data (commented out since once I store it as a CSV I pull from that to avoid recharging Google BigQuery)
+# var5_data = dbGetQuery(bq_con, var5_query)
+# write.csv(var5_data, "./data/var5_data.csv")
+```
+```{r, warning=FALSE, message=FALSE}
+var5_data = read.csv("./data/var5_data.csv")
+var5_data$perc_late = var5_data$late_additions/var5_data$project_members
+describe(var5_data$perc_late)
+
+var5_data %>% 
+  ggplot(aes(x = perc_late)) +
+  geom_histogram(position = "identity", alpha = 0.5) + 
+  xlim(0,1) + labs(title = "Distribution of ``late addition'' project percentage", x = "Percent of project members added after project creation date")
 ```
