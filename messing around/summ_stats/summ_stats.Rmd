@@ -42,9 +42,9 @@ knitr::knit_hooks$set(
 ```
 
 # Intro
-This doc has the code and results for each variable outlined [here](https://docs.google.com/spreadsheets/d/1c49ib2oDodITWm66JfoQ4nshZbZ-YrHiZI8S4D1esHE/edit#gid=0). Results are being stored as CSVs for now (presumably we'll have a different file management system in place; this is just a placeholder). In addition, graphs/summary statistics are included for each variable. 
+This doc has the code and results for each variable outlined [here](https://docs.google.com/spreadsheets/d/1c49ib2oDodITWm66JfoQ4nshZbZ-YrHiZI8S4D1esHE/edit#gid=0). 
 
-Each section is dedicated to a specific variable. I include the SQL query used, so it's easy to see if/where I'm making mistakes. **All queries are currently limited to January, 2015** (this is easily expandable, just limiting them for now). Details regarding my connection to Google BigQuery can be seen below.
+Each section is dedicated to a specific variable. For each section, I have run the printed query in Google BigQuery and stored the resulting dataset on GCP under mcd-lab/work_culture. For descriptive statistics and graphs, I pull 10000 observations from each dataset (limiting to prevent RStudio from crashing, most of these datasets are >1 million rows). Details regarding my connection to Google BigQuery can be seen below.
 
 ```{r}
 #adding libraries
@@ -68,15 +68,13 @@ bq_con
 ```
 
 # Variable 1: Number of distinct projects working on
-Our first variable is the "number of distinct projects working on", observed at the person-week level, to measure being on multiple projects simultaneously. The query itself can be seen below.
+Our first variable is the "number of distinct projects working on", observed at the person-week level, to measure being on multiple projects simultaneously. The query itself can be seen below; the resulting dataset is on GCP "mcd-lab/work_culture/var1_data".
 ```{r}
 var1_query =
   glue_sql(
     "
-    SELECT author_id, EXTRACT(WEEK FROM date(created_at)) as week, COUNT(DISTINCT project_id) as num_projects  
-    FROM `ghtorrent-bq.ght.commits`
-    WHERE EXTRACT(YEAR FROM date(created_at)) = 2015 AND EXTRACT(MONTH FROM date(created_at)) = 1
-    group by author_id, EXTRACT(WEEK FROM date(created_at))
+    SELECT author_id, CONCAT(EXTRACT(WEEK FROM date(created_at)), EXTRACT(WEEK FROM date(created_at))) as week_year, COUNT(DISTINCT project_id) as num_projects FROM `ghtorrent-bq.ght.commits`
+    group by author_id, CONCAT(EXTRACT(WEEK FROM date(created_at)), EXTRACT(WEEK FROM date(created_at)))
 
     
     "
@@ -84,56 +82,53 @@ var1_query =
 print(var1_query)
 ```
 
-I pull and store this data as a CSV. Distribution statistics and histograms for "num_projects" (i.e. the number of distinct projects a user worked on in a given week; unit of observation is person-week) can be seen below.
-```{r, include=FALSE}
-#pulling down the data (commented out since once I store it as a CSV I pull from that to avoid recharging Google BigQuery)
-var1_data = dbGetQuery(bq_con, var1_query)
-write.csv(var1_data, "./data/var1_data.csv")
-```
+I pull means of variable one by week-year (resulting in 3510 observations), and graph/summarize the results below.
 ```{r, warning=FALSE, message=FALSE}
-var1_data = read.csv("./data/var1_data.csv")
-describe(var1_data$num_projects)
-var1_data$week.f = factor(var1_data$week)
-var1_data %>% 
-  ggplot(aes(x = num_projects, color = week.f)) +
-  geom_histogram(position = "identity", alpha = 0.5, fill = "white") + 
-  xlim(0, 5) + labs(title = "Distribution of distinct projects worked on (1-5)", x = "Number of distinct projects worked on (by person-week)")
+#pulling down the data (commented out since once I store it as a CSV I pull from that to avoid recharging Google BigQuery)
+var1_desc =
+  glue_sql(
+    "
+    SELECT week_year, AVG(num_projects) as week_year_mean 
+    FROM `mcd-lab.work_culture.var1_data` 
+    group by week_year
+    
+    
+    "
+  )
+var1_data = dbGetQuery(bq_con, var1_desc)
 
+describe(var1_data$week_year_mean)
 var1_data %>% 
-  ggplot(aes(x = num_projects, color = week.f)) +
-  geom_histogram(position = "identity", alpha = 0.5, fill = "white") + 
-  xlim(10, 100) + labs(title = "Distribution of distinct projects worked on (10-100)", x = "Number of distinct projects worked on (by person-week)")
+  ggplot(aes(x = week_year_mean)) +
+  geom_histogram(position = "identity", alpha = 0.5) + 
+  labs(title = "Distribution of distinct projects worked on", x = "Number of distinct projects worked on (by year-week)")
+
 ```
 
 # Variable 2: percent of team members for which this is only team we share
-Our second variable is the percent of project members for which this is the only project they share (unit of observation is person-project-week). This is a measure of how disconnected the projects are. I first query person-project-week combinations, with counts of the number of distinct projects they worked on that week. The query can be seen below. 
+Our second variable is the percent of project members for which this is the only project they share (unit of observation is person-project-week). This is a measure of how disconnected the projects are. I first query person-project-week combinations, with counts of the number of distinct projects they worked on that week. The query can be seen below; the data is stored on GCP under "mcd-lab/work_culture/var2_data". 
 
 ```{r}
 var2_query =
   glue_sql(
     "
-      SELECT DISTINCT author_id, project_id, EXTRACT(WEEK FROM date(created_at)) as week
-      FROM `ghtorrent-bq.ght.commits`
-      WHERE EXTRACT(YEAR FROM date(created_at)) = 2015 AND EXTRACT(MONTH FROM date(created_at)) = 1 
-      GROUP BY author_id, project_id, EXTRACT(WEEK FROM date(created_at)) 
-
+    SELECT DISTINCT author_id, project_id, CONCAT(EXTRACT(WEEK FROM date(created_at)), EXTRACT(YEAR FROM date(created_at))) as week_year
+    FROM `ghtorrent-bq.ght.commits` 
+    GROUP BY author_id, project_id, CONCAT(EXTRACT(WEEK FROM date(created_at)), EXTRACT(YEAR FROM date(created_at)))
+    
 
     "
   )
 print(var2_query)
+
 ```
 
-I pull and store this data as a CSV. I then subset the data to only include observations with num_projects >= 2, then lapply a function to create dummy variables for whether the observation (person-project-week) represents the only project shared by co-editors. **Flagging because I need some help here; I believe I've written a function that satisfies what we want, but it would take forever to run (I run it over only ten observations now and it takes a second; given that it increases linearly, it's unfeasible to run this over the 1.1 million observations we have from January 2015)**. 
+I wrote a function to create dummy variables for whether the observation (person-project-week) represents the only project shared by co-editors; I could mapply this and get the desired dataset. **Flagging because I need some help here; I believe I've written a function that satisfies what we want, but it would take forever to run (I run it over only ten observations now and it takes a second; given that it increases linearly, it's unfeasible to run this over the 1.1 million observations we have from January 2015)**. 
 
-```{r}
+```{r, echo=TRUE}
 #pulling down the data (commented out since once I store it as a CSV I pull from that to avoid recharging Google BigQuery)
-# var2_data = dbGetQuery(bq_con, var2_query)
-# write.csv(var2_data, "./data/var2_data.csv")
-```
-```{r, echo = TRUE}
-var2_data = read.csv("./data/var2_data.csv")
-var2_data = merge(var1_data, var2_data, by = c("author_id", "week"))
-var2_data_sub = subset(var2_data, num_projects > 1)
+#var2_data = dbGetQuery(bq_con, var2_query_abridged)
+#var2_data_sub = subset(var2_data, num_projects > 1)
 
 get_mult_team = function(x, y, z){
   author_list1 = subset(var2_data_sub, week == y & project_id == z)
@@ -145,12 +140,10 @@ get_mult_team = function(x, y, z){
   return(ifelse(sum(author_list1 %in% author_list2) > 0, 1, 0))
 }
 
-test = var2_data_sub[c(1:10),]
-test2 = mapply(get_mult_team, x = test$author_id, y = test$week, z = test$project_id)
 ```
 
 # Variable 3: Number of new teams joined
-Our third variable is number of new teams joined (unit of observation is person-year). This is a measure of being on multiple teams serially. The query itself can be seen below. **NOTE: I don't limit my pull this time, because our unit of observation makes the data manageable**. 
+Our third variable is number of new teams joined (unit of observation is person-year). This is a measure of being on multiple teams serially. The query itself can be seen below.  
 ```{r}
 var3_query =
   glue_sql(
@@ -163,25 +156,26 @@ var3_query =
   )
 print(var3_query)
 ```
-I pull and store this data as a CSV. Distribution statistics and histograms for "num_projects" (i.e. the number of new projects a user worked on in a given year; unit of observation is person-year) can be seen below.
-```{r, include = FALSE}
-#pulling down the data (commented out since once I store it as a CSV I pull from that to avoid recharging Google BigQuery)
-# var3_data = dbGetQuery(bq_con, var3_query)
-# write.csv(var3_data, "./data/var3_data.csv")
-```
+I pull and a full year of data (2015; manageable size so I don't need to subset). Distribution statistics and histograms for "num_projects" (i.e. the number of new projects a user worked on in a given year; unit of observation is person-year) can be seen below.
 ```{r, warning=FALSE, message=FALSE}
-var3_data = read.csv("./data/var3_data.csv")
+#pulling down the data (commented out since once I store it as a CSV I pull from that to avoid recharging Google BigQuery)
+var3_desc =
+  glue_sql(
+    "
+    SELECT *
+    FROM `mcd-lab.work_culture.var3_data` 
+    WHERE year = 2015
+
+    "
+  )
+var3_data = dbGetQuery(bq_con, var3_desc)
 describe(var3_data$num_projects)
 var3_data$year.f = factor(var3_data$year)
 var3_data %>% 
-  ggplot(aes(x = num_projects, color = year.f)) +
-  geom_histogram(position = "identity", alpha = 0.5, fill = "white") + 
-  xlim(0, 5) + labs(title = "Distribution of new projects worked on (1-5)", x = "Number of distinct projects worked on (by person-year)")
+  ggplot(aes(x = num_projects)) +
+  geom_histogram(position = "identity", alpha = 0.5) + 
+  xlim(0, 5) + labs(title = "Distribution of new projects worked on", x = "Number of distinct projects worked on (by person-year, only 2015)")
 
-var3_data %>% 
-  ggplot(aes(x = num_projects, color = year.f)) +
-  geom_histogram(position = "identity", alpha = 0.5, fill = "white") + 
-  xlim(10, 250) + labs(title = "Distribution of new projects worked on (10-250)", x = "Number of distinct projects worked on (by person-year)")
 ```
 
 # Variable 4: Number of distinct authors working on project in given hour
@@ -190,69 +184,93 @@ Our fourth variable is number of distinct authors working on project in given ho
 var4_query =
   glue_sql(
     "
-    SELECT project_id, EXTRACT(WEEK from created_at) as week, EXTRACT(DAY from created_at) as day, EXTRACT(HOUR from created_at) as hour, COUNT(DISTINCT author_id) as num_authors  
+    SELECT project_id, EXTRACT(WEEK from created_at) as week, EXTRACT(DAY from created_at) as day, EXTRACT(HOUR from created_at) as hour, CONCAT(EXTRACT(WEEK from created_at), EXTRACT(YEAR from created_at)) as week_year, COUNT(DISTINCT author_id) as num_authors  
     FROM `ghtorrent-bq.ght.commits`
-    WHERE EXTRACT(YEAR FROM date(created_at)) = 2015 AND EXTRACT(MONTH FROM date(created_at)) = 1
-    group by project_id, EXTRACT(WEEK from created_at), EXTRACT(DAY FROM created_at), EXTRACT(HOUR FROM created_at)
+    group by project_id, CONCAT(EXTRACT(WEEK from created_at), EXTRACT(YEAR from created_at)), EXTRACT(WEEK from created_at), EXTRACT(DAY FROM created_at), EXTRACT(HOUR FROM created_at)
 
     "
   )
 print(var4_query)
 ```
-I pull and store this data as a CSV. Distribution statistics and histograms for "num_projects" (i.e. the number of new projects a user worked on in a given year; unit of observation is person-year) can be seen below.
-```{r, include = FALSE}
-#pulling down the data (commented out since once I store it as a CSV I pull from that to avoid recharging Google BigQuery)
-# var4_data = dbGetQuery(bq_con, var4_query)
-# write.csv(var4_data, "./data/var4_data.csv")
-var4_data = dbGetQuery(bq_con, var4_query)
-```
+I pull the mean number of authors working on a project and the percent of project-hours with more than one distinct author, by week. Distribution statistics and histograms for each can be seen below.
 ```{r, warning=FALSE, message=FALSE}
-describe(var4_data$num_authors)
-number = sum(var4_data$num_authors > 1)
-percent = sum(var4_data$num_authors > 1)/nrow(var4_data)
-print(paste("Number of synchronous project hours:", number, sep = " "))
-print(paste("Percent of project hours synchronous:", percent, sep = " "))
-
-var4_data$week.f = factor(var4_data$week)
-var4_data %>% 
-  ggplot(aes(x = num_authors, color = week.f)) +
-  geom_histogram(position = "identity", alpha = 0.5, fill = "white") + 
-  xlim(0, 5) + labs(title = "Distribution of syhcronous work (by project-hour)", x = "Number of distinct authors working on project in an hour (0-5)")
-
-var4_data %>% 
-  ggplot(aes(x = num_authors, color = week.f)) +
-  geom_histogram(position = "identity", alpha = 0.5, fill = "white") + 
-  xlim(10, 100) + labs(title = "Distribution of syhcronous work (by project-hour)", x = "Number of distinct authors working on project in an hour (10-100)")
-```
-
-# Variable 5: Share of team members who joined partway through
-Our fifth variable is number of distinct authors working on project who joined after the project was originally created. This is a measure of variation in team composition within its lifetime.  
-```{r}
-var5_query =
+#pulling down the data (commented out since once I store it as a CSV I pull from that to avoid recharging Google BigQuery)
+var4_desc =
   glue_sql(
     "
-    SELECT repo_id, COUNT(DISTINCT user_id) as project_members, COUNT(DISTINCT date(created_at)) as late_additions 
-    FROM `ghtorrent-bq.ght.project_members` 
-    WHERE EXTRACT(YEAR FROM date(created_at)) = 2015
-    group by repo_id
+    SELECT week_year, AVG(num_authors) as avg_authors, COUNT(more_than_one)/COUNT(DISTINCT project_id) perc_more_one 
+    FROM `mcd-lab.work_culture.var4_data` 
+    group by week_year
+
 
     "
   )
-print(var5_query)
-```
-I pull and store this data as a CSV. Distribution statistics and histograms for "num_projects" (i.e. the number of new projects a user worked on in a given year; unit of observation is person-year) can be seen below.
-```{r, include = FALSE}
-#pulling down the data (commented out since once I store it as a CSV I pull from that to avoid recharging Google BigQuery)
-# var5_data = dbGetQuery(bq_con, var5_query)
-# write.csv(var5_data, "./data/var5_data.csv")
-```
-```{r, warning=FALSE, message=FALSE}
-var5_data = read.csv("./data/var5_data.csv")
-var5_data$perc_late = var5_data$late_additions/var5_data$project_members
-describe(var5_data$perc_late)
+var4_data = dbGetQuery(bq_con, var4_desc)
+describe(var4_data$avg_authors)
+describe(var4_data$perc_more_one)
 
-var5_data %>% 
-  ggplot(aes(x = perc_late)) +
+var4_data %>% 
+  ggplot(aes(x = avg_authors)) +
   geom_histogram(position = "identity", alpha = 0.5) + 
-  xlim(0,1) + labs(title = "Distribution of ``late addition'' project percentage", x = "Percent of project members added after project creation date")
+  xlim(0, 5) + labs(title = "Distribution of syhcronous work (by project-hour)", x = "Average number of distinct authors in an hour (by week)")
+```
+
+# Variable 5: Share of team members who joined partway through
+Our fifth variable is number of distinct authors working on project who joined after the project was originally created. This is a measure of variation in team composition within its lifetime. I think defining this variable is a little difficult; if you define "late additions" as anyone added after the moment a project is created, that's almost everyone. If you define it as anyone added on a different date than the project was created (i.e. a one day difference, minimum) that's substantially less people. I define late additions using unique dates, weeks and months (i.e. "late_additions_day", "late_additions_week", "late_additions_month"). To do this I need to run 3 queries to generate the eventual dataset, and use leftjoins at each step. The final dataset is stored on GCP under "mcd-lab/work_culture/var5_data".   
+```{r}
+var5_query_1 =
+  glue_sql(
+    "
+    SELECT repo_id, COUNT(DISTINCT user_id) as project_members, MIN(created_at) as project_created_at,  
+    FROM `ghtorrent-bq.ght.project_members` 
+    WHERE EXTRACT(YEAR FROM date(created_at)) = 2015
+    GROUP BY repo_id
+
+    "
+  )
+
+var5_query_2 =
+  glue_sql(
+    "
+    SELECT `ghtorrent-bq.ght.project_members`.user_id, `mcd-lab.work_culture.var5_1`.repo_id, `mcd-lab.work_culture.var5_1`.project_members,       `mcd-lab.work_culture.var5_1`.project_creation, 
+`ghtorrent-bq.ght.project_members`.created_at, TIMESTAMP_DIFF(`ghtorrent-bq.ght.project_members`.created_at, `mcd-lab.work_culture.var5_1`.project_creation, day) as days_late
+    FROM `mcd-lab.work_culture.var5_1` LEFT JOIN `ghtorrent-bq.ght.project_members` on `mcd-lab.work_culture.var5_1`.repo_id = `ghtorrent-bq.ght.project_members`.repo_id
+
+    "
+  )
+
+var5_query_3 =
+  glue_sql(
+    "
+    SELECT repo_id, concat(EXTRACT(WEEK FROM MIN(date(created_at))), EXTRACT(YEAR FROM MIN(date(created_at)))) as week_year, AVG(project_members) as project_members, COUNTIF(days_late >= 1) as num_day_late, COUNTIF(days_late >= 7) as num_week_late, 
+    COUNTIF(days_late >= 30) as num_month_late, COUNTIF(days_late >= 1)/AVG(project_members) as perc_day_late, COUNTIF(days_late >= 7)/AVG(project_members) as perc_week_late,
+    COUNTIF(days_late >= 30)/AVG(project_members) as perc_month_late
+    FROM `mcd-lab.work_culture.var5_2` 
+    GROUP BY repo_id
+
+    "
+  )
+
+print(var5_query_1)
+print(var5_query_2) 
+print(var5_query_3)
+```
+I pull and store each variable (late additions by day, week, and month) averaged over week-year combination. I describe each below.
+```{r, warning=FALSE, message=FALSE}
+#pulling down the data (commented out since once I store it as a CSV I pull from that to avoid recharging Google BigQuery)
+var5_desc =
+  glue_sql(
+    "
+    SELECT AVG(perc_day_late) as avg_perc_day, AVG(perc_week_late) as avg_perc_week, AVG(perc_month_late) as avg_perc_month
+    FROM `mcd-lab.work_culture.var5_data` 
+    group by week_year
+
+    "
+  )
+var5_data = dbGetQuery(bq_con, var5_desc)
+
+describe(var5_data$avg_perc_day)
+describe(var5_data$avg_perc_week)
+describe(var5_data$avg_perc_month)
+
 ```
