@@ -73,9 +73,9 @@ Our first variable is the "number of distinct projects working on", observed at 
 var1_query =
   glue_sql(
     "
-    SELECT author_id, CONCAT(EXTRACT(WEEK FROM date(created_at)), EXTRACT(WEEK FROM date(created_at))) as week_year, COUNT(DISTINCT project_id) as num_projects FROM `ghtorrent-bq.ght.commits`
-    group by author_id, CONCAT(EXTRACT(WEEK FROM date(created_at)), EXTRACT(WEEK FROM date(created_at)))
-
+    SELECT author_id, CONCAT(EXTRACT(WEEK FROM date(created_at)), EXTRACT(YEAR FROM date(created_at))) as week_year, COUNT(DISTINCT project_id) as num_projects  
+    FROM `ghtorrent-bq.ght.commits`
+    group by author_id, CONCAT(EXTRACT(WEEK FROM date(created_at)), EXTRACT(YEAR FROM date(created_at)))
     
     "
   )
