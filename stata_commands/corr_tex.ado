@@ -52,7 +52,7 @@ program corr_tex
     }
 
     file write corrmat "\bottomrule "
-    file write corrmat "\end{tabularx}" _n 
+    file write corrmat "\end{tabular}" _n 
     file close corrmat
 
 end 
