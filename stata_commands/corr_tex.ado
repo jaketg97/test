@@ -16,7 +16,7 @@ program corr_tex
     }
 
     file open corrmat using "`out_file'", write replace
-    file write corrmat "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi} \begin{tabular}{@{\extracolsep{2pt}}{l}*{4}{>{\raggedright\arraybackslash}m{`width_all'cm}}@{}}  \toprule" _n  
+    file write corrmat "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi} \begin{tabular}{@{\extracolsep{2pt}}{l}*{`num_vars'}{>{\raggedright\arraybackslash}m{`width_all'cm}}@{}}  \toprule" _n  
     file write corrmat "\toprule"
     file write corrmat "  `col_heads'  \\     " _n         
     file write corrmat "\midrule" _n 
