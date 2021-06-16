@@ -12,7 +12,8 @@ program corr_tex
 
     local col_heads 
     foreach var of varlist `corr_vars' {
-        local col_heads "`col_heads' & ``var''"
+        local varlab: var la `var'
+        local col_heads "`col_heads' & `varlab'"
     }
 
     file open corrmat using "`out_file'", write replace
