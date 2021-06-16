@@ -1,0 +1,6 @@
+v .01
+d Materials by Jacob Gosselin
+d Northwestern University
+d jaketg97@gmail.com
+
+p corr_tex

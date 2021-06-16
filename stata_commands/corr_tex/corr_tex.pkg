@@ -1,0 +1,7 @@
+v .01
+d 'CORR_TEX': Output latex correlation table
+d 
+d Distribution-Date:   20210616
+d License: Academic Free License v3.0
+d 
+F corr_tex.ado

@@ -3,4 +3,4 @@
 *************************************************************************************************
 
 sysuse auto, clear
-ssc install corr_tex.ado
+net install corr_tex, from("https://raw.githubusercontent.com/jaketg97/Jacob-Toner-Gosselin/main/ado_files/")
