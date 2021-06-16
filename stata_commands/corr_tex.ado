@@ -26,7 +26,7 @@ program corr_tex
 
     foreach var of varlist `corr_vars' {
 
-        local varlab ``var''
+        local varlab: var la `var'
 
         foreach j of numlist 1/`num_vars' {
             local col_`j': di %7.3f A[`i', `j']
