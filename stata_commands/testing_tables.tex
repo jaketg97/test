@@ -1,0 +1,93 @@
+\documentclass[letterpaper,12pt,pdftex]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath,amsthm,amssymb, amsmath}
+\usepackage{appendix}
+\usepackage{bigstrut}
+\usepackage{booktabs}
+\usepackage[english]{babel}
+\usepackage [autostyle, english = american]{csquotes}
+\MakeOuterQuote{"}
+\usepackage[capposition=top]{floatrow}
+\usepackage[pdftex]{color,graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{pdflscape}
+\usepackage{pdfpages}
+\usepackage{rotating}
+\usepackage{setspace}
+\usepackage{soul}	% required for highlighting \hl{ ... }
+\usepackage{tabularx}
+\usepackage{threeparttable}
+\usepackage[compact]{titlesec}
+\usepackage{verbatim}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{booktabs,pdflscape,longtable,subcaption,multirow,threeparttablex}
+\usepackage{threeparttable}
+\usepackage{setspace}
+\usepackage[colon]{natbib}
+\usepackage{tabularx} % for tables created using texsave in stata
+\usepackage{array}
+\usepackage{pdflscape}
+\usepackage{makecell}
+
+%\usepackage{pp4link}
+%\usepackage{mpmulti}
+%\usepackage{bbm}
+%\usepackage{ulem}
+
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\hangindent=1em \raggedright \let\newline\\\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+% Now we can set the bibliography style.
+
+
+
+\newcommand{\specialcell}[2][c]{%
+	\begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+
+\setcounter{MaxMatrixCols}{10}
+\geometry{letterpaper,tmargin=1in,bmargin=1in,lmargin=1.in,rmargin=1.in}
+\hypersetup{urlcolor=black,citecolor=black,colorlinks=true,linkcolor=black,raiselinks=false,pdfstartview={XYZ null null 1.20}}
+\linespread{1.4}
+\setlength{\footnotesep}{0.7\baselineskip}
+\setlength{\parindent}{24pt}
+
+\def\fn{\footnote}
+\def\bi{\begin{itemize}}
+\def\ei{\end{itemize}}
+\def\i{\item}
+\def\ni{\noindent}
+
+\titlespacing{\section}{0pt}{10pt}{5pt}
+\titlespacing{\subsection}{2pt}{8pt}{4pt}
+\titlespacing{\subsubsection}{0pt}{10pt}{3pt}
+
+\newtheorem{result}{Prediction}
+\newtheorem{claim}{Claim}
+\newtheorem{assumption}{Assumption}
+\renewcommand{\qed}{\quad \rule{1.8mm}{1.8mm}}
+
+\title{PES Chiapas RCT: Tables}
+
+\date{\today}
+
+\begin{document}
+
+\tableofcontents
+\clearpage
+\listoftables
+\clearpage
+
+\begin{table}[!h]
+	\caption{corr\_tex test}
+	\begin{center}
+	\input{./corr_text_test}
+	\end{center}
+\end{table}
+
+\end{document}
